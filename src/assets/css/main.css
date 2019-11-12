@@ -1,0 +1,70 @@
+body{ text-align:center; background-color:#fff; } 
+#App{
+    width: 100vw;
+    height: 100vh;
+    /* background: #02162F; */
+    margin:0 auto;  
+}
+/* #Title{
+    width:100%;
+    height: 5%;
+
+} */
+#Main{
+    width:100%;
+    /*float:left;设置浮动，实现多列效果，p+Css布局中很重要的*/
+    height: 100%;
+
+}
+#Vertikal_1{
+    width:100%;
+    height:60%;
+}
+#Vertikal_2{
+    width:100%;
+    height:40%;
+}
+#Vertikal_1-Horizontal_1{
+    width:33%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+#Vertikal_1-Horizontal_2{
+    width:33%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+#Vertikal_1-Horizontal_3{
+    width:34%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+
+
+#Vertikal_2-Horizontal_1{
+    width:25%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+#Vertikal_2-Horizontal_2{
+    width:50%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+#Vertikal_2-Horizontal_3{
+    width:25%;
+    height:100%;
+    float:left;
+    /* border-width:1px; border-style: solid; border-color:#C7C7C7; */
+}
+/* #Vertikal_2-Horizontal_4{
+    width:25%;
+    height:100%;
+    float:left;
+    border-width:1px; border-style: solid; border-color:#C7C7C7;
+} */
