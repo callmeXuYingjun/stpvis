@@ -19,12 +19,9 @@ var store = new Vuex.Store({
     testData_action({ commit }) {
       function read_testData() {
         return new Promise(function (resolve) {
-          d3.csv("data/test/testData.csv", function (csvdata) {
-            // var out=[];
-            // console.log("!!!!!!!!!!!!!!!!!!!")
-            // console.log(csvdata)
+          d3.csv("data/test/testData.csv").then(function(csvdata) {
             resolve(csvdata)
-          })
+          });
         });
       }
       read_testData()

@@ -16,20 +16,17 @@ export default {
       sharedState: store.state
     };
   },
-  created() {
-    store.dispatch("testData_action");
-  },
   mounted() {
-    this.draw([12,34,5]);
+    store.dispatch("testData_action");
   },
   watch: {
     "sharedState.testData": function(newdata) {
       this.draw(newdata);
-    },
+    }
   },
   methods: {
     draw(data) {
-      console.log(data)
+      console.log(data);
       // Setting the margin and dimensions of the work area
       var margin = { top: 50, right: 20, bottom: 30, left: 30 };
       var width =
@@ -41,25 +38,11 @@ export default {
         margin.top -
         margin.bottom;
 
-      // Given sample data
-      var someData = [
-        { key: "W1", value: 32 },
-        { key: "W2", value: 26 },
-        { key: "W3", value: 45 },
-        { key: "W4", value: 38 },
-        { key: "W5", value: 53 },
-        { key: "W6", value: 48 },
-        { key: "W7", value: 42 },
-        { key: "W8", value: 34 },
-        { key: "W9", value: 37 },
-        { key: "W10", value: 36 }
-      ];
-
       // Creating new arrays from the data, separating weeks from the numbers
-      var weeks = someData.map(function(d) {
+      var weeks = data.map(function(d) {
         return d.key;
       });
-      var values = someData.map(function(d) {
+      var values = data.map(function(d) {
         return d.value;
       });
 
@@ -113,7 +96,7 @@ export default {
       // Creating chart
       var chart = g
         .selectAll("bar")
-        .data(someData)
+        .data(data)
         .enter()
         .append("g");
 
