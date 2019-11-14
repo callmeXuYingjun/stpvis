@@ -8,14 +8,28 @@
 </template>
 
 <script>
-// import store from "../vuex/store.js";
+import store from "../vuex/store.js";
 import * as d3 from "d3";
 export default {
+  data: function() {
+    return {
+      sharedState: store.state
+    };
+  },
+  created() {
+    store.dispatch("testData_action");
+  },
   mounted() {
-    this.draw();
+    this.draw([12,34,5]);
+  },
+  watch: {
+    "sharedState.testData": function(newdata) {
+      this.draw(newdata);
+    },
   },
   methods: {
-    draw() {
+    draw(data) {
+      console.log(data)
       // Setting the margin and dimensions of the work area
       var margin = { top: 50, right: 20, bottom: 30, left: 30 };
       var width =
