@@ -8,11 +8,15 @@ var store = new Vuex.Store({
     // 大家可以把 state 想象成 组件中的 data ,专门用来存储数据的
     // 如果在 组件中，想要访问，store 中的数据，只能通过 this.$store.state.*** 来访问
     wangge_id: "all",
-    testData: {}
+    testData: {},
+    scatterData: [],
   },
   mutations: {
     testData_Update(state,data) {
       state.testData = data
+    },
+    scatterData_Update(state,data) {
+      state.scatterData = data
     },
   },
   actions: {
@@ -27,6 +31,19 @@ var store = new Vuex.Store({
       read_testData()
         .then(data => {
           commit('testData_Update', data)
+        })
+    },
+    scatterData_action({ commit }) {
+      function read_scatterData() {
+        return new Promise(function (resolve) {
+          d3.csv("data/scatter/scatter.csv").then(function(csvdata) {
+            resolve(csvdata)
+          });
+        });
+      }
+      read_scatterData()
+        .then(data => {
+          commit('scatterData_Update', data)
         })
     }
   },
