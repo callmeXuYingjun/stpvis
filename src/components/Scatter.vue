@@ -1,7 +1,7 @@
 <template>
   <div id="scatter">
     <div id="scatter_top">
-      <font>Grid Summarization View</font>
+      <font>Scatter View</font>
     </div>
     <div id="scatter_down"></div>
   </div>

@@ -2,10 +2,22 @@
     <div id="App">
     <div id="Main">
         <div id="Vertikal_1">
-          <router-view name="Scatter" ></router-view>
+          <div id="Vertikal_1-Horizontal_1">
+            <router-view name="Scatter" ></router-view>
+          </div>
+          <div id="Vertikal_1-Horizontal_2"></div>
+          <div id="Vertikal_1-Horizontal_3"></div>
+          
         </div>
         <div id="Vertikal_2">
-          <router-view name="Test" ></router-view>
+          <div id="Vertikal_2-Horizontal_1">
+            <!-- <router-view name="Test" ></router-view> -->
+          </div>
+          <div id="Vertikal_2-Horizontal_2">
+            <router-view name="Tree" ></router-view>
+          </div>
+          <div id="Vertikal_2-Horizontal_3"></div>
+          
         </div>
     </div>
     </div>

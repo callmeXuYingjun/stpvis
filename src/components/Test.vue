@@ -1,7 +1,7 @@
 <template>
   <div id="test">
     <div id="test_top">
-      <font>Grid Summarization View</font>
+      <font>Test View</font>
     </div>
     <div id="test_down"></div>
   </div>
@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     draw(data) {
-      console.log(data);
       // Setting the margin and dimensions of the work area
       var margin = { top: 50, right: 20, bottom: 30, left: 30 };
       var width =
