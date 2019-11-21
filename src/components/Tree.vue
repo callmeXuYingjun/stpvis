@@ -1,7 +1,7 @@
 <template>
   <div id="tree">
     <div id="tree_top">
-      <font>tree View</font>
+      <font>Tree View</font>
     </div>
     <div id="tree_down"></div>
   </div>
@@ -93,7 +93,6 @@ export default {
         ]
       };
 
-
       var N_all_num_history = [
         45193,
         8680,
@@ -136,7 +135,7 @@ export default {
       function treee() {
         // var treeData = [treeData_0, treeData_1, treeData_2, treeData_3];
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 30, bottom: 20, left: 30 };
+        var margin = { top: 20, right: 0, bottom: 20, left: 40 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -159,7 +158,6 @@ export default {
             d.y -= 40 * d.depth;
           }
         });
-
         var svg = d3
             .select("#tree_down")
             .append("svg")
@@ -237,39 +235,137 @@ export default {
           .scalePow()
           .exponent(0.5)
           .domain([minx, maxx])
-          .rangeRound([25, 60]);
+          .rangeRound([20, 40]);
+        var nodeArray = nodes.descendants();
+        for (var i = 0; i < nodeArray.length; i++) {
+          //绘制节点整个的graph
+          const outerRadius = pow(N_all_num[num_tree][i]);
+          const innerRadius = outerRadius / 2;
+          const paddingAngle = (Math.PI / 180) * 5;
+          var gg = g
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + nodeArray[i].y + "," + nodeArray[i].x + ")"
+            );
+          gg.append("circle")
+            .attr("r", function() {
+              return innerRadius;
+            })
+            .style("fill", function() {
+              return "white";
+            });
 
-        var node = g.selectAll(".node").data(nodes.descendants());
-        // Enter the nodes.
-        var nodeEnter = node
-          .enter()
-          .append("g")
-          .attr("transform", function(d) {
-            return "translate(" + d.y + "," + d.x + ")";
-          });
-        // adds each node as a group
+          //第一扇形
+          var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var pieData_0 = [1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
+          var pieData_0_data = [12, 11, 13, 11, 11, 11, 11]; //data we want to turn into a pie chart
+          var max_0 = d3.max(pieData_0_data);
+          var min_0 = d3.min(pieData_0_data);
+          var linear_0 = d3
+            .scaleLinear()
+            .domain([min_0, max_0])
+            .range([outerRadius * 1.1, outerRadius * 1.5]);
+          var pies_0 = d3
+            .pie()
+            .startAngle(0 + paddingAngle)
+            .endAngle((2 * Math.PI) / 3 - paddingAngle)(pieData_0); // turns into data for pie chart with start and end angles
 
-        nodeEnter
-          .append("circle")
-          .attr("r", function(d, i) {
-            if (d.depth == shendu) {
-              return pow(N_all_num[num_tree][i]);
-            } else {
-              return pow(N_all_num[num_tree][i]) / 3;
-            }
-          })
-          .attr("id", function(d, i) {
-            return "circle" + i;
-          })
-          .style("stroke", function() {
-            return "#4C86B6";
-          })
-          .style("stroke-width", function() {
-            return 4;
-          })
-          .style("fill", function() {
-            return "black";
-          });
+          let arc_0 = d3
+            .arc()
+            .innerRadius(innerRadius) //means full circle. if not 0, would be donut
+            .outerRadius(function() {
+              return outerRadius;
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_0)
+            .enter()
+            .append("path")
+            .attr("d", arc_0)
+            .attr("fill", d => {
+              return colors_0(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
+          let arc_0_outer = d3
+            .arc()
+            .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+            .outerRadius(function(d,k) {
+              return linear_0(pieData_0_data[k]);
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_0)
+            .enter()
+            .append("path")
+            .attr("d", arc_0_outer)
+            .attr("fill", d => {
+              return colors_0(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
+
+          //第二扇形
+          var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var pieData_1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
+          var pies_1 = d3
+            .pie()
+            .startAngle((2 * Math.PI) / 3 + paddingAngle)
+            .endAngle(((2 * Math.PI) / 3) * 2 - paddingAngle)(pieData_1); // turns into data for pie chart with start and end angles
+
+          let arc_1 = d3
+            .arc()
+            .innerRadius(innerRadius) //means full circle. if not 0, would be donut
+            .outerRadius(function() {
+              return outerRadius;
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_1)
+            .enter()
+            .append("path")
+            .attr("d", arc_1)
+            .attr("fill", d => {
+              return colors_1(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
+
+          //第三扇形
+          var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var pieData_2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
+          var pies_2 = d3
+            .pie()
+            .startAngle(((2 * Math.PI) / 3) * 2 + paddingAngle)
+            .endAngle(2 * Math.PI - paddingAngle)(pieData_2); // turns into data for pie chart with start and end angles
+
+          let arc_2 = d3
+            .arc()
+            .innerRadius(innerRadius) //means full circle. if not 0, would be donut
+            .outerRadius(function() {
+              return outerRadius;
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_2)
+            .enter()
+            .append("path")
+            .attr("d", arc_2)
+            .attr("fill", d => {
+              return colors_2(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
+        }
       }
     }
   }
@@ -314,5 +410,4 @@ font {
   border-color: #c7c7c7;
   border-radius: 5px;
 }
-
 </style>

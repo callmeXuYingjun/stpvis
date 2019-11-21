@@ -89,22 +89,46 @@ export default {
         .scaleLinear()
         .domain([minInNumbers, maxInNumbers])
         .range([0, AxisWidth]);
+      for (var i = 0; i < data.length; i++) {
+        svg
+          .append("circle")
+          .attr("r", linear_r(data[i].he))
+          .attr("cx", Scale(data[i].x))
+          .attr("cy", Scale(data[i].y))
+          .style("fill", function() {
+            if (i >= data.length / 2) {
+              return "grey";
+            } else {
+              return "red";
+            }
+          });
 
-      // add the dots
-      svg
-        .selectAll("dot")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("r", function(d) {
-          return linear_r(d.he);
-        })
-        .attr("cx", function(d) {
-          return Scale(d.x);
-        })
-        .attr("cy", function(d) {
-          return Scale(d.y);
-        });
+        var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+        var pieData = [1, 1, 2, 3, 5, 1, 1, 21]; //data we want to turn into a pie chart
+        var pies = d3.pie().startAngle(0).endAngle(2*Math.PI)(pieData); // turns into data for pie chart with start and end angles
+        var arc = d3
+          .arc()
+          .innerRadius(linear_r(data[i].he) / 2) //means full circle. if not 0, would be donut
+          .outerRadius(linear_r(data[i].he)) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
+        svg
+          .selectAll()
+          .data(pies)
+          .enter()
+          .append("path")
+          .attr("d", arc)
+          .attr("fill", d => {
+            return colors(d.value);
+          })
+          .attr("stroke", function() {
+            return "#fff";
+          })
+          .attr(
+            "transform",
+            "translate(" + Scale(data[i].x) + "," + Scale(data[i].y) + ")"
+          );
+      }
     }
   }
 };
