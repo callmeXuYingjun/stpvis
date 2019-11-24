@@ -6,7 +6,7 @@
           <router-view name="Tree"></router-view>
         </div>
         <div id="Vertikal_1-Horizontal_2">
-           <router-view name="Scatter"></router-view>
+          <router-view name="Scatter"></router-view>
         </div>
         <div id="Vertikal_1-Horizontal_3">
           <router-view name="Matrix"></router-view>
