@@ -8,7 +8,9 @@
         <div id="Vertikal_1-Horizontal_2">
            <router-view name="Scatter"></router-view>
         </div>
-        <div id="Vertikal_1-Horizontal_3"></div>
+        <div id="Vertikal_1-Horizontal_3">
+          <router-view name="Matrix"></router-view>
+        </div>
       </div>
       <div id="Vertikal_2">
         <div id="Vertikal_2-Horizontal_1"></div>

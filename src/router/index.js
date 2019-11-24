@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import Test from '@/components/Test'
 import Scatter from '@/components/Scatter'
 import Tree from '@/components/Tree'
+import Matrix from '@/components/Matrix'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -14,6 +15,7 @@ export default new Router({
         'Test': Test,
         'Scatter': Scatter,
         'Tree': Tree,
+        'Matrix': Matrix,
       }
     }
   ]
