@@ -121,20 +121,20 @@ export default {
         29905,
         5889.1,
         24016,
-        19091.9,
+        1191.9,
         1994.1,
         1381.1,
-        122,
-        722.4,
-        9141.5,
-        4234.5
+        1322,
+        141.5,
+        24722.4,
+        434.5
       ];
       var N_all_num = [N_all_num_history, N_all_num_ce, N_all_num_cha];
-      var colors = ["#893D98", "#22B184", "#4272B5"];
+      var colors = ["#f58321", "#77bc45", "#ef1621"];
       treee();
       function treee() {
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 80, bottom: 20, left: 60 };
+        var margin = { top: 80, right: 20, bottom: 140, left: 20 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -144,7 +144,7 @@ export default {
           margin.top -
           margin.bottom;
         // declares a tree layout and assigns the size
-        var treemap = d3.tree().size([height, width]);
+        var treemap = d3.tree().size([width, height]);
         var nodes = d3.hierarchy(treeData, function(d) {
           return d.children;
         });
@@ -166,7 +166,7 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var color_link =["#893D98", "#22B184", "#4272B5"];
+        var color_link = ["#f58321", "#77bc45", "#ef1621"];
         function curtail(arr) {
           var m = arr.slice(0);
           m.splice(0, 1);
@@ -183,7 +183,7 @@ export default {
         var x = d3
           .scaleLinear()
           .domain([min_line, max_line])
-          .range([2, height / 10]);
+          .range([2, 20]);
 
         var linkenter = g.selectAll(".link").data(nodes.descendants().slice(1));
 
@@ -203,21 +203,21 @@ export default {
           .attr("d", function(d) {
             return (
               "M" +
+              d.x +
+              "," +
               d.y +
-              "," +
-              d.x +
               "C" +
-              (d.y + d.parent.y) / 2 +
-              "," +
               d.x +
-              " " +
+              "," +
               (d.y + d.parent.y) / 2 +
-              "," +
-              d.parent.x +
               " " +
-              d.parent.y +
+              d.parent.x +
               "," +
-              d.parent.x
+              (d.y + d.parent.y) / 2 +
+              " " +
+              d.parent.x +
+              "," +
+              d.parent.y
             );
           });
 
@@ -229,10 +229,9 @@ export default {
         });
 
         var pow = d3
-          .scalePow()
-          .exponent(0.5)
+          .scaleLinear()
           .domain([minx, maxx])
-          .rangeRound([height / 20, height / 6]);
+          .range([width / 30, width /10]);
         var nodeArray = nodes.descendants();
 
         for (var i = 0; i < nodeArray.length; i++) {
@@ -240,14 +239,14 @@ export default {
           const outerRadius =
             nodeArray[i].depth == shendu
               ? pow(N_all_num[num_tree][i])
-              : pow(N_all_num[num_tree][i]) / 2;
+              : pow(N_all_num[num_tree][i]) / 3;
           const innerRadius = outerRadius * 0.9;
           const paddingAngle = (Math.PI / 180) * 5;
           var gg = g
             .append("g")
             .attr(
               "transform",
-              "translate(" + nodeArray[i].y + "," + nodeArray[i].x + ")"
+              "translate(" + nodeArray[i].x + "," + nodeArray[i].y + ")"
             );
           gg.append("circle")
             .attr("r", function() {
@@ -574,7 +573,7 @@ export default {
           var LinearY_0 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_0_data));
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -583,14 +582,12 @@ export default {
             .radius(function(d) {
               return LinearY_0(d);
             });
-          var modelData_0=RandomArray(pieData_0_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_0)
-            .enter()
-            .append("path")
+
+          gg.append("path")
+            .datum(pieData_0_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_0);
 
           var LinearX_1 = d3
@@ -604,7 +601,7 @@ export default {
           var LinearY_1 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_1_data));
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -613,14 +610,12 @@ export default {
             .radius(function(d) {
               return LinearY_1(d);
             });
-          var modelData_1=RandomArray(pieData_1_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_1)
-            .enter()
-            .append("path")
+
+          gg.append("path")
+            .datum(pieData_1_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_1);
 
           var LinearX_2 = d3
@@ -633,7 +628,7 @@ export default {
           var LinearY_2 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_2_data));
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -643,14 +638,11 @@ export default {
               return LinearY_2(d);
             });
 
-          var modelData_2=RandomArray(pieData_2_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_2)
-            .enter()
-            .append("path")
+          gg.append("path")
+            .datum(pieData_2_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_2);
 
           //三角形内部
@@ -685,20 +677,6 @@ export default {
               return "#fff";
             });
         }
-      }
-      function RandomArray(Len, Min, Max) {
-        
-        var Range = Max - Min;
-        
-        var out = [];
-        for (var i = 0; i < 15; i++) {
-          out[i] = [];
-          for (var j = 0; j < Len; j++) {
-            var Rand = Math.random();
-            out[i][j] = Min + Math.round(Rand * Range); //四舍五入
-          }
-        }
-        return out;
       }
     }
   }

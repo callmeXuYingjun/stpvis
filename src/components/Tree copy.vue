@@ -121,20 +121,20 @@ export default {
         29905,
         5889.1,
         24016,
-        19091.9,
+        1191.9,
         1994.1,
         1381.1,
-        122,
-        722.4,
-        9141.5,
+        1322,
+        6141.5,
+        7722.4,
         4234.5
       ];
       var N_all_num = [N_all_num_history, N_all_num_ce, N_all_num_cha];
-      var colors = ["#893D98", "#22B184", "#4272B5"];
       treee();
       function treee() {
+        // var treeData = [treeData_0, treeData_1, treeData_2, treeData_3];
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 80, bottom: 20, left: 60 };
+        var margin = { top: 20, right: 0, bottom: 20, left: 40 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -151,7 +151,9 @@ export default {
         var shendu = nodes.height;
         nodes = treemap(nodes);
         nodes.each(function(d) {
-          if (d.depth < shendu && d.depth != 0) {
+          if (d.depth == shendu) {
+            d.y -= 40 * (d.depth - 1);
+          } else if (d.depth < shendu && d.depth != 0) {
             d.y -= 40 * d.depth;
           }
         });
@@ -166,7 +168,7 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var color_link =["#893D98", "#22B184", "#4272B5"];
+        var color_link = ["#f58321", "#77bc45", "#ef1621"];
         function curtail(arr) {
           var m = arr.slice(0);
           m.splice(0, 1);
@@ -183,7 +185,7 @@ export default {
         var x = d3
           .scaleLinear()
           .domain([min_line, max_line])
-          .range([2, height / 10]);
+          .range([2, 20]);
 
         var linkenter = g.selectAll(".link").data(nodes.descendants().slice(1));
 
@@ -232,15 +234,12 @@ export default {
           .scalePow()
           .exponent(0.5)
           .domain([minx, maxx])
-          .rangeRound([height / 20, height / 6]);
+          .rangeRound([20, 40]);
         var nodeArray = nodes.descendants();
 
         for (var i = 0; i < nodeArray.length; i++) {
           //绘制节点整个的graph
-          const outerRadius =
-            nodeArray[i].depth == shendu
-              ? pow(N_all_num[num_tree][i])
-              : pow(N_all_num[num_tree][i]) / 2;
+          const outerRadius = pow(N_all_num[num_tree][i]);
           const innerRadius = outerRadius * 0.9;
           const paddingAngle = (Math.PI / 180) * 5;
           var gg = g
@@ -258,7 +257,7 @@ export default {
             });
 
           //第一扇形
-          // var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
           var pieData_0 = [1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
           var pieData_0_data = [12, 11, 13, 11, 11, 11, 11]; //data we want to turn into a pie chart
           var max_0 = d3.max(pieData_0_data);
@@ -266,7 +265,7 @@ export default {
           var linear_0 = d3
             .scaleLinear()
             .domain([min_0, max_0])
-            .range([outerRadius * 0.3, outerRadius * 1.5]);
+            .range([outerRadius * 1.1, outerRadius * 1.5]);
           var pies_0 = d3
             .pie()
             .startAngle(0 - paddingAngle)
@@ -285,34 +284,34 @@ export default {
             .enter()
             .append("path")
             .attr("d", arc_0)
-            .attr("fill", () => {
-              return colors[0];
+            .attr("fill", d => {
+              return colors_0(d.value);
             })
             .attr("stroke", function() {
               return "#fff";
             });
-          // let arc_0_outer = d3
-          //   .arc()
-          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
-          //   .outerRadius(function(d, k) {
-          //     return linear_0(pieData_0_data[k]);
-          //   }) //size of circle
-          //   .startAngle(d => d.startAngle) //how does it get d???
-          //   .endAngle(d => d.endAngle);
-          // gg.selectAll()
-          //   .data(pies_0)
-          //   .enter()
-          //   .append("path")
-          //   .attr("d", arc_0_outer)
-          //   .attr("fill", d => {
-          //     return colors_0(d.value);
-          //   })
-          //   .attr("stroke", function() {
-          //     return "#fff";
-          //   });
+          let arc_0_outer = d3
+            .arc()
+            .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+            .outerRadius(function(d, k) {
+              return linear_0(pieData_0_data[k]);
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_0)
+            .enter()
+            .append("path")
+            .attr("d", arc_0_outer)
+            .attr("fill", d => {
+              return colors_0(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
 
           //第二扇形
-          // var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
           var pieData_1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
           var pieData_1_data = [12, 11, 13, 11, 11, 11, 11, 12, 12, 12]; //data we want to turn into a pie chart
           var max_1 = d3.max(pieData_1_data);
@@ -320,7 +319,7 @@ export default {
           var linear_1 = d3
             .scaleLinear()
             .domain([min_1, max_1])
-            .range([outerRadius * 0.3, outerRadius * 1.5]);
+            .range([outerRadius * 1.1, outerRadius * 1.5]);
           var pies_1 = d3
             .pie()
             .startAngle(-(2 * Math.PI) / 3 - paddingAngle)
@@ -339,35 +338,35 @@ export default {
             .enter()
             .append("path")
             .attr("d", arc_1)
-            .attr("fill", () => {
-              return colors[1];
+            .attr("fill", d => {
+              return colors_1(d.value);
             })
             .attr("stroke", function() {
               return "#fff";
             });
 
-          // let arc_1_outer = d3
-          //   .arc()
-          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
-          //   .outerRadius(function(d, k) {
-          //     return linear_1(pieData_1_data[k]);
-          //   }) //size of circle
-          //   .startAngle(d => d.startAngle) //how does it get d???
-          //   .endAngle(d => d.endAngle);
-          // gg.selectAll()
-          //   .data(pies_1)
-          //   .enter()
-          //   .append("path")
-          //   .attr("d", arc_1_outer)
-          //   .attr("fill", d => {
-          //     return colors_1(d.value);
-          //   })
-          //   .attr("stroke", function() {
-          //     return "#fff";
-          //   });
+          let arc_1_outer = d3
+            .arc()
+            .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+            .outerRadius(function(d, k) {
+              return linear_1(pieData_1_data[k]);
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_1)
+            .enter()
+            .append("path")
+            .attr("d", arc_1_outer)
+            .attr("fill", d => {
+              return colors_1(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
 
           //第三扇形
-          // var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+          var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
           var pieData_2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
           var pieData_2_data = [
             11,
@@ -393,7 +392,7 @@ export default {
           var linear_2 = d3
             .scaleLinear()
             .domain([min_2, max_2])
-            .range([outerRadius * 0.3, outerRadius * 1.5]);
+            .range([outerRadius * 1.1, outerRadius * 1.5]);
           var pies_2 = d3
             .pie()
             .startAngle((-(2 * Math.PI) / 3) * 2 - paddingAngle)
@@ -412,32 +411,32 @@ export default {
             .enter()
             .append("path")
             .attr("d", arc_2)
-            .attr("fill", () => {
-              return colors[2];
+            .attr("fill", d => {
+              return colors_2(d.value);
             })
             .attr("stroke", function() {
               return "#fff";
             });
 
-          // let arc_2_outer = d3
-          //   .arc()
-          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
-          //   .outerRadius(function(d, k) {
-          //     return linear_2(pieData_2_data[k]);
-          //   }) //size of circle
-          //   .startAngle(d => d.startAngle) //how does it get d???
-          //   .endAngle(d => d.endAngle);
-          // gg.selectAll()
-          //   .data(pies_2)
-          //   .enter()
-          //   .append("path")
-          //   .attr("d", arc_2_outer)
-          //   .attr("fill", d => {
-          //     return colors_2(d.value);
-          //   })
-          //   .attr("stroke", function() {
-          //     return "#fff";
-          //   });
+          let arc_2_outer = d3
+            .arc()
+            .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+            .outerRadius(function(d, k) {
+              return linear_2(pieData_2_data[k]);
+            }) //size of circle
+            .startAngle(d => d.startAngle) //how does it get d???
+            .endAngle(d => d.endAngle);
+          gg.selectAll()
+            .data(pies_2)
+            .enter()
+            .append("path")
+            .attr("d", arc_2_outer)
+            .attr("fill", d => {
+              return colors_2(d.value);
+            })
+            .attr("stroke", function() {
+              return "#fff";
+            });
 
           //三角形,
           //内半径innerRadius
@@ -451,7 +450,7 @@ export default {
             (Math.sqrt(3) * triangleRadius) / 2,
             triangleRadius / 2
           ];
-
+          var colors = ["red", "blue", "grey"];
           var lines_0 = [triangleTop, triangleLeft];
           var lines_1 = [triangleLeft, triangleRight];
           var lines_2 = [triangleRight, triangleTop];
@@ -563,142 +562,35 @@ export default {
               return colors[2];
             });
 
-          //外圆模式个个维度分布
-          // var sequential_0=d3.range(7)
+          //三角形内散点
+          var triangleSize = [
+            pieData_0_data.length,
+            pieData_1_data.length,
+            pieData_2_data.length
+          ];
 
-          var LinearX_0 = d3
-            .scaleLinear()
-            .domain([0, pieData_0_data.length])
-            .range([0 - paddingAngle, -(2 * Math.PI) / 3 + paddingAngle]);
-
-          var LinearY_0 = d3
-            .scaleLinear()
-            .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
-          var lineR_0 = d3
-            .lineRadial()
-            .angle(function(d, k) {
-              return LinearX_0(k);
-            })
-            .radius(function(d) {
-              return LinearY_0(d);
-            });
-          var modelData_0=RandomArray(pieData_0_data.length,1,10)
+          var points = [[1, 2, 3][(2, 3, 4)], [1, 2, 4]];
           gg.selectAll()
-            .data(modelData_0)
+            .data(points)
             .enter()
-            .append("path")
-            .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
-            .attr("d", lineR_0);
-
-          var LinearX_1 = d3
-            .scaleLinear()
-            .domain([0, pieData_1_data.length])
-            .range([
-              -(2 * Math.PI) / 3 - paddingAngle,
-              (-(2 * Math.PI) / 3) * 2 + paddingAngle
-            ]);
-
-          var LinearY_1 = d3
-            .scaleLinear()
-            .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
-          var lineR_1 = d3
-            .lineRadial()
-            .angle(function(d, k) {
-              return LinearX_1(k);
+            .append("circle")
+            .attr("r", 5)
+            .attr("cx", d => {
+              triangleLocation2cartesianLocation(d, triangleSize);
+              return 0;
             })
-            .radius(function(d) {
-              return LinearY_1(d);
-            });
-          var modelData_1=RandomArray(pieData_1_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_1)
-            .enter()
-            .append("path")
-            .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
-            .attr("d", lineR_1);
-
-          var LinearX_2 = d3
-            .scaleLinear()
-            .domain([0, pieData_2_data.length])
-            .range([
-              (-(2 * Math.PI) / 3) * 2 - paddingAngle,
-              -2 * Math.PI + paddingAngle
-            ]);
-          var LinearY_2 = d3
-            .scaleLinear()
-            .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
-          var lineR_2 = d3
-            .lineRadial()
-            .angle(function(d, k) {
-              return LinearX_2(k);
+            .attr("cy", d => {
+              triangleLocation2cartesianLocation(d, triangleSize);
+              return 0;
             })
-            .radius(function(d) {
-              return LinearY_2(d);
-            });
-
-          var modelData_2=RandomArray(pieData_2_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_2)
-            .enter()
-            .append("path")
-            .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
-            .attr("d", lineR_2);
-
-          //三角形内部
-
-          //信息熵的比例尺
-          var entropyData = [0.7, 0.3, 0.5];
-          var linear_entropy = d3
-            .scaleLinear()
-            .domain([0, 1])
-            .range([0, triangleRadius * 0.5]);
-          var pies_entropy = d3
-            .pie()
-            .startAngle(0)
-            .endAngle(-2 * Math.PI)([1, 1, 1]); // turns into data for pie chart with start and end angles
-          let arc_entropy_outer = d3
-            .arc()
-            .innerRadius(0) //means full circle. if not 0, would be donut
-            .outerRadius(function(d, k) {
-              return linear_entropy(entropyData[k]);
-            }) //size of circle
-            .startAngle(d => d.startAngle) //how does it get d???
-            .endAngle(d => d.endAngle);
-          gg.selectAll()
-            .data(pies_entropy)
-            .enter()
-            .append("path")
-            .attr("d", arc_entropy_outer)
-            .attr("fill", (d, k) => {
-              return colors[k];
-            })
-            .attr("stroke", function() {
-              return "#fff";
+            .style("fill", function() {
+              return "grey";
             });
         }
       }
-      function RandomArray(Len, Min, Max) {
-        
-        var Range = Max - Min;
-        
-        var out = [];
-        for (var i = 0; i < 15; i++) {
-          out[i] = [];
-          for (var j = 0; j < Len; j++) {
-            var Rand = Math.random();
-            out[i][j] = Min + Math.round(Rand * Range); //四舍五入
-          }
-        }
-        return out;
+            function triangleLocation2cartesianLocation(location, triangleSize) {
+        console.log(location, triangleSize);
+        return location;
       }
     }
   }

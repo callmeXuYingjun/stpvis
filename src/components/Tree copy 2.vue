@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     draw() {
-      var num_tree = 2;
+      var num_tree = 1;
       var treeData = {
         name: "初始张量",
         id: 1,
@@ -121,20 +121,20 @@ export default {
         29905,
         5889.1,
         24016,
-        19091.9,
+        1191.9,
         1994.1,
         1381.1,
-        122,
-        722.4,
-        9141.5,
+        1322,
+        6141.5,
+        7722.4,
         4234.5
       ];
       var N_all_num = [N_all_num_history, N_all_num_ce, N_all_num_cha];
-      var colors = ["#893D98", "#22B184", "#4272B5"];
+      var colors = ["#f58321", "#77bc45", "#ef1621"];
       treee();
       function treee() {
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 80, bottom: 20, left: 60 };
+        var margin = { top: 20, right: 80, bottom: 20, left: 40 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -166,7 +166,7 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var color_link =["#893D98", "#22B184", "#4272B5"];
+        var color_link = ["#f58321", "#77bc45", "#ef1621"];
         function curtail(arr) {
           var m = arr.slice(0);
           m.splice(0, 1);
@@ -574,7 +574,7 @@ export default {
           var LinearY_0 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_0_data));
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -583,14 +583,12 @@ export default {
             .radius(function(d) {
               return LinearY_0(d);
             });
-          var modelData_0=RandomArray(pieData_0_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_0)
-            .enter()
-            .append("path")
+
+          gg.append("path")
+            .datum(pieData_0_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_0);
 
           var LinearX_1 = d3
@@ -604,7 +602,7 @@ export default {
           var LinearY_1 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_1_data));
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -613,14 +611,12 @@ export default {
             .radius(function(d) {
               return LinearY_1(d);
             });
-          var modelData_1=RandomArray(pieData_1_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_1)
-            .enter()
-            .append("path")
+
+          gg.append("path")
+            .datum(pieData_1_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_1);
 
           var LinearX_2 = d3
@@ -633,7 +629,7 @@ export default {
           var LinearY_2 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain(d3.extent(pieData_2_data));
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -643,14 +639,11 @@ export default {
               return LinearY_2(d);
             });
 
-          var modelData_2=RandomArray(pieData_2_data.length,1,10)
-          gg.selectAll()
-            .data(modelData_2)
-            .enter()
-            .append("path")
+          gg.append("path")
+            .datum(pieData_2_data)
             .attr("fill", "none")
-            .attr("stroke", "#D35F89")
-            .style("stroke-width", 0.2)
+            .attr("stroke", "#CCCCCC")
+            .style("stroke-width", 1)
             .attr("d", lineR_2);
 
           //三角形内部
@@ -685,20 +678,6 @@ export default {
               return "#fff";
             });
         }
-      }
-      function RandomArray(Len, Min, Max) {
-        
-        var Range = Max - Min;
-        
-        var out = [];
-        for (var i = 0; i < 15; i++) {
-          out[i] = [];
-          for (var j = 0; j < Len; j++) {
-            var Rand = Math.random();
-            out[i][j] = Min + Math.round(Rand * Range); //四舍五入
-          }
-        }
-        return out;
       }
     }
   }
