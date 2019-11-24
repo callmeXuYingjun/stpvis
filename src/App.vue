@@ -13,7 +13,9 @@
         </div>
       </div>
       <div id="Vertikal_2">
-        <div id="Vertikal_2-Horizontal_1"></div>
+        <div id="Vertikal_2-Horizontal_1">
+          <router-view name="Pattern"></router-view>
+        </div>
         <div id="Vertikal_2-Horizontal_2"></div>
         <div id="Vertikal_2-Horizontal_3"></div>
       </div>

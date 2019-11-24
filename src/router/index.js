@@ -5,6 +5,7 @@ import Test from '@/components/Test'
 import Scatter from '@/components/Scatter'
 import Tree from '@/components/Tree'
 import Matrix from '@/components/Matrix'
+import Pattern from '@/components/Pattern'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -16,6 +17,7 @@ export default new Router({
         'Scatter': Scatter,
         'Tree': Tree,
         'Matrix': Matrix,
+        'Pattern': Pattern,
       }
     }
   ]

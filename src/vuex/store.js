@@ -10,20 +10,24 @@ var store = new Vuex.Store({
     wangge_id: "all",
     testData: {},
     scatterData: [],
+    boundaryData: {},
   },
   mutations: {
-    testData_Update(state,data) {
+    testData_Update(state, data) {
       state.testData = data
     },
-    scatterData_Update(state,data) {
+    scatterData_Update(state, data) {
       state.scatterData = data
+    },
+    boundaryData_Update(state, data) {
+      state.boundaryData = data
     },
   },
   actions: {
     testData_action({ commit }) {
       function read_testData() {
         return new Promise(function (resolve) {
-          d3.csv("data/test/testData.csv").then(function(csvdata) {
+          d3.csv("data/test/testData.csv").then(function (csvdata) {
             resolve(csvdata)
           });
         });
@@ -36,7 +40,7 @@ var store = new Vuex.Store({
     scatterData_action({ commit }) {
       function read_scatterData() {
         return new Promise(function (resolve) {
-          d3.csv("data/scatter/scatter.csv").then(function(csvdata) {
+          d3.csv("data/scatter/scatter.csv").then(function (csvdata) {
             resolve(csvdata)
           });
         });
@@ -44,6 +48,19 @@ var store = new Vuex.Store({
       read_scatterData()
         .then(data => {
           commit('scatterData_Update', data)
+        })
+    },
+    boundaryData_action({ commit }) {
+      function read_boundaryData() {
+        return new Promise(function (resolve) {
+          d3.json("data/boundary/ChangchunBoundary.json").then(function (csvdata) {
+            resolve(csvdata)
+          });
+        });
+      }
+      read_boundaryData()
+        .then(data => {
+          commit('boundaryData_Update', data)
         })
     }
   },
