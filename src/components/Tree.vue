@@ -166,7 +166,7 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var color_link =["#893D98", "#22B184", "#4272B5"];
+        var color_link = ["#893D98", "#22B184", "#4272B5"];
         function curtail(arr) {
           var m = arr.slice(0);
           m.splice(0, 1);
@@ -260,7 +260,7 @@ export default {
           //第一扇形
           // var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
           var pieData_0 = [1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-          var pieData_0_data = [12, 11, 13, 11, 11, 11, 11]; //data we want to turn into a pie chart
+          var pieData_0_data = [12, 11, 13, 11, 11, 3, 4]; //data we want to turn into a pie chart
           var max_0 = d3.max(pieData_0_data);
           var min_0 = d3.min(pieData_0_data);
           var linear_0 = d3
@@ -313,8 +313,26 @@ export default {
 
           //第二扇形
           // var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-          var pieData_1_data = [12, 11, 13, 11, 11, 11, 11, 12, 12, 12]; //data we want to turn into a pie chart
+          var pieData_1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
+          var pieData_1_data = [
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            18,
+            17,
+            16,
+            15,
+            14,
+            13,
+            12,
+            11
+          ]; //data we want to turn into a pie chart
           var max_1 = d3.max(pieData_1_data);
           var min_1 = d3.min(pieData_1_data);
           var linear_1 = d3
@@ -368,26 +386,9 @@ export default {
 
           //第三扇形
           // var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-          var pieData_2_data = [
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            18,
-            17,
-            16,
-            15,
-            14,
-            13,
-            12,
-            11
-          ]; //data we want to turn into a pie chart
+          var pieData_2 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
+          var pieData_2_data = [12, 11, 13, 11, 11, 11, 11, 12, 12, 12];
+          [11, 12, 13, 14, 15, 16, 17, 18, 19, 18, 17, 16, 15, 14, 13, 12, 11]; //data we want to turn into a pie chart
           var max_2 = d3.max(pieData_2_data);
           var min_2 = d3.min(pieData_2_data);
           var linear_2 = d3
@@ -574,7 +575,7 @@ export default {
           var LinearY_0 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain([1, 10]);
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -583,7 +584,7 @@ export default {
             .radius(function(d) {
               return LinearY_0(d);
             });
-          var modelData_0=RandomArray(pieData_0_data.length,1,10)
+          var modelData_0 = RandomArray(pieData_0_data.length, 1, 10);
           gg.selectAll()
             .data(modelData_0)
             .enter()
@@ -604,7 +605,7 @@ export default {
           var LinearY_1 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain([1, 10]);
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -613,7 +614,7 @@ export default {
             .radius(function(d) {
               return LinearY_1(d);
             });
-          var modelData_1=RandomArray(pieData_1_data.length,1,10)
+          var modelData_1 = RandomArray(pieData_1_data.length, 1, 10);
           gg.selectAll()
             .data(modelData_1)
             .enter()
@@ -633,7 +634,7 @@ export default {
           var LinearY_2 = d3
             .scaleLinear()
             .range([outerRadius * 1.1, outerRadius * 1.3])
-            .domain([1,10]);
+            .domain([1, 10]);
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -643,7 +644,7 @@ export default {
               return LinearY_2(d);
             });
 
-          var modelData_2=RandomArray(pieData_2_data.length,1,10)
+          var modelData_2 = RandomArray(pieData_2_data.length, 1, 10);
           gg.selectAll()
             .data(modelData_2)
             .enter()
@@ -687,9 +688,8 @@ export default {
         }
       }
       function RandomArray(Len, Min, Max) {
-        
         var Range = Max - Min;
-        
+
         var out = [];
         for (var i = 0; i < 15; i++) {
           out[i] = [];
