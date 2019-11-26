@@ -76,7 +76,7 @@ export default {
       const wordScale = d3
         .scaleLinear()
         .domain(d3.extent(data,d=>d[1]))
-        .range([10, 60]);
+        .range([10, 80]);
       d3Cloud()
         .size([width, height])
         .timeInterval(20)
