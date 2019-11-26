@@ -6,6 +6,7 @@ import Scatter from '@/components/Scatter'
 import Tree from '@/components/Tree'
 import Matrix from '@/components/Matrix'
 import Pattern from '@/components/Pattern'
+import WordCloud from '@/components/WordCloud'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -18,6 +19,7 @@ export default new Router({
         'Tree': Tree,
         'Matrix': Matrix,
         'Pattern': Pattern,
+        'WordCloud': WordCloud,
       }
     }
   ]
