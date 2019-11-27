@@ -7,6 +7,7 @@ import Tree from '@/components/Tree'
 import Matrix from '@/components/Matrix'
 import Pattern from '@/components/Pattern'
 import WordCloud from '@/components/WordCloud'
+import Anomaly from '@/components/Anomaly'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -20,6 +21,7 @@ export default new Router({
         'Matrix': Matrix,
         'Pattern': Pattern,
         'WordCloud': WordCloud,
+        'Anomaly': Anomaly,
       }
     }
   ]

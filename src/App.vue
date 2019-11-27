@@ -19,7 +19,9 @@
         <div id="Vertikal_2-Horizontal_2">
           <router-view name="WordCloud"></router-view>
         </div>
-        <div id="Vertikal_2-Horizontal_3"></div>
+        <div id="Vertikal_2-Horizontal_3">
+          <router-view name="Anomaly"></router-view>
+        </div>
       </div>
       <!-- <router-view name="Tree" ></router-view> -->
     </div>

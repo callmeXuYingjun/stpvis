@@ -1,7 +1,7 @@
 <template>
   <div id="wordcloud">
     <div id="wordcloud_top">
-      <font>wordcloud View</font>
+      <font>WordCloud View</font>
     </div>
     <div id="wordcloud_down"></div>
   </div>

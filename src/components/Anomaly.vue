@@ -1,9 +1,9 @@
 <template>
-  <div id="pattern">
-    <div id="pattern_top">
-      <font>Pattern View</font>
+  <div id="anomaly">
+    <div id="anomaly_top">
+      <font>Anomaly View</font>
     </div>
-    <div id="pattern_down"></div>
+    <div id="anomaly_down"></div>
   </div>
 </template>
 
@@ -26,32 +26,32 @@ export default {
   },
   methods: {
     draw(data) {
-      var colors = ["#893D98", "#22B184", "#4272B5"];
-      document.getElementById("pattern_down").innerHTML = "";
+      // var colors = ["#893D98", "#22B184", "#4272B5"]
+      document.getElementById("anomaly_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
-        document.getElementById("pattern_down").scrollWidth -
+        document.getElementById("anomaly_down").scrollWidth -
         margin.left -
         margin.right;
       var height =
-        document.getElementById("pattern_down").scrollHeight -
+        document.getElementById("anomaly_down").scrollHeight -
         margin.top -
         margin.bottom;
       var centerLocation = [125.951316, 44.23102];
       var projection = d3
         .geoMercator()
         .center(centerLocation)
-        .scale(5000)
+        .scale(7000)
         .translate([width / 2, height / 2]);
 
       var path = d3
         .geoPath() // d3.geo.path avec d3 version 3
         .projection(projection);
-      const outerRadius = width > height ? height / 2 : width / 2;
-      const innerRadius = outerRadius * 0.9;
-      const paddingAngle = (Math.PI / 180) * 5;
+      // const outerRadius = width > height ? height / 2 : width / 2;
+      // const innerRadius = outerRadius * 0.9;
+      // const paddingAngle = (Math.PI / 180) * 5;
       var svg = d3
-          .select("#pattern_down")
+          .select("#anomaly_down")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom),
@@ -62,24 +62,24 @@ export default {
             "translate(" + margin.left + "," + margin.top + ")"
           );
 
-      var gg = g
-        .append("g")
-        .attr(
-          "transform",
-          () =>
-            "translate(" +
-            projection(centerLocation)[0] +
-            "," +
-            projection(centerLocation)[1] +
-            ")"
-        );
-      gg.append("circle")
-        .attr("r", function() {
-          return innerRadius;
-        })
-        .style("fill", function() {
-          return "#aad3df";
-        });
+      // var gg = g
+      //   .append("g")
+      //   .attr(
+      //     "transform",
+      //     () =>
+      //       "translate(" +
+      //       projection(centerLocation)[0] +
+      //       "," +
+      //       projection(centerLocation)[1] +
+      //       ")"
+      //   );
+      // gg.append("circle")
+      //   .attr("r", function() {
+      //     return innerRadius;
+      //   })
+      //   .style("fill", function() {
+      //     return "#aad3df";
+      //   });
 
       g.selectAll()
         .data(data.features)
@@ -143,101 +143,45 @@ export default {
       g.selectAll()
         .data(districtData)
         .enter()
-        .append("circle")
-        .attr("cx", function(d) {
+        .append("rect")
+        .attr("x", function(d) {
           return projection(d[1])[0];
         })
-        .attr("cy", function(d) {
+        .attr("y", function(d) {
           return projection(d[1])[1];
         })
-        .attr("r", d => linear(d[2]))
+        .attr("width", d => linear(d[2]))
+        .attr("height", d => linear(d[2]))
         .style("stroke", function() {
-          return colors[2];
+          return "#D4D5D3";
         })
-        .style("stroke-width", 2)
-        .style("fill", "rgba(255,255,255,0.5)")
-
-      //上半圆
-      var pieData_top = [1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-      var pieData_top_data = [12, 11, 13, 11, 11, 3, 4]; //data we want to turn into a pie chart
-      var linear_top = d3
-        .scaleLinear()
-        .domain([0, d3.max(pieData_top_data)])
-        .range([innerRadius, outerRadius]);
-      var pies_top = d3
-        .pie()
-        .startAngle(-Math.PI / 2 + paddingAngle)
-        .endAngle(Math.PI / 2 - paddingAngle)(pieData_top); // turns into data for pie chart with start and end angles
-
-      let arc_top = d3
-        .arc()
-        .innerRadius(innerRadius) //means full circle. if not 0, would be donut
-        .outerRadius(function(d, i) {
-          return linear_top(pieData_top_data[i]);
-        }) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
-      gg.selectAll()
-        .data(pies_top)
+        .style("stroke-width", 0.5)
+        .style("fill", "red")
+        .attr(
+          "transform",
+          d => "translate(" + -linear(d[2]) / 2 + "," + -linear(d[2]) / 2 + ")"
+        );
+      g.selectAll()
+        .data(districtData)
         .enter()
-        .append("path")
-        .attr("d", arc_top)
-        .attr("fill", () => {
-          return colors[0];
+        .append("rect")
+        .attr("x", function(d) {
+          return projection(d[1])[0];
         })
-        .attr("stroke", function() {
-          return "#fff";
-        });
-
-      //上半圆
-      var pieData_down = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-      var pieData_down_data = [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        8,
-        7,
-        6,
-        5,
-        4,
-        3,
-        2,
-        1
-      ]; //data we want to turn into a pie chart
-      var linear_down = d3
-        .scaleLinear()
-        .domain([0, d3.max(pieData_down_data)])
-        .range([innerRadius, outerRadius]);
-      var pies_down = d3
-        .pie()
-        .startAngle(Math.PI / 2 + paddingAngle)
-        .endAngle((3 * Math.PI) / 2 - paddingAngle)(pieData_down); // turns into data for pie chart with start and end angles
-
-      let arc_down = d3
-        .arc()
-        .innerRadius(innerRadius) //means full circle. if not 0, would be donut
-        .outerRadius(function(d, i) {
-          return linear_down(pieData_down_data[i]);
-        }) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
-      gg.selectAll()
-        .data(pies_down)
-        .enter()
-        .append("path")
-        .attr("d", arc_down)
-        .attr("fill", () => {
-          return colors[1];
+        .attr("y", function(d) {
+          return projection(d[1])[1];
         })
-        .attr("stroke", function() {
-          return "#fff";
-        });
+        .attr("width", d => linear(d[2])/2)
+        .attr("height", d => linear(d[2])/2)
+        .style("stroke", function() {
+          return "#D4D5D3";
+        })
+        .style("stroke-width", 0.5)
+        .style("fill", "white")
+        .attr(
+          "transform",
+          d => "translate(" + -linear(d[2]) / 4 + "," + -linear(d[2]) / 4 + ")"
+        );
     }
   }
 };
@@ -251,12 +195,12 @@ font {
   top: 18%;
   left: 2%;
 }
-#pattern {
+#anomaly {
   width: 99%;
   height: 99%;
   margin: 0.5% 0.5%;
 }
-#pattern_top {
+#anomaly_top {
   width: 100%;
   height: 6%;
   background: linear-gradient(
@@ -272,7 +216,7 @@ font {
   text-align: left;
   border-radius: 5px;
 }
-#pattern_down {
+#anomaly_down {
   width: 100%;
   height: 94%;
   background-color: #f5f5f5;
