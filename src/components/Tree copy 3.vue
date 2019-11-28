@@ -259,16 +259,8 @@ export default {
 
           //第一扇形
           // var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_0 = d3.range(7).map(() => 1); //data we want to turn into a pie chart
-          var pieData_0_data = [
-            0.07524071,
-            0.077525052,
-            0.173225796,
-            0.174929844,
-            0.169244389,
-            0.168637343,
-            0.161196865
-          ]; //data we want to turn into a pie chart
+          var pieData_0 = d3.range(7).map(()=>1); //data we want to turn into a pie chart
+          var pieData_0_data = [0.07524071,0.077525052,0.173225796,0.174929844,0.169244389,0.168637343,0.161196865]; //data we want to turn into a pie chart
           var max_0 = d3.max(pieData_0_data);
           var min_0 = d3.min(pieData_0_data);
           var linear_0 = d3
@@ -321,53 +313,8 @@ export default {
 
           //第二扇形
           // var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_1 = d3.range(44).map(() => 1); //data we want to turn into a pie chart
-          var pieData_1_data = [
-            0.070404158,
-            0.190398426,
-            0.032909937,
-            0.035419277,
-            0.115716373,
-            0.018819612,
-            0.04104331,
-            0.026160633,
-            0.037437429,
-            0.023327005,
-            0.020240607,
-            0.029662779,
-            0.028013357,
-            0.014603382,
-            0.022933092,
-            0.02100244,
-            0.019167552,
-            0.021910625,
-            0.036748618,
-            0.025073274,
-            0.017891783,
-            0.016933394,
-            0.020750153,
-            0.011238795,
-            0.003390082,
-            0.008788096,
-            0.013478864,
-            0.008975319,
-            0.002199094,
-            0.006905413,
-            0.004123819,
-            0.005492358,
-            0.00698448,
-            0.008134062,
-            0.004379284,
-            0.001297873,
-            0.004071546,
-            0.003247519,
-            0.006212739,
-            0.002844376,
-            0.004798661,
-            0.002853695,
-            0.002135364,
-            0.001881344
-          ]; //data we want to turn into a pie chart
+          var pieData_1 = d3.range(44).map(()=>1); //data we want to turn into a pie chart
+          var pieData_1_data = [0.070404158,0.190398426,0.032909937,0.035419277,0.115716373,0.018819612,0.04104331,0.026160633,0.037437429,0.023327005,0.020240607,0.029662779,0.028013357,0.014603382,0.022933092,0.02100244,0.019167552,0.021910625,0.036748618,0.025073274,0.017891783,0.016933394,0.020750153,0.011238795,0.003390082,0.008788096,0.013478864,0.008975319,0.002199094,0.006905413,0.004123819,0.005492358,0.00698448,0.008134062,0.004379284,0.001297873,0.004071546,0.003247519,0.006212739,0.002844376,0.004798661,0.002853695,0.002135364,0.001881344]; //data we want to turn into a pie chart
           var max_1 = d3.max(pieData_1_data);
           var min_1 = d3.min(pieData_1_data);
           var linear_1 = d3
@@ -421,19 +368,8 @@ export default {
 
           //第三扇形
           // var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_2 = d3.range(10).map(() => 1); //data we want to turn into a pie chart
-          var pieData_2_data = [
-            0.183079937,
-            0.167195066,
-            0.123041623,
-            0.161131554,
-            0.15793099,
-            0.032298312,
-            0.032375012,
-            0.034448609,
-            0.074161035,
-            0.034337862
-          ]; //data we want to turn into a pie chart
+          var pieData_2 = d3.range(10).map(()=>1); //data we want to turn into a pie chart
+          var pieData_2_data = [0.183079937,0.167195066,0.123041623,0.161131554,0.15793099,0.032298312,0.032375012,0.034448609,0.074161035,0.034337862];//data we want to turn into a pie chart
           var max_2 = d3.max(pieData_2_data);
           var min_2 = d3.min(pieData_2_data);
           var linear_2 = d3
@@ -619,14 +555,8 @@ export default {
 
           var LinearY_0 = d3
             .scaleLinear()
-            .range([outerRadius * 1.05, outerRadius * 1.4])
-            .domain(
-              d3.extent(
-                data[0].reduce(function(a, b) {
-                  return a.concat(b);
-                })
-              )
-            );
+            .range([outerRadius * 1.1, outerRadius * 1.3])
+            .domain([1, 10]);
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -635,7 +565,7 @@ export default {
             .radius(function(d) {
               return LinearY_0(d);
             });
-          var modelData_0 = data[0];
+          var modelData_0 =  data[0];
           gg.selectAll()
             .data(modelData_0)
             .enter()
@@ -655,15 +585,8 @@ export default {
 
           var LinearY_1 = d3
             .scaleLinear()
-            .range([outerRadius * 1.05, outerRadius * 1.4])
-            .domain(
-              d3.extent(
-                data[1].reduce(function(a, b) {
-                  return a.concat(b);
-                })
-              )
-            );
-
+            .range([outerRadius * 1.1, outerRadius * 1.3])
+            .domain([1, 10]);
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
@@ -691,15 +614,8 @@ export default {
             ]);
           var LinearY_2 = d3
             .scaleLinear()
-            .range([outerRadius * 1.05, outerRadius * 1.4])
-            .domain(
-              d3.extent(
-                data[2].reduce(function(a, b) {
-                  return a.concat(b);
-                })
-              )
-            );
-
+            .range([outerRadius * 1.1, outerRadius * 1.3])
+            .domain([1, 10]);
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {

@@ -11,6 +11,8 @@ var store = new Vuex.Store({
     testData: {},
     scatterData: [],
     boundaryData: {},
+    marginalDistributionData:[],
+    patternData:[],
   },
   mutations: {
     testData_Update(state, data) {
@@ -21,6 +23,12 @@ var store = new Vuex.Store({
     },
     boundaryData_Update(state, data) {
       state.boundaryData = data
+    },
+    marginalDistributionData_Update(state, data) {
+      state.marginalDistributionData = data
+    },
+    patternData_Update(state, data) {
+      state.patternData = data
     },
   },
   actions: {
@@ -62,7 +70,56 @@ var store = new Vuex.Store({
         .then(data => {
           commit('boundaryData_Update', data)
         })
-    }
+    },
+    marginalDistributionData_action({ commit }) {
+      function read_marginalDistributionData() {
+        return new Promise(function (resolve) {
+          d3.csv("data/marginalDistribution/A1.csv").then(function (csvdata_A) {
+            d3.csv("data/marginalDistribution/B1.csv").then(function (csvdata_B) {
+              d3.csv("data/marginalDistribution/C1.csv").then(function (csvdata_C) {
+                resolve([csvdata_A,csvdata_B,csvdata_C])
+              });
+            });
+          });
+        });
+      }
+      read_marginalDistributionData()
+        .then(data => {
+          commit('marginalDistributionData_Update', data)
+        })
+    },
+    patternData_action({ commit }) {
+      function read_patternData() {
+        return new Promise(function (resolve) {
+          d3.csv("data/pattern/A1.csv").then(function (csvdata_A) {
+            d3.csv("data/pattern/B1.csv").then(function (csvdata_B) {
+              d3.csv("data/pattern/C1.csv").then(function (csvdata_C) {
+              var out=[[],[],[]]
+              for(var i=0;i<15;i++){
+                out[0][i]=[]
+                for(var a=0;a<csvdata_A.length;a++){
+                  out[0][i][a]=parseFloat(csvdata_A[a]['a'+(i+1)])
+                }
+                out[1][i]=[]
+                for(var b=0;b<csvdata_B.length;b++){
+                  out[1][i][b]=parseFloat(csvdata_B[b]['b'+(i+1)])
+                }
+                out[2][i]=[]
+                for(var c=0;c<csvdata_C.length;c++){
+                  out[2][i][c]=parseFloat(csvdata_C[c]['c'+(i+1)])
+                }
+              }
+                resolve(out)
+              });
+            });
+          });
+        });
+      }
+      read_patternData()
+        .then(data => {
+          commit('patternData_Update', data)
+        })
+    },
   },
   getters: {
   }
