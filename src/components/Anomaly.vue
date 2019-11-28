@@ -132,56 +132,91 @@ export default {
         .text(function(d) {
           return d[0];
         });
-      var linear = d3
-        .scaleLinear()
-        .domain(
-          d3.extent(districtData, function(d) {
-            return d[2];
+      // var linear = d3
+      //   .scaleLinear()
+      //   .domain(
+      //     d3.extent(districtData, function(d) {
+      //       return d[2];
+      //     })
+      //   )
+      //   .range([5, 30]);
+      // g.selectAll()
+      //   .data(districtData)
+      //   .enter()
+      //   .append("rect")
+      //   .attr("x", function(d) {
+      //     return projection(d[1])[0];
+      //   })
+      //   .attr("y", function(d) {
+      //     return projection(d[1])[1];
+      //   })
+      //   .attr("width", d => linear(d[2]))
+      //   .attr("height", d => linear(d[2]))
+      //   .style("stroke", function() {
+      //     return "#D4D5D3";
+      //   })
+      //   .style("stroke-width", 0.5)
+      //   .style("fill", "red")
+      //   .attr(
+      //     "transform",
+      //     d => "translate(" + -linear(d[2]) / 2 + "," + -linear(d[2]) / 2 + ")"
+      //   );
+      // g.selectAll()
+      //   .data(districtData)
+      //   .enter()
+      //   .append("rect")
+      //   .attr("x", function(d) {
+      //     return projection(d[1])[0];
+      //   })
+      //   .attr("y", function(d) {
+      //     return projection(d[1])[1];
+      //   })
+      //   .attr("width", d => linear(d[2]) / 2)
+      //   .attr("height", d => linear(d[2]) / 2)
+      //   .style("stroke", function() {
+      //     return "#D4D5D3";
+      //   })
+      //   .style("stroke-width", 0.5)
+      //   .style("fill", "white")
+      //   .attr(
+      //     "transform",
+      //     d => "translate(" + -linear(d[2]) / 4 + "," + -linear(d[2]) / 4 + ")"
+      //   );
+
+      var petal = [[0, 0], [5, -40], [0, -60], [-5, -40]];
+      var linePath = d3.line().curve(d3.curveCardinalClosed);
+      districtData.forEach(d => {
+        flower(projection(d[1]));
+      });
+      function flower(location,scale=0.3) {
+        g.append("circle")
+          .attr("r", function() {
+            return 60*scale;
           })
-        )
-        .range([5, 20]);
-      g.selectAll()
-        .data(districtData)
-        .enter()
-        .append("rect")
-        .attr("x", function(d) {
-          return projection(d[1])[0];
-        })
-        .attr("y", function(d) {
-          return projection(d[1])[1];
-        })
-        .attr("width", d => linear(d[2]))
-        .attr("height", d => linear(d[2]))
-        .style("stroke", function() {
-          return "#D4D5D3";
-        })
-        .style("stroke-width", 0.5)
-        .style("fill", "red")
-        .attr(
-          "transform",
-          d => "translate(" + -linear(d[2]) / 2 + "," + -linear(d[2]) / 2 + ")"
-        );
-      g.selectAll()
-        .data(districtData)
-        .enter()
-        .append("rect")
-        .attr("x", function(d) {
-          return projection(d[1])[0];
-        })
-        .attr("y", function(d) {
-          return projection(d[1])[1];
-        })
-        .attr("width", d => linear(d[2])/2)
-        .attr("height", d => linear(d[2])/2)
-        .style("stroke", function() {
-          return "#D4D5D3";
-        })
-        .style("stroke-width", 0.5)
-        .style("fill", "white")
-        .attr(
-          "transform",
-          d => "translate(" + -linear(d[2]) / 4 + "," + -linear(d[2]) / 4 + ")"
-        );
+          .style("fill", function() {
+            return "none";
+          }) 
+          .attr("stroke", "grey")
+          .attr("stroke-width", 2)
+          .attr("transform", function() {
+            return "translate(" + location[0] + "," + location[1] + ")";
+          });
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var flowerData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+        for (var i = 0; i < flowerData.length; i++) {
+          g.append("path")
+            .attr("d", linePath(petal))
+            .attr("stroke", "black")
+            .attr("stroke-width", 0.2)
+            .attr("fill", color(i))
+            .attr("transform", function() {
+              return "translate(" + location[0] + "," + location[1] + ") rotate(" + (360 / flowerData.length) * i + ") scale("+scale+") ";
+            })
+            // .attr("transform", function() {
+            //   return "scale(0.5)";
+            // });
+        }
+      }
     }
   }
 };

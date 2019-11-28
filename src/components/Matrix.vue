@@ -65,6 +65,31 @@ export default {
         .attr("transform", "translate(" + textLeft + "," + textTop + ")");
       for (let k = 0; k < martrixData.length; k++) {
         var dy = cellHeight * k;
+
+        // gg.selectAll()
+        //   .data(martrixData[k])
+        //   .enter()
+        //   .append("circle")
+        //   .attr("cx", function(d, i) {
+        //     return i * cellWidth;
+        //   })
+        //   .attr("cy", function() {
+        //     return dy;
+        //   })
+        //   .attr("id", function(d, i) {
+        //     return "cell_" + k + "_" + i;
+        //   })
+        //   .attr("r", cellHeight/2)
+        //   .style("stroke", function() {
+        //     return "#D4D5D3";
+        //   })
+        //   .style("stroke-width", 0.5)
+        //   .style("fill", function(d, i) {
+        //     return color(i);
+        //   })
+        //   .style("fill-opacity", function(d) {
+        //     return linear(d);
+        //   });
         gg.selectAll()
           .data(martrixData[k])
           .enter()
@@ -79,7 +104,7 @@ export default {
             return "cell_" + k + "_" + i;
           })
           .attr("width", cellWidth)
-          .attr("height", cellHeight)
+          .attr("height", cellHeight) 
           .style("stroke", function() {
             return "#D4D5D3";
           })

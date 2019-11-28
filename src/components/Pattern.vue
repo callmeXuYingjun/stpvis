@@ -41,15 +41,15 @@ export default {
       var projection = d3
         .geoMercator()
         .center(centerLocation)
-        .scale(5000)
+        .scale(3000)
         .translate([width / 2, height / 2]);
 
       var path = d3
         .geoPath() // d3.geo.path avec d3 version 3
         .projection(projection);
-      const outerRadius = width > height ? height / 2 : width / 2;
-      const innerRadius = outerRadius * 0.9;
-      const paddingAngle = (Math.PI / 180) * 5;
+      const outerRadius = width > height ? height / 2.5 : width / 2.5;
+      // const innerRadius = outerRadius * 0.9;
+      // const paddingAngle = (Math.PI / 180) * 5;
       var svg = d3
           .select("#pattern_down")
           .append("svg")
@@ -75,11 +75,33 @@ export default {
         );
       gg.append("circle")
         .attr("r", function() {
-          return innerRadius;
+          return outerRadius * 0.8;
         })
         .style("fill", function() {
           return "#aad3df";
         });
+      var districtData = [
+        ["CY", [125.318334, 43.64432], 12],
+        ["NG", [125.447115, 43.739438], 13],
+        ["KC", [125.332132, 44.080271], 21],
+        ["ED", [125.642587, 43.899292], 12],
+        ["LY", [125.182654, 43.899292], 32],
+        ["SY", [125.667883, 43.522281], 12],
+        ["JT", [125.854156, 44.154825], 12],
+        ["DH", [125.720775, 44.545913], 32],
+        ["NA", [125.182654, 44.450447], 44],
+        ["YS", [126.562452, 44.841186], 22]
+      ];
+
+//       var palegreen = d3.rgb(66,251,75);    //浅绿
+// var darkgreen = d3.rgb(2,100,7);        //深绿
+
+var mapColor = d3.interpolate("white",colors[2]);        //颜色插值函数
+var linear_map = d3.scaleLinear()
+        .domain(d3.extent(districtData, function(d) {
+            return d[2];
+          }))
+        .range([0, 1]);
 
       g.selectAll()
         .data(data.features)
@@ -87,9 +109,9 @@ export default {
         .append("path")
         .attr("d", path)
         .attr("stroke", "#808080")
-        .attr("stroke-width", 2)
-        .style("fill", function() {
-          return "#F2EFE9";
+        .attr("stroke-width", 1)
+        .style("fill", function(d,i) {
+          return mapColor(linear_map(districtData[i][2]));
         })
         .on("click", function(d) {
           console.log(d.properties.name);
@@ -106,18 +128,7 @@ export default {
       //   ["农安县NA", [125.182654, 44.450447], 44],
       //   ["榆树市YS", [126.562452, 44.841186], 22]
       // ];
-      var districtData = [
-        ["CY", [125.318334, 43.64432], 12],
-        ["NG", [125.447115, 43.739438], 13],
-        ["KC", [125.332132, 44.080271], 21],
-        ["ED", [125.642587, 43.899292], 12],
-        ["LY", [125.182654, 43.899292], 32],
-        ["SY", [125.667883, 43.522281], 12],
-        ["JT", [125.854156, 44.154825], 12],
-        ["DH", [125.720775, 44.545913], 32],
-        ["NA", [125.182654, 44.450447], 44],
-        ["YS", [126.562452, 44.841186], 22]
-      ];
+
       g.selectAll()
         .data(districtData)
         .enter()
@@ -139,7 +150,7 @@ export default {
             return d[2];
           })
         )
-        .range([5, 20]);
+        .range([2, 10]);
       g.selectAll()
         .data(districtData)
         .enter()
@@ -155,89 +166,156 @@ export default {
           return colors[2];
         })
         .style("stroke-width", 2)
-        .style("fill", "rgba(255,255,255,0.5)")
+        .style("fill", "rgba(255,255,255,0.5)");
 
-      //上半圆
-      var pieData_top = [1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-      var pieData_top_data = [12, 11, 13, 11, 11, 3, 4]; //data we want to turn into a pie chart
-      var linear_top = d3
+      //行业半圆
+      var pieData_industry = d3.range(44).map(function() {
+        return 1;
+      });
+      var pieData_industry_data = RandomArrayOne(44, 0, 100); //data we want to turn into a pie chart
+      var pieData_industry_data_1 = RandomArrayOne(44, 0, 100); //data we want to turn into a pie chart
+
+      var linear_industry = d3
         .scaleLinear()
-        .domain([0, d3.max(pieData_top_data)])
-        .range([innerRadius, outerRadius]);
-      var pies_top = d3
+        .domain([
+          0,
+          d3.max(pieData_industry_data.concat(pieData_industry_data_1))
+        ])
+        .range([outerRadius * 0.8, outerRadius]);
+      var linear_industry_1 = d3
+        .scaleLinear()
+        .domain([
+          0,
+          d3.max(pieData_industry_data.concat(pieData_industry_data_1))
+        ])
+        .range([outerRadius * 0.8, outerRadius * 0.6]);
+      var pies_industry = d3
         .pie()
-        .startAngle(-Math.PI / 2 + paddingAngle)
-        .endAngle(Math.PI / 2 - paddingAngle)(pieData_top); // turns into data for pie chart with start and end angles
+        .startAngle(0)
+        .endAngle(Math.PI * 2)(pieData_industry); // turns into data for pie chart with start and end angles
 
-      let arc_top = d3
+      let arc_industry = d3
         .arc()
-        .innerRadius(innerRadius) //means full circle. if not 0, would be donut
+        .innerRadius(outerRadius * 0.8) //means full circle. if not 0, would be donut
         .outerRadius(function(d, i) {
-          return linear_top(pieData_top_data[i]);
+          return linear_industry(pieData_industry_data[i]);
+        }) //size of circle
+        .startAngle(d => d.startAngle) //how does it get d???
+        .endAngle(d => d.endAngle);
+      let arc_industry_1 = d3
+        .arc()
+        .innerRadius(outerRadius * 0.8) //means full circle. if not 0, would be donut
+        .outerRadius(function(d, i) {
+          return linear_industry_1(pieData_industry_data_1[i]);
         }) //size of circle
         .startAngle(d => d.startAngle) //how does it get d???
         .endAngle(d => d.endAngle);
       gg.selectAll()
-        .data(pies_top)
+        .data(pies_industry)
         .enter()
         .append("path")
-        .attr("d", arc_top)
-        .attr("fill", () => {
-          return colors[0];
-        })
-        .attr("stroke", function() {
-          return "#fff";
-        });
-
-      //上半圆
-      var pieData_down = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; //data we want to turn into a pie chart
-      var pieData_down_data = [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        8,
-        7,
-        6,
-        5,
-        4,
-        3,
-        2,
-        1
-      ]; //data we want to turn into a pie chart
-      var linear_down = d3
-        .scaleLinear()
-        .domain([0, d3.max(pieData_down_data)])
-        .range([innerRadius, outerRadius]);
-      var pies_down = d3
-        .pie()
-        .startAngle(Math.PI / 2 + paddingAngle)
-        .endAngle((3 * Math.PI) / 2 - paddingAngle)(pieData_down); // turns into data for pie chart with start and end angles
-
-      let arc_down = d3
-        .arc()
-        .innerRadius(innerRadius) //means full circle. if not 0, would be donut
-        .outerRadius(function(d, i) {
-          return linear_down(pieData_down_data[i]);
-        }) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
-      gg.selectAll()
-        .data(pies_down)
-        .enter()
-        .append("path")
-        .attr("d", arc_down)
+        .attr("d", arc_industry)
         .attr("fill", () => {
           return colors[1];
         })
         .attr("stroke", function() {
           return "#fff";
         });
+      gg.selectAll()
+        .data(pies_industry)
+        .enter()
+        .append("path")
+        .attr("d", arc_industry_1)
+        .attr("fill", () => {
+          return colors[1];
+        })
+        .attr("stroke", function() {
+          return "#fff";
+        });
+      //面积图
+      var pieData_time_data = RandomArrayOne(84, 0, 10);
+      var pieData_time_data_1 = RandomArrayOne(84, 0, 10);
+      var LinearX_time = d3
+        .scaleLinear()
+        .domain([0, pieData_time_data.length])
+        .range([0, 2 * Math.PI]);
+      var LinearY_time = d3
+        .scaleLinear()
+        .range([outerRadius * 1.2, outerRadius * 1.3])
+        .domain([1, 10]);
+
+      var lineR_time = d3
+        .lineRadial()
+        .defined(function(d) {
+          return d + 1;
+        })
+        .angle(function(d, k) {
+          return LinearX_time(k);
+        })
+        .radius(function(d) {
+          return LinearY_time(d);
+        });
+      var area = d3
+        .areaRadial()
+        .curve(d3.curveCardinalClosed)
+        .defined(lineR_time.defined())
+        .angle(lineR_time.angle())
+        .outerRadius(lineR_time.radius())
+        .innerRadius(outerRadius * 1.2);
+      gg.datum(pieData_time_data)
+        .append("path")
+        .attr("fill", colors[0])
+        .attr("d", area);
+
+
+
+
+
+      var LinearY_time_1 = d3
+        .scaleLinear()
+        .range([outerRadius * 1.2, outerRadius*1.1])
+        .domain([1, 10]);
+
+      var lineR_time_1 = d3
+        .lineRadial()
+        .defined(function(d) {
+          return d + 1;
+        })
+        .angle(function(d, k) {
+          return LinearX_time(k);
+        })
+        .radius(function(d) {
+          return LinearY_time_1(d);
+        });
+      var area_1 = d3
+        .areaRadial()
+        .curve(d3.curveCardinalClosed)
+        .defined(lineR_time_1.defined())
+        .angle(lineR_time_1.angle())
+        .outerRadius(lineR_time_1.radius())
+        .innerRadius(outerRadius * 1.2);
+
+      gg.datum(pieData_time_data_1)
+        .append("path")
+        .attr("fill", "grey")
+        .attr("d", area_1);
+
+      // gg.datum(pieData_time_data)
+      //   .append("path")
+      //   .attr("fill", "none")
+      //   .attr("stroke", colors[0])
+      //   .style("stroke-width", 2)
+      //   .attr("d", lineR_time);
+
+      function RandomArrayOne(Len, Min, Max) {
+        var Range = Max - Min;
+        var out = [];
+        for (var j = 0; j < Len; j++) {
+          var Rand = Math.random();
+          out[j] = Min + Math.round(Rand * Range); //四舍五入
+        }
+        return out;
+      }
     }
   }
 };

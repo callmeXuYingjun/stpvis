@@ -110,7 +110,6 @@ export default {
         var rect_all=[];
      
         for(let k=0;k<data.length;k++){
-            console.log(k)
             if(store.state.mobilesensor_set.indexOf(sensorset_paixu[k])!=-1){
                 var dy=barHeight*(k);
                 var rect_hang=svg.selectAll()
