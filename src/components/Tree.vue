@@ -642,6 +642,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
+            .style("opacity",0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_0);
 
@@ -679,6 +680,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
+            .style("opacity",0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_1);
 
@@ -716,6 +718,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
+            .style("opacity",0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_2);
 

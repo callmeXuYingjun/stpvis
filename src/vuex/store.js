@@ -95,7 +95,7 @@ var store = new Vuex.Store({
             d3.csv("data/pattern/B1.csv").then(function (csvdata_B) {
               d3.csv("data/pattern/C1.csv").then(function (csvdata_C) {
               var out=[[],[],[]]
-              for(var i=0;i<15;i++){
+              for(var i=0;i<117;i++){
                 out[0][i]=[]
                 for(var a=0;a<csvdata_A.length;a++){
                   out[0][i][a]=parseFloat(csvdata_A[a]['a'+(i+1)])
