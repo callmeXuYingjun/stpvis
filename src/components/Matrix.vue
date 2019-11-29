@@ -17,16 +17,17 @@ export default {
     };
   },
   mounted() {
-    this.draw();
+    // this.draw();
     // store.dispatch("matrixData_action");
   },
   watch: {
-    // "sharedState.matrixData": function(newdata) {
-    //   this.draw(newdata);
-    // }
+    "sharedState.patternData": function(newdata) {
+      this.draw(newdata);
+    }
   },
   methods: {
-    draw() {
+    draw(data) {
+      var martrixData = data[1];
       document.getElementById("matrix_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -48,17 +49,26 @@ export default {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-      var martrixData = RandomArray(44, 1, 10);
+
       var textLeft = 20,
         textTop = 20;
       var martrixWidth = width - textLeft,
         martrixHeight = height - textTop;
       var cellWidth = martrixWidth / martrixData[0].length,
         cellHeight = martrixHeight / martrixData.length;
+      var maxx = d3.max(
+        martrixData.reduce(function(a, b) {
+          return a.concat(b);
+        })
+      );
       var linear = d3
         .scaleLinear()
-        .domain([0, 10])
+        .domain([0,maxx])
         .range([0, 1]);
+      var linear_r = d3
+        .scaleLinear()
+        .domain([0, maxx])
+        .range([0, 10]);
       var color = d3.scaleOrdinal(d3.schemeCategory10);
       var gg = g
         .append("g")
@@ -66,45 +76,20 @@ export default {
       for (let k = 0; k < martrixData.length; k++) {
         var dy = cellHeight * k;
 
-        // gg.selectAll()
-        //   .data(martrixData[k])
-        //   .enter()
-        //   .append("circle")
-        //   .attr("cx", function(d, i) {
-        //     return i * cellWidth;
-        //   })
-        //   .attr("cy", function() {
-        //     return dy;
-        //   })
-        //   .attr("id", function(d, i) {
-        //     return "cell_" + k + "_" + i;
-        //   })
-        //   .attr("r", cellHeight/2)
-        //   .style("stroke", function() {
-        //     return "#D4D5D3";
-        //   })
-        //   .style("stroke-width", 0.5)
-        //   .style("fill", function(d, i) {
-        //     return color(i);
-        //   })
-        //   .style("fill-opacity", function(d) {
-        //     return linear(d);
-        //   });
         gg.selectAll()
           .data(martrixData[k])
           .enter()
-          .append("rect")
-          .attr("x", function(d, i) {
+          .append("circle")
+          .attr("cx", function(d, i) {
             return i * cellWidth;
           })
-          .attr("y", function() {
+          .attr("cy", function() {
             return dy;
           })
           .attr("id", function(d, i) {
             return "cell_" + k + "_" + i;
           })
-          .attr("width", cellWidth)
-          .attr("height", cellHeight) 
+          .attr("r", d => linear_r(d))
           .style("stroke", function() {
             return "#D4D5D3";
           })
@@ -115,13 +100,38 @@ export default {
           .style("fill-opacity", function(d) {
             return linear(d);
           });
+        // gg.selectAll()
+        //   .data(martrixData[k])
+        //   .enter()
+        //   .append("rect")
+        //   .attr("x", function(d, i) {
+        //     return i * cellWidth;
+        //   })
+        //   .attr("y", function() {
+        //     return dy;
+        //   })
+        //   .attr("id", function(d, i) {
+        //     return "cell_" + k + "_" + i;
+        //   })
+        //   .attr("width", cellWidth)
+        //   .attr("height", cellHeight)
+        //   .style("stroke", function() {
+        //     return "#D4D5D3";
+        //   })
+        //   .style("stroke-width", 0.5)
+        //   .style("fill", function(d, i) {
+        //     return color(i);
+        //   })
+        //   .style("fill-opacity", function(d) {
+        //     return linear(d);
+        //   });
       }
       var modelName = d3.range(119);
       g.selectAll()
         .data(modelName)
         .enter()
         .append("text")
-        .attr("x", textLeft-10)
+        .attr("x", textLeft - 10)
         .attr("y", (d, i) => cellHeight * i + textTop)
         .attr("dy", "0.8em")
         .style("font-size", "5px")
@@ -136,25 +146,13 @@ export default {
         .enter()
         .append("text")
         .attr("x", (d, i) => textLeft + cellWidth * i)
-        .attr("y", textTop-10)
+        .attr("y", textTop - 10)
         .attr("dy", "0.8em")
         .style("font-size", "5px")
         .style("font-family", "monospace")
         .text(function(d) {
           return d;
-        })
-      function RandomArray(Len, Min, Max) {
-        var Range = Max - Min;
-        var out = [];
-        for (var i = 0; i < 119; i++) {
-          out[i] = [];
-          for (var j = 0; j < Len; j++) {
-            var Rand = Math.random();
-            out[i][j] = Min + Math.round(Rand * Range); //四舍五入
-          }
-        }
-        return out;
-      }
+        });
     }
   }
 };

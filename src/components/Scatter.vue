@@ -19,13 +19,25 @@ export default {
   mounted() {
     store.dispatch("scatterData_action");
   },
+  computed: {
+    address() {
+      const [scatterData, patternData] = [
+        this.sharedState.scatterData,
+        this.sharedState.patternData
+      ];
+      return [scatterData, patternData];
+    }
+  },
   watch: {
-    "sharedState.scatterData": function(newdata) {
-      this.draw(newdata);
+    address: {
+      handler: function(val) {
+        if (val[0].length && val[1].length) this.draw(val[0], val[1]);
+      },
+      deep: true
     }
   },
   methods: {
-    draw(data) {
+    draw(scatter, pattern) {
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 50 };
       document.getElementById("scatter_down").innerHTML = "";
@@ -49,29 +61,29 @@ export default {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      // format the data
-      data.forEach(function(d) {
+      // format the scatter
+      scatter.forEach(function(d) {
         d.x = +d.x;
         d.y = +d.y;
         d.he = +d.he;
       });
 
-      var maxInNumbers_x = d3.max(data, function(d) {
+      var maxInNumbers_x = d3.max(scatter, function(d) {
         return +d.x;
       });
-      var minInNumbers_x = d3.min(data, function(d) {
+      var minInNumbers_x = d3.min(scatter, function(d) {
         return +d.x;
       });
-      var maxInNumbers_y = d3.max(data, function(d) {
+      var maxInNumbers_y = d3.max(scatter, function(d) {
         return +d.y;
       });
-      var minInNumbers_y = d3.min(data, function(d) {
+      var minInNumbers_y = d3.min(scatter, function(d) {
         return +d.y;
       });
-      var maxInNumbers_r = d3.max(data, function(d) {
+      var maxInNumbers_r = d3.max(scatter, function(d) {
         return +d.he;
       });
-      var minInNumbers_r = d3.min(data, function(d) {
+      var minInNumbers_r = d3.min(scatter, function(d) {
         return +d.he;
       });
 
@@ -89,14 +101,19 @@ export default {
         .scaleLinear()
         .domain([minInNumbers, maxInNumbers])
         .range([0, AxisWidth]);
-      for (var i = 0; i < data.length; i++) {
+      // var Scale_r = d3
+      //   .scaleLinear()
+      //   .domain([minInNumbers, maxInNumbers])
+      //   .range([0, AxisWidth]);
+      var industryData = pattern[1].concat(pattern[1]);
+      for (var i = 0; i < scatter.length; i++) {
         svg
           .append("circle")
-          .attr("r", linear_r(data[i].he))
-          .attr("cx", Scale(data[i].x))
-          .attr("cy", Scale(data[i].y))
+          .attr("r", linear_r(scatter[i].he))
+          .attr("cx", Scale(scatter[i].x))
+          .attr("cy", Scale(scatter[i].y))
           .style("fill", function() {
-            if (i >= data.length / 2) {
+            if (i >= scatter.length / 2) {
               return "grey";
             } else {
               return "red";
@@ -104,12 +121,16 @@ export default {
           });
 
         var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-        var pieData = [1, 1, 2, 3, 5, 1, 1, 21]; //data we want to turn into a pie chart
-        var pies = d3.pie().startAngle(0).endAngle(2*Math.PI)(pieData); // turns into data for pie chart with start and end angles
+
+        var pieData = industryData[i]; //data we want to turn into a pie chart
+        var pies = d3
+          .pie()
+          .startAngle(0)
+          .endAngle(2 * Math.PI)(pieData); // turns into data for pie chart with start and end angles
         var arc = d3
           .arc()
-          .innerRadius(linear_r(data[i].he) / 2) //means full circle. if not 0, would be donut
-          .outerRadius(linear_r(data[i].he)) //size of circle
+          .innerRadius(linear_r(scatter[i].he) / 2) //means full circle. if not 0, would be donut
+          .outerRadius(linear_r(scatter[i].he)) //size of circle
           .startAngle(d => d.startAngle) //how does it get d???
           .endAngle(d => d.endAngle);
         svg
@@ -124,9 +145,12 @@ export default {
           .attr("stroke", function() {
             return "#fff";
           })
+          .attr("stroke-width", function() {
+            return 0.8;
+          })
           .attr(
             "transform",
-            "translate(" + Scale(data[i].x) + "," + Scale(data[i].y) + ")"
+            "translate(" + Scale(scatter[i].x) + "," + Scale(scatter[i].y) + ")"
           );
       }
     }

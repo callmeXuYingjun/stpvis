@@ -48,7 +48,7 @@ var store = new Vuex.Store({
     scatterData_action({ commit }) {
       function read_scatterData() {
         return new Promise(function (resolve) {
-          d3.csv("data/scatter/scatter.csv").then(function (csvdata) {
+          d3.csv("data/scatter/scatter1.csv").then(function (csvdata) {
             resolve(csvdata)
           });
         });
