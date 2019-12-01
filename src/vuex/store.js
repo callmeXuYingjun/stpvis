@@ -11,8 +11,9 @@ var store = new Vuex.Store({
     testData: {},
     scatterData: [],
     boundaryData: {},
-    marginalDistributionData:[],
-    patternData:[],
+    marginalDistributionData: [],
+    patternData: [],
+    anomalyData: [],
   },
   mutations: {
     testData_Update(state, data) {
@@ -29,6 +30,9 @@ var store = new Vuex.Store({
     },
     patternData_Update(state, data) {
       state.patternData = data
+    },
+    anomalyData_Update(state, data) {
+      state.anomalyData = data
     },
   },
   actions: {
@@ -58,6 +62,26 @@ var store = new Vuex.Store({
           commit('scatterData_Update', data)
         })
     },
+    anomalyData_action({ commit }) {
+      function read_anomalyData() {
+        return new Promise(function (resolve) {
+          d3.csv("data/anomaly/C1.csv").then(function (csvdata) {
+            var out = []
+            for (var i = 0; i <csvdata.length ; i++) {
+              out[i] = []
+              for (var j = 0; j < 13; j++) {
+                out[i][j] = parseFloat(csvdata[i]['anomaly' + (j + 1)])
+              }
+            }
+            resolve(out)
+          });
+        });
+      }
+      read_anomalyData()
+        .then(data => {
+          commit('anomalyData_Update', data)
+        })
+    },
     boundaryData_action({ commit }) {
       function read_boundaryData() {
         return new Promise(function (resolve) {
@@ -77,7 +101,7 @@ var store = new Vuex.Store({
           d3.csv("data/marginalDistribution/A1.csv").then(function (csvdata_A) {
             d3.csv("data/marginalDistribution/B1.csv").then(function (csvdata_B) {
               d3.csv("data/marginalDistribution/C1.csv").then(function (csvdata_C) {
-                resolve([csvdata_A,csvdata_B,csvdata_C])
+                resolve([csvdata_A, csvdata_B, csvdata_C])
               });
             });
           });
@@ -94,21 +118,21 @@ var store = new Vuex.Store({
           d3.csv("data/pattern/A1.csv").then(function (csvdata_A) {
             d3.csv("data/pattern/B1.csv").then(function (csvdata_B) {
               d3.csv("data/pattern/C1.csv").then(function (csvdata_C) {
-              var out=[[],[],[]]
-              for(var i=0;i<117;i++){
-                out[0][i]=[]
-                for(var a=0;a<csvdata_A.length;a++){
-                  out[0][i][a]=parseFloat(csvdata_A[a]['a'+(i+1)])
+                var out = [[], [], []]
+                for (var i = 0; i < 117; i++) {
+                  out[0][i] = []
+                  for (var a = 0; a < csvdata_A.length; a++) {
+                    out[0][i][a] = parseFloat(csvdata_A[a]['a' + (i + 1)])
+                  }
+                  out[1][i] = []
+                  for (var b = 0; b < csvdata_B.length; b++) {
+                    out[1][i][b] = parseFloat(csvdata_B[b]['b' + (i + 1)])
+                  }
+                  out[2][i] = []
+                  for (var c = 0; c < csvdata_C.length; c++) {
+                    out[2][i][c] = parseFloat(csvdata_C[c]['c' + (i + 1)])
+                  }
                 }
-                out[1][i]=[]
-                for(var b=0;b<csvdata_B.length;b++){
-                  out[1][i][b]=parseFloat(csvdata_B[b]['b'+(i+1)])
-                }
-                out[2][i]=[]
-                for(var c=0;c<csvdata_C.length;c++){
-                  out[2][i][c]=parseFloat(csvdata_C[c]['c'+(i+1)])
-                }
-              }
                 resolve(out)
               });
             });

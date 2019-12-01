@@ -17,16 +17,31 @@ export default {
     };
   },
   mounted() {
-    store.dispatch("boundaryData_action");
+    store.dispatch("anomalyData_action");
   },
-  watch: {
-    "sharedState.boundaryData": function(newdata) {
-      this.draw(newdata);
+  computed: {
+    boundary_anomalyData() {
+      const [boundaryData, anomalyData] = [
+        this.sharedState.boundaryData,
+        this.sharedState.anomalyData
+      ];
+      return [boundaryData, anomalyData];
     }
   },
+  watch: {
+    boundary_anomalyData: {
+      handler: function(val) {
+        if (JSON.stringify(val[0]) !== "{}" && val[1].length)
+          this.draw(val[0], val[1]);
+      },
+      deep: true
+    }
+    // "sharedState.boundaryData": function(newdata) {
+    //   this.draw(newdata);
+    // }
+  },
   methods: {
-    draw(data) {
-      // var colors = ["#893D98", "#22B184", "#4272B5"]
+    draw(data, anomalyData) {
       document.getElementById("anomaly_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -185,36 +200,59 @@ export default {
 
       var petal = [[0, 0], [5, -40], [0, -60], [-5, -40]];
       var linePath = d3.line().curve(d3.curveCardinalClosed);
-      districtData.forEach(d => {
-        flower(projection(d[1]));
+      var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var scaleMax = 0.3;
+        var scaleMin = 0.1;
+      var linear_scale = d3
+        .scaleLinear()
+        .domain(
+          d3.extent(
+            anomalyData.reduce(function(a, b) {
+              return a.concat(b);
+            })
+          )
+        )
+        .range([scaleMin, scaleMax]);
+      districtData.forEach((d, i) => {
+        flower(projection(d[1]), i);
       });
-      function flower(location,scale=0.3) {
+      function flower(location, districtIndex) {
+
         g.append("circle")
           .attr("r", function() {
-            return 60*scale;
+            return 60 * scaleMax;
           })
           .style("fill", function() {
             return "none";
-          }) 
+          })
           .attr("stroke", "grey")
           .attr("stroke-width", 2)
           .attr("transform", function() {
             return "translate(" + location[0] + "," + location[1] + ")";
           });
-        var color = d3.scaleOrdinal(d3.schemeCategory10);
-        var flowerData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-        for (var i = 0; i < flowerData.length; i++) {
+
+        for (var i = 0; i < 13; i++) {
           g.append("path")
             .attr("d", linePath(petal))
             .attr("stroke", "black")
             .attr("stroke-width", 0.2)
             .attr("fill", color(i))
             .attr("transform", function() {
-              return "translate(" + location[0] + "," + location[1] + ") rotate(" + (360 / flowerData.length) * i + ") scale("+scale+") ";
-            })
-            // .attr("transform", function() {
-            //   return "scale(0.5)";
-            // });
+              return (
+                "translate(" +
+                location[0] +
+                "," +
+                location[1] +
+                ") rotate(" +
+                (360 / 13) * i +
+                ") scale(" +
+                linear_scale(anomalyData[districtIndex][i]) +
+                ") "
+              );
+            });
+          // .attr("transform", function() {
+          //   return "scale(0.5)";
+          // });
         }
       }
     }

@@ -20,7 +20,7 @@ export default {
     store.dispatch("scatterData_action");
   },
   computed: {
-    address() {
+    scatter_patternData() {
       const [scatterData, patternData] = [
         this.sharedState.scatterData,
         this.sharedState.patternData
@@ -29,7 +29,7 @@ export default {
     }
   },
   watch: {
-    address: {
+    scatter_patternData: {
       handler: function(val) {
         if (val[0].length && val[1].length) this.draw(val[0], val[1]);
       },
