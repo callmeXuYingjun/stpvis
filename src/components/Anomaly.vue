@@ -201,7 +201,7 @@ export default {
       var petal = [[0, 0], [5, -40], [0, -60], [-5, -40]];
       var linePath = d3.line().curve(d3.curveCardinalClosed);
       var color = d3.scaleOrdinal(d3.schemeCategory10);
-        var scaleMax = 0.3;
+        var scaleMax = 0.5;
         var scaleMin = 0.1;
       var linear_scale = d3
         .scaleLinear()
@@ -218,18 +218,18 @@ export default {
       });
       function flower(location, districtIndex) {
 
-        g.append("circle")
-          .attr("r", function() {
-            return 60 * scaleMax;
-          })
-          .style("fill", function() {
-            return "none";
-          })
-          .attr("stroke", "grey")
-          .attr("stroke-width", 2)
-          .attr("transform", function() {
-            return "translate(" + location[0] + "," + location[1] + ")";
-          });
+        // g.append("circle")
+        //   .attr("r", function() {
+        //     return 60 * scaleMax;
+        //   })
+        //   .style("fill", function() {
+        //     return "none";
+        //   })
+        //   .attr("stroke", "grey")
+        //   .attr("stroke-width", 2)
+        //   .attr("transform", function() {
+        //     return "translate(" + location[0] + "," + location[1] + ")";
+        //   });
 
         for (var i = 0; i < 13; i++) {
           g.append("path")

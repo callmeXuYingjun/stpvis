@@ -93,14 +93,17 @@ export default {
         ["YS", [126.562452, 44.841186], 22]
       ];
 
-//       var palegreen = d3.rgb(66,251,75);    //浅绿
-// var darkgreen = d3.rgb(2,100,7);        //深绿
+      //       var palegreen = d3.rgb(66,251,75);    //浅绿
+      // var darkgreen = d3.rgb(2,100,7);        //深绿
 
-var mapColor = d3.interpolate("white",colors[2]);        //颜色插值函数
-var linear_map = d3.scaleLinear()
-        .domain(d3.extent(districtData, function(d) {
+      var mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
+      var linear_map = d3
+        .scaleLinear()
+        .domain(
+          d3.extent(districtData, function(d) {
             return d[2];
-          }))
+          })
+        )
         .range([0, 1]);
 
       g.selectAll()
@@ -110,7 +113,7 @@ var linear_map = d3.scaleLinear()
         .attr("d", path)
         .attr("stroke", "#808080")
         .attr("stroke-width", 1)
-        .style("fill", function(d,i) {
+        .style("fill", function(d, i) {
           return mapColor(linear_map(districtData[i][2]));
         })
         .on("click", function(d) {
@@ -168,7 +171,7 @@ var linear_map = d3.scaleLinear()
         .style("stroke-width", 2)
         .style("fill", "rgba(255,255,255,0.5)");
 
-      //行业半圆
+      //行业
       var pieData_industry = d3.range(44).map(function() {
         return 1;
       });
@@ -181,22 +184,28 @@ var linear_map = d3.scaleLinear()
           0,
           d3.max(pieData_industry_data.concat(pieData_industry_data_1))
         ])
-        .range([outerRadius * 0.8, outerRadius]);
+        .range([outerRadius * 0.88, outerRadius * 1.1]);
       var linear_industry_1 = d3
         .scaleLinear()
         .domain([
           0,
           d3.max(pieData_industry_data.concat(pieData_industry_data_1))
         ])
-        .range([outerRadius * 0.8, outerRadius * 0.6]);
+        .range([outerRadius * 0.82, outerRadius * 0.6]);
       var pies_industry = d3
         .pie()
         .startAngle(0)
         .endAngle(Math.PI * 2)(pieData_industry); // turns into data for pie chart with start and end angles
+      let arc_industry_mid = d3
+        .arc()
+        .innerRadius(outerRadius * 0.83) //means full circle. if not 0, would be donut
+        .outerRadius(outerRadius * 0.87) //size of circle
+        .startAngle(d => d.startAngle) //how does it get d???
+        .endAngle(d => d.endAngle);
 
       let arc_industry = d3
         .arc()
-        .innerRadius(outerRadius * 0.8) //means full circle. if not 0, would be donut
+        .innerRadius(outerRadius * 0.88) //means full circle. if not 0, would be donut
         .outerRadius(function(d, i) {
           return linear_industry(pieData_industry_data[i]);
         }) //size of circle
@@ -204,7 +213,7 @@ var linear_map = d3.scaleLinear()
         .endAngle(d => d.endAngle);
       let arc_industry_1 = d3
         .arc()
-        .innerRadius(outerRadius * 0.8) //means full circle. if not 0, would be donut
+        .innerRadius(outerRadius * 0.82) //means full circle. if not 0, would be donut
         .outerRadius(function(d, i) {
           return linear_industry_1(pieData_industry_data_1[i]);
         }) //size of circle
@@ -232,6 +241,17 @@ var linear_map = d3.scaleLinear()
         .attr("stroke", function() {
           return "#fff";
         });
+      gg.selectAll()
+        .data(pies_industry)
+        .enter()
+        .append("path")
+        .attr("d", arc_industry_mid)
+        .attr("fill", () => {
+          return "none";
+        })
+        .attr("stroke", function() {
+          return colors[1];
+        });
       //面积图
       var pieData_time_data = RandomArrayOne(84, 0, 10);
       var pieData_time_data_1 = RandomArrayOne(84, 0, 10);
@@ -241,7 +261,7 @@ var linear_map = d3.scaleLinear()
         .range([0, 2 * Math.PI]);
       var LinearY_time = d3
         .scaleLinear()
-        .range([outerRadius * 1.2, outerRadius * 1.3])
+        .range([outerRadius * 1.23, outerRadius * 1.3])
         .domain([1, 10]);
 
       var lineR_time = d3
@@ -261,19 +281,15 @@ var linear_map = d3.scaleLinear()
         .defined(lineR_time.defined())
         .angle(lineR_time.angle())
         .outerRadius(lineR_time.radius())
-        .innerRadius(outerRadius * 1.2);
+        .innerRadius(outerRadius * 1.23);
       gg.datum(pieData_time_data)
         .append("path")
         .attr("fill", colors[0])
         .attr("d", area);
 
-
-
-
-
       var LinearY_time_1 = d3
         .scaleLinear()
-        .range([outerRadius * 1.2, outerRadius*1.1])
+        .range([outerRadius * 1.17, outerRadius * 1.1])
         .domain([1, 10]);
 
       var lineR_time_1 = d3
@@ -293,13 +309,40 @@ var linear_map = d3.scaleLinear()
         .defined(lineR_time_1.defined())
         .angle(lineR_time_1.angle())
         .outerRadius(lineR_time_1.radius())
-        .innerRadius(outerRadius * 1.2);
+        .innerRadius(outerRadius * 1.17);
 
       gg.datum(pieData_time_data_1)
         .append("path")
-        .attr("fill", "grey")
+        .attr("fill", colors[0])
         .attr("d", area_1);
 
+      let arc_area_mid = d3
+        .arc()
+        .innerRadius(outerRadius * 1.18) //means full circle. if not 0, would be donut
+        .outerRadius(outerRadius * 1.22) //size of circle
+        .startAngle(d => {
+          return d.startAngle;
+        }) //how does it get d???
+        .endAngle(d => d.endAngle);
+      var pies_area = d3
+        .pie()
+        .startAngle(0)
+        .endAngle(Math.PI * 2)(
+        d3.range(84).map(function() {
+          return 1;
+        })
+      ); // turns into data for pie chart with start and end angles
+      gg.selectAll()
+        .data(pies_area)
+        .enter()
+        .append("path")
+        .attr("d", arc_area_mid)
+        .attr("fill", () => {
+          return "none";
+        })
+        .attr("stroke", function() {
+          return colors[0];
+        });
       // gg.datum(pieData_time_data)
       //   .append("path")
       //   .attr("fill", "none")
