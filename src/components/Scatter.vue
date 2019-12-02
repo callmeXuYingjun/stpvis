@@ -2,6 +2,15 @@
   <div id="scatter">
     <div id="scatter_top">
       <font>Scatter View</font>
+      <Select v-model="model10" multiple size="small" placeholder="region" style="width:150px">
+        <Option v-for="item in cityList"  :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <Select v-model="model10" multiple size="small" placeholder="industry" style="width:150px">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <Select v-model="model10" multiple size="small" placeholder="time" style="width:150px">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
     </div>
     <div id="scatter_down"></div>
   </div>
@@ -13,7 +22,34 @@ import * as d3 from "d3";
 export default {
   data: function() {
     return {
-      sharedState: store.state
+      sharedState: store.state,
+      cityList: [
+        {
+          value: "New York",
+          label: "New York"
+        },
+        {
+          value: "London",
+          label: "London"
+        },
+        {
+          value: "Sydney",
+          label: "Sydney"
+        },
+        {
+          value: "Ottawa",
+          label: "Ottawa"
+        },
+        {
+          value: "Paris",
+          label: "Paris"
+        },
+        {
+          value: "Canberra",
+          label: "Canberra"
+        }
+      ],
+      model10: []
     };
   },
   mounted() {
@@ -195,5 +231,10 @@ font {
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;
+}
+#scatter_top .ivu-select {
+  float: right;
+  margin-right: 2%;
+  margin-top: 3px;
 }
 </style>

@@ -22,6 +22,9 @@
         <div id="Vertikal_2-Horizontal_3">
           <router-view name="Anomaly"></router-view>
         </div>
+        <div id="Vertikal_2-Horizontal_4">
+          <!-- <router-view name="Select"></router-view> -->
+        </div>
       </div>
       <!-- <router-view name="Tree" ></router-view> -->
     </div>

@@ -8,6 +8,7 @@ import Matrix from '@/components/Matrix'
 import Pattern from '@/components/Pattern'
 import WordCloud from '@/components/WordCloud'
 import Anomaly from '@/components/Anomaly'
+import Select from '@/components/Select'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -22,6 +23,7 @@ export default new Router({
         'Pattern': Pattern,
         'WordCloud': WordCloud,
         'Anomaly': Anomaly,
+        'Select':Select,
       }
     }
   ]
