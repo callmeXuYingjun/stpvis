@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Test from '@/components/Test'
 import Scatter from '@/components/Scatter'
 import Tree from '@/components/Tree'
 import Matrix from '@/components/Matrix'
@@ -15,8 +13,6 @@ export default new Router({
     {
       path: '/',
       components: {
-        'HelloWorld': HelloWorld,
-        'Test': Test,
         'Scatter': Scatter,
         'Tree': Tree,
         'Matrix': Matrix,
