@@ -12,6 +12,7 @@ import 'iview/dist/styles/iview.css';
 axios.defaults.baseURL = 'http://localhost:3000';
 Vue.use(Vuex)
 Vue.use(iView)
+axios.defaults.baseURL = 'http://localhost:8000';
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false
 

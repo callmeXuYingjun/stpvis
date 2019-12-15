@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as d3 from "d3";
+import axios from 'axios'
 Vue.use(Vuex)
 var store = new Vuex.Store({
   state: {
@@ -64,10 +65,21 @@ var store = new Vuex.Store({
     },
     anomalyData_action({ commit }) {
       function read_anomalyData() {
+        //删删删删删删删删删删删删删删删删删删删删删删删删删删删
+        axios.get('/algorithm/patition')
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        //删删删删删删删删删删删删删删删删删删删删删删删删删删删
+
+
         return new Promise(function (resolve) {
           d3.csv("data/anomaly/C1.csv").then(function (csvdata) {
             var out = []
-            for (var i = 0; i <csvdata.length ; i++) {
+            for (var i = 0; i < csvdata.length; i++) {
               out[i] = []
               for (var j = 0; j < 13; j++) {
                 out[i][j] = parseFloat(csvdata[i]['anomaly' + (j + 1)])
