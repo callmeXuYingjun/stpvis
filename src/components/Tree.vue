@@ -19,78 +19,99 @@ export default {
   mounted() {
     // this.draw();
     store.dispatch("patternData_action");
+    store.dispatch("treeData_action");
+  },
+  computed: {
+    patternData_treeData() {
+      const [patternData, treeData] = [
+        this.sharedState.patternData,
+        this.sharedState.treeData
+      ];
+      return [patternData, treeData];
+    }
   },
   watch: {
-    "sharedState.patternData": function(newdata) {
-      this.draw(newdata);
+    // "sharedState.patternData": function(newdata) {
+    //   this.draw(newdata);
+    // },
+    // "sharedState.treeData": function(newdata) {
+    //   this.draw(newdata);
+    // },
+    patternData_treeData: {
+      handler: function(val) {
+        if (val[0].length && JSON.stringify(val[1]) !== "{}")
+          this.draw(val[0], val[1]);
+      },
+      deep: true
     }
   },
   methods: {
-    draw(data) {
+    draw(data,treeData) {
+      // console.log(data,treeData1)
       var num_tree = 2;
-      var treeData = {
-        name: "初始张量",
-        id: 1,
-        id_shunxu: 0,
-        children: [
-          {
-            name: "周末",
-            id: 11,
-            id_shunxu: 1,
-            children: null
-          },
-          {
-            name: "工作日",
-            id: 12,
-            id_shunxu: 2,
-            children: [
-              {
-                name: "城区",
-                id: 121,
-                id_shunxu: 3,
-                children: [
-                  {
-                    name: "行业集合1",
-                    id: 1211,
-                    id_shunxu: 5,
-                    children: null
-                  },
-                  {
-                    name: "行业集合2",
-                    id: 1212,
-                    id_shunxu: 6,
-                    children: null
-                  },
-                  {
-                    name: "行业集合3",
-                    id: 1213,
-                    id_shunxu: 7,
-                    children: null
-                  },
-                  {
-                    name: "行业集合4",
-                    id: 1214,
-                    id_shunxu: 8,
-                    children: null
-                  },
-                  {
-                    name: "行业集合5",
-                    id: 1215,
-                    id_shunxu: 9,
-                    children: null
-                  }
-                ]
-              },
-              {
-                name: "乡村",
-                id: 122,
-                id_shunxu: 4,
-                children: null
-              }
-            ]
-          }
-        ]
-      };
+      // var treeData = {
+      //   name: "初始张量",
+      //   id: 1,
+      //   id_shunxu: 0,
+      //   children: [
+      //     {
+      //       name: "周末",
+      //       id: 11,
+      //       id_shunxu: 1,
+      //       children: null
+      //     },
+      //     {
+      //       name: "工作日",
+      //       id: 12,
+      //       id_shunxu: 2,
+      //       children: [
+      //         {
+      //           name: "城区",
+      //           id: 121,
+      //           id_shunxu: 3,
+      //           children: [
+      //             {
+      //               name: "行业集合1",
+      //               id: 1211,
+      //               id_shunxu: 5,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合2",
+      //               id: 1212,
+      //               id_shunxu: 6,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合3",
+      //               id: 1213,
+      //               id_shunxu: 7,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合4",
+      //               id: 1214,
+      //               id_shunxu: 8,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合5",
+      //               id: 1215,
+      //               id_shunxu: 9,
+      //               children: null
+      //             }
+      //           ]
+      //         },
+      //         {
+      //           name: "乡村",
+      //           id: 122,
+      //           id_shunxu: 4,
+      //           children: null
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // };
 
       var N_all_num_history = [
         45193,
@@ -166,39 +187,42 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var color_link = ["#893D98", "#22B184", "#4272B5"];
-        function curtail(arr) {
-          var m = arr.slice(0);
-          m.splice(0, 1);
-          return m;
-        }
-        var line_data = curtail(N_all_num[num_tree]);
-        var max_line = d3.max(line_data, function(a) {
-          return +a;
-        });
-        var min_line = d3.min(line_data, function(a) {
-          return +a;
-        });
+        // var color_link = ["#893D98", "#22B184", "#4272B5"];
+        // function curtail(arr) {
+        //   var m = arr.slice(0);
+        //   m.splice(0, 1);
+        //   return m;
+        // }
+        // var line_data = curtail(N_all_num[num_tree]);
+        // var max_line = d3.max(line_data, function(a) {
+        //   return +a;
+        // });
+        // var min_line = d3.min(line_data, function(a) {
+        //   return +a;
+        // });
 
-        var x = d3
-          .scaleLinear()
-          .domain([min_line, max_line])
-          .range([2, height / 10]);
+        // var x = d3
+        //   .scaleLinear()
+        //   .domain([min_line, max_line])
+        //   .range([2, height / 10]);
 
         var linkenter = g.selectAll(".link").data(nodes.descendants().slice(1));
+        console.log(linkenter)
 
         linkenter
           .enter()
           .append("path")
           .attr("class", "link")
-          .style("stroke", function(d) {
-            return color_link[d.depth - 1];
+          .style("stroke", function() {
+            // return color_link[d.depth - 1];
+            return "grey";
           })
           .style("fill", function() {
             return "none";
           })
-          .style("stroke-width", function(d, i) {
-            return x(line_data[i]);
+          .style("stroke-width", function() {
+            // return x(line_data[i]);
+            return 5;
           })
           .attr("d", function(d) {
             return (
@@ -642,7 +666,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity",0.2)
+            .style("opacity", 0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_0);
 
@@ -680,7 +704,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity",0.2)
+            .style("opacity", 0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_1);
 
@@ -718,7 +742,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity",0.2)
+            .style("opacity", 0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_2);
 

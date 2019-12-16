@@ -15,10 +15,14 @@ var store = new Vuex.Store({
     marginalDistributionData: [],
     patternData: [],
     anomalyData: [],
+    treeData: {},
   },
   mutations: {
     testData_Update(state, data) {
       state.testData = data
+    },
+    treeData_Update(state, data) {
+      state.treeData = data
     },
     scatterData_Update(state, data) {
       state.scatterData = data
@@ -63,19 +67,26 @@ var store = new Vuex.Store({
           commit('scatterData_Update', data)
         })
     },
+    treeData_action({ commit }) {
+      function read_treeData() {
+        return new Promise(function (resolve) {
+          axios.get('/algorithm/patition')
+            .then(function (response) {
+              resolve(response.data)
+              
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        });
+      }
+      read_treeData()
+        .then(data => {
+          commit('treeData_Update', data)
+        })
+    },
     anomalyData_action({ commit }) {
       function read_anomalyData() {
-        //删删删删删删删删删删删删删删删删删删删删删删删删删删删
-        axios.get('/algorithm/patition')
-          .then(function (response) {
-            console.log(response)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        //删删删删删删删删删删删删删删删删删删删删删删删删删删删
-
-
         return new Promise(function (resolve) {
           d3.csv("data/anomaly/C1.csv").then(function (csvdata) {
             var out = []
