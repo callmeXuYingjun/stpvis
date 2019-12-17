@@ -4,6 +4,33 @@
       <font>Tree View</font>
     </div>
     <div id="tree_down"></div>
+    <div id="tree_panel">
+      <h3>partition panel</h3>
+      <Icon type="md-add-circle" size="24" />
+      <Select v-model="dimensionSelect" size="small" style="width:100px">
+        <Option v-for="item in dimensionList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <br />
+      <Icon type="md-add-circle" size="24" />
+      <Select v-model="clusteringMethodsSelect" size="small" style="width:100px">
+        <Option
+          v-for="item in clusteringMethodsList"
+          :value="item.value"
+          :key="item.value"
+        >{{ item.label }}</Option>
+      </Select>
+      <br />
+      <Icon type="md-add-circle" size="24" />
+      <Input
+        v-model="clusterNum"
+        placeholder="Enter something..."
+        size="small"
+        style="width:100px"
+      />
+      <br />
+      <br />
+      <Button type="success" @click="toLoading">SUBMIT</Button>
+    </div>
   </div>
 </template>
 
@@ -13,7 +40,34 @@ import * as d3 from "d3";
 export default {
   data: function() {
     return {
-      sharedState: store.state
+      sharedState: store.state,
+      dimensionList: [
+        {
+          value: "0",
+          label: "Time"
+        },
+        {
+          value: "1",
+          label: "Industry"
+        },
+        {
+          value: "2",
+          label: "Area"
+        }
+      ],
+      dimensionSelect: "",
+      clusteringMethodsList: [
+        {
+          value: "0",
+          label: "KMeans"
+        },
+        {
+          value: "1",
+          label: "Hierarchical Clustering"
+        }
+      ],
+      clusteringMethodsSelect: "",
+      clusterNum: ""
     };
   },
   mounted() {
@@ -46,7 +100,11 @@ export default {
     }
   },
   methods: {
-    draw(data,treeData) {
+    toLoading() {
+       d3.select("#tree_panel").style("visibility", "hidden");
+       
+    },
+    draw(data, treeData) {
       // console.log(data,treeData1)
       var num_tree = 2;
       // var treeData = {
@@ -207,8 +265,6 @@ export default {
         //   .range([2, height / 10]);
 
         var linkenter = g.selectAll(".link").data(nodes.descendants().slice(1));
-        console.log(linkenter)
-
         linkenter
           .enter()
           .append("path")
@@ -279,6 +335,16 @@ export default {
             })
             .style("fill", function() {
               return "white";
+            })
+            .on("click", function() {
+              // console.log(d3.event);
+              d3.select("#tree_panel")
+                .style("visibility", "visible")
+                .style("left", d3.event.pageX + "px")
+                .style("top", d3.event.pageY + "px");
+              // .on("click", () => {
+              //   d3.select("#tree_panel").style("visibility", "hidden");
+              // });
             });
 
           //第一扇形
@@ -834,5 +900,15 @@ font {
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;
+}
+#tree_panel {
+  height: 150px;
+  width: 180px;
+  position: absolute;
+  visibility: hidden;
+  border-width: 2px;
+  border-style: solid;
+  border-color: grey;
+  background-color: white;
 }
 </style>

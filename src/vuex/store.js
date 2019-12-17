@@ -73,7 +73,6 @@ var store = new Vuex.Store({
           axios.get('/algorithm/patition')
             .then(function (response) {
               resolve(response.data)
-              
             })
             .catch(function (error) {
               console.log(error);
