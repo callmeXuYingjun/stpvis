@@ -29,7 +29,7 @@
       />
       <br />
       <br />
-      <Button type="success" @click="toLoading">SUBMIT</Button>
+      <Button type="success" @click="partitionSubmit">SUBMIT</Button>
     </div>
   </div>
 </template>
@@ -100,9 +100,15 @@ export default {
     }
   },
   methods: {
-    toLoading() {
+    partitionSubmit() {
        d3.select("#tree_panel").style("visibility", "hidden");
-       
+       var params={
+         dimensionSelect:this.dimensionSelect,
+         clusteringMethodsSelect:this.clusteringMethodsSelect,
+         clusterNum:this.clusterNum,
+         tensorSelectedData:this.sharedState.tensorSelectedData
+       }
+       store.dispatch("partition_action",params);
     },
     draw(data, treeData) {
       // console.log(data,treeData1)
@@ -315,7 +321,7 @@ export default {
           .rangeRound([height / 20, height / 6]);
         var nodeArray = nodes.descendants();
 
-        for (var i = 0; i < nodeArray.length; i++) {
+        for (let i = 0; i < nodeArray.length; i++) {
           //绘制节点整个的graph
           const outerRadius =
             nodeArray[i].depth == shendu
@@ -337,6 +343,7 @@ export default {
               return "white";
             })
             .on("click", function() {
+              store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
               // console.log(d3.event);
               d3.select("#tree_panel")
                 .style("visibility", "visible")
