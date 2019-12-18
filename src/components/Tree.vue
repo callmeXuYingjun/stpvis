@@ -111,6 +111,7 @@ export default {
        store.dispatch("partition_action",params);
     },
     draw(data, treeData) {
+      console.log(treeData)
       // console.log(data,treeData1)
       var num_tree = 2;
       // var treeData = {

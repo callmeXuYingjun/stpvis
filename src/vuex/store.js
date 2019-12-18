@@ -16,7 +16,7 @@ var store = new Vuex.Store({
     patternData: [],
     anomalyData: [],
     treeData: {},
-    tensorSelectedData: "A",
+    tensorSelectedData: "Root",
   },
   mutations: {
     testData_Update(state, data) {
@@ -74,7 +74,7 @@ var store = new Vuex.Store({
     treeData_action({ commit }) {
       function read_treeData() {
         return new Promise(function (resolve) {
-          axios.get('/algorithm/patition')
+          axios.get('/algorithm/treeInit')
             .then(function (response) {
               resolve(response.data)
             })
@@ -91,7 +91,7 @@ var store = new Vuex.Store({
     partition_action({ commit },params) {
       function read_treeData() {
         return new Promise(function (resolve) {
-          axios.get('/algorithm/patition1', {
+          axios.get('/algorithm/partition', {
             params: params
           })
             .then(function (response) {
@@ -104,7 +104,6 @@ var store = new Vuex.Store({
       }
       read_treeData()
         .then(data => {
-          console.log(data)
           commit('treeData_Update', data)
         })
     },
