@@ -71,26 +71,151 @@ export default {
     };
   },
   mounted() {
+    // this.draw();
     store.dispatch("patternData_action");
     store.dispatch("treeData_action");
   },
+  computed: {
+    patternData_treeData() {
+      const [patternData, treeData] = [
+        this.sharedState.patternData,
+        this.sharedState.treeData
+      ];
+      return [patternData, treeData];
+    }
+  },
   watch: {
-    "sharedState.treeData": function(newdata) {
-      this.draw(newdata);
-    },
+    // "sharedState.patternData": function(newdata) {
+    //   this.draw(newdata);
+    // },
+    // "sharedState.treeData": function(newdata) {
+    //   this.draw(newdata);
+    // },
+    patternData_treeData: {
+      handler: function(val) {
+        if (val[0].length && JSON.stringify(val[1]) !== "{}")
+          this.draw(val[0], val[1]);
+      },
+      deep: true
+    }
   },
   methods: {
     partitionSubmit() {
-      d3.select("#tree_panel").style("visibility", "hidden");
-      var params = {
-        dimensionSelect: this.dimensionSelect,
-        clusteringMethodsSelect: this.clusteringMethodsSelect,
-        clusterNum: this.clusterNum,
-        tensorSelectedData: this.sharedState.tensorSelectedData
-      };
-      store.dispatch("partition_action", params);
+       d3.select("#tree_panel").style("visibility", "hidden");
+       var params={
+         dimensionSelect:this.dimensionSelect,
+         clusteringMethodsSelect:this.clusteringMethodsSelect,
+         clusterNum:this.clusterNum,
+         tensorSelectedData:this.sharedState.tensorSelectedData
+       }
+       store.dispatch("partition_action",params);
     },
-    draw(treeData) {
+    draw(data, treeData) {
+      // console.log(data,treeData1)
+      var num_tree = 2;
+      // var treeData = {
+      //   name: "初始张量",
+      //   id: 1,
+      //   id_shunxu: 0,
+      //   children: [
+      //     {
+      //       name: "周末",
+      //       id: 11,
+      //       id_shunxu: 1,
+      //       children: null
+      //     },
+      //     {
+      //       name: "工作日",
+      //       id: 12,
+      //       id_shunxu: 2,
+      //       children: [
+      //         {
+      //           name: "城区",
+      //           id: 121,
+      //           id_shunxu: 3,
+      //           children: [
+      //             {
+      //               name: "行业集合1",
+      //               id: 1211,
+      //               id_shunxu: 5,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合2",
+      //               id: 1212,
+      //               id_shunxu: 6,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合3",
+      //               id: 1213,
+      //               id_shunxu: 7,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合4",
+      //               id: 1214,
+      //               id_shunxu: 8,
+      //               children: null
+      //             },
+      //             {
+      //               name: "行业集合5",
+      //               id: 1215,
+      //               id_shunxu: 9,
+      //               children: null
+      //             }
+      //           ]
+      //         },
+      //         {
+      //           name: "乡村",
+      //           id: 122,
+      //           id_shunxu: 4,
+      //           children: null
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // };
+
+      var N_all_num_history = [
+        45193,
+        8680,
+        36513,
+        1474.9,
+        2231.1,
+        2426.1,
+        2548,
+        9337.5,
+        12159
+      ];
+
+      var N_all_num_ce = [
+        15288,
+        2791,
+        12497,
+        283,
+        237,
+        1045,
+        1226,
+        3196,
+        4437,
+        1954
+      ];
+
+      var N_all_num_cha = [
+        29905,
+        5889.1,
+        24016,
+        19091.9,
+        1994.1,
+        1381.1,
+        122,
+        722.4,
+        9141.5,
+        4234.5
+      ];
+      var N_all_num = [N_all_num_history, N_all_num_ce, N_all_num_cha];
+      var colors = ["#893D98", "#22B184", "#4272B5"];
       treee();
       function treee() {
         document.getElementById("tree_down").innerHTML = "";
@@ -115,9 +240,6 @@ export default {
             d.y -= 40 * d.depth;
           }
         });
-        var nodeArray = nodes.descendants();
-        var colors = ["#893D98", "#22B184", "#4272B5"];
-
         var svg = d3
             .select("#tree_down")
             .append("svg")
@@ -129,31 +251,40 @@ export default {
               "transform",
               "translate(" + margin.left + "," + margin.top + ")"
             );
-        var LinearLine = d3
-          .scaleLinear()
-          .domain(d3.extent(nodeArray.slice(1), ele => ele.data.sum))
-          .range([2, height / 10]);
+        // var color_link = ["#893D98", "#22B184", "#4272B5"];
+        // function curtail(arr) {
+        //   var m = arr.slice(0);
+        //   m.splice(0, 1);
+        //   return m;
+        // }
+        // var line_data = curtail(N_all_num[num_tree]);
+        // var max_line = d3.max(line_data, function(a) {
+        //   return +a;
+        // });
+        // var min_line = d3.min(line_data, function(a) {
+        //   return +a;
+        // });
+
+        // var x = d3
+        //   .scaleLinear()
+        //   .domain([min_line, max_line])
+        //   .range([2, height / 10]);
 
         var linkenter = g.selectAll(".link").data(nodes.descendants().slice(1));
         linkenter
           .enter()
           .append("path")
           .attr("class", "link")
-          .style("stroke", function(d) {
-            let temp = d.data.name.split("-");
-            if (temp[temp.length - 1][0] == "A") {
-              return colors[0];
-            } else if (temp[temp.length - 1][0] == "B") {
-              return colors[1];
-            } else if (temp[temp.length - 1][0] == "C") {
-              return colors[2];
-            }
+          .style("stroke", function() {
+            // return color_link[d.depth - 1];
+            return "grey";
           })
           .style("fill", function() {
             return "none";
           })
-          .style("stroke-width", function(d) {
-            return LinearLine(d.data.sum);
+          .style("stroke-width", function() {
+            // return x(line_data[i]);
+            return 5;
           })
           .attr("d", function(d) {
             return (
@@ -176,18 +307,26 @@ export default {
             );
           });
 
+        var maxx = d3.max(N_all_num[num_tree], function(a) {
+          return +a;
+        });
+        var minx = d3.min(N_all_num[num_tree], function(a) {
+          return +a;
+        });
+
         var pow = d3
           .scalePow()
           .exponent(0.5)
-          .domain(d3.extent(nodeArray, ele => ele.data.sum))
+          .domain([minx, maxx])
           .rangeRound([height / 20, height / 6]);
+        var nodeArray = nodes.descendants();
 
         for (let i = 0; i < nodeArray.length; i++) {
           //绘制节点整个的graph
           const outerRadius =
             nodeArray[i].depth == shendu
-              ? pow(nodeArray[i].data.sum)
-              : pow(nodeArray[i].data.sum)/2;
+              ? pow(N_all_num[num_tree][i])
+              : pow(N_all_num[num_tree][i]) / 2;
           const innerRadius = outerRadius * 0.9;
           const paddingAngle = (Math.PI / 180) * 5;
           var gg = g
@@ -205,6 +344,7 @@ export default {
             })
             .on("click", function() {
               store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
+              // console.log(d3.event);
               d3.select("#tree_panel")
                 .style("visibility", "visible")
                 .style("left", d3.event.pageX + "px")
@@ -216,8 +356,16 @@ export default {
 
           //第一扇形
           // var colors_0 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_0_data = nodeArray[i].data.marginalA; //data we want to turn into a pie chart
-          var pieData_0 = d3.range(pieData_0_data.length).map(() => 1); //data we want to turn into a pie chart
+          var pieData_0 = d3.range(7).map(() => 1); //data we want to turn into a pie chart
+          var pieData_0_data = [
+            0.07524071,
+            0.077525052,
+            0.173225796,
+            0.174929844,
+            0.169244389,
+            0.168637343,
+            0.161196865
+          ]; //data we want to turn into a pie chart
           var max_0 = d3.max(pieData_0_data);
           var min_0 = d3.min(pieData_0_data);
           var linear_0 = d3
@@ -248,11 +396,75 @@ export default {
             .attr("stroke", function() {
               return "#fff";
             });
+          // let arc_0_outer = d3
+          //   .arc()
+          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+          //   .outerRadius(function(d, k) {
+          //     return linear_0(pieData_0_data[k]);
+          //   }) //size of circle
+          //   .startAngle(d => d.startAngle) //how does it get d???
+          //   .endAngle(d => d.endAngle);
+          // gg.selectAll()
+          //   .data(pies_0)
+          //   .enter()
+          //   .append("path")
+          //   .attr("d", arc_0_outer)
+          //   .attr("fill", d => {
+          //     return colors_0(d.value);
+          //   })
+          //   .attr("stroke", function() {
+          //     return "#fff";
+          //   });
 
           //第二扇形
           // var colors_1 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_1_data = nodeArray[i].data.marginalB; //data we want to turn into a pie chart
-          var pieData_1 = d3.range(pieData_1_data.length).map(() => 1); //data we want to turn into a pie chart
+          var pieData_1 = d3.range(44).map(() => 1); //data we want to turn into a pie chart
+          var pieData_1_data = [
+            0.070404158,
+            0.190398426,
+            0.032909937,
+            0.035419277,
+            0.115716373,
+            0.018819612,
+            0.04104331,
+            0.026160633,
+            0.037437429,
+            0.023327005,
+            0.020240607,
+            0.029662779,
+            0.028013357,
+            0.014603382,
+            0.022933092,
+            0.02100244,
+            0.019167552,
+            0.021910625,
+            0.036748618,
+            0.025073274,
+            0.017891783,
+            0.016933394,
+            0.020750153,
+            0.011238795,
+            0.003390082,
+            0.008788096,
+            0.013478864,
+            0.008975319,
+            0.002199094,
+            0.006905413,
+            0.004123819,
+            0.005492358,
+            0.00698448,
+            0.008134062,
+            0.004379284,
+            0.001297873,
+            0.004071546,
+            0.003247519,
+            0.006212739,
+            0.002844376,
+            0.004798661,
+            0.002853695,
+            0.002135364,
+            0.001881344
+          ]; //data we want to turn into a pie chart
           var max_1 = d3.max(pieData_1_data);
           var min_1 = d3.min(pieData_1_data);
           var linear_1 = d3
@@ -284,10 +496,41 @@ export default {
               return "#fff";
             });
 
+          // let arc_1_outer = d3
+          //   .arc()
+          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+          //   .outerRadius(function(d, k) {
+          //     return linear_1(pieData_1_data[k]);
+          //   }) //size of circle
+          //   .startAngle(d => d.startAngle) //how does it get d???
+          //   .endAngle(d => d.endAngle);
+          // gg.selectAll()
+          //   .data(pies_1)
+          //   .enter()
+          //   .append("path")
+          //   .attr("d", arc_1_outer)
+          //   .attr("fill", d => {
+          //     return colors_1(d.value);
+          //   })
+          //   .attr("stroke", function() {
+          //     return "#fff";
+          //   });
+
           //第三扇形
           // var colors_2 = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-          var pieData_2_data = nodeArray[i].data.marginalC; //data we want to turn into a pie chart
-          var pieData_2 = d3.range(pieData_2_data.length).map(() => 1); //data we want to turn into a pie chart
+          var pieData_2 = d3.range(10).map(() => 1); //data we want to turn into a pie chart
+          var pieData_2_data = [
+            0.183079937,
+            0.167195066,
+            0.123041623,
+            0.161131554,
+            0.15793099,
+            0.032298312,
+            0.032375012,
+            0.034448609,
+            0.074161035,
+            0.034337862
+          ]; //data we want to turn into a pie chart
           var max_2 = d3.max(pieData_2_data);
           var min_2 = d3.min(pieData_2_data);
           var linear_2 = d3
@@ -318,6 +561,26 @@ export default {
             .attr("stroke", function() {
               return "#fff";
             });
+
+          // let arc_2_outer = d3
+          //   .arc()
+          //   .innerRadius(outerRadius * 1.1) //means full circle. if not 0, would be donut
+          //   .outerRadius(function(d, k) {
+          //     return linear_2(pieData_2_data[k]);
+          //   }) //size of circle
+          //   .startAngle(d => d.startAngle) //how does it get d???
+          //   .endAngle(d => d.endAngle);
+          // gg.selectAll()
+          //   .data(pies_2)
+          //   .enter()
+          //   .append("path")
+          //   .attr("d", arc_2_outer)
+          //   .attr("fill", d => {
+          //     return colors_2(d.value);
+          //   })
+          //   .attr("stroke", function() {
+          //     return "#fff";
+          //   });
 
           //三角形,
           //内半径innerRadius
@@ -443,7 +706,9 @@ export default {
               return colors[2];
             });
 
-        //外圈多模式的分布
+          //外圆模式个个维度分布
+          // var sequential_0=d3.range(7)
+
           var LinearX_0 = d3
             .scaleLinear()
             .domain([0, pieData_0_data.length])
@@ -454,7 +719,7 @@ export default {
             .range([outerRadius * 1.05, outerRadius * 1.4])
             .domain(
               d3.extent(
-                nodeArray[i].data.A.reduce(function(a, b) {
+                data[0].reduce(function(a, b) {
                   return a.concat(b);
                 })
               )
@@ -462,19 +727,19 @@ export default {
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_0(k)-(2 * Math.PI) /3/2/pieData_0_data.length;
+              return LinearX_0(k);
             })
             .radius(function(d) {
               return LinearY_0(d);
             });
-          var modelData_0 = nodeArray[i].data.A;
+          var modelData_0 = data[0];
           gg.selectAll()
             .data(modelData_0)
             .enter()
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity", 1)
+            .style("opacity", 0.2)
             .style("stroke-width", 0.2)
             .attr("d", lineR_0);
 
@@ -491,7 +756,7 @@ export default {
             .range([outerRadius * 1.05, outerRadius * 1.4])
             .domain(
               d3.extent(
-                nodeArray[i].data.B.reduce(function(a, b) {
+                data[1].reduce(function(a, b) {
                   return a.concat(b);
                 })
               )
@@ -500,12 +765,12 @@ export default {
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_1(k)-(2 * Math.PI) / 3/2/pieData_1_data.length;
+              return LinearX_1(k);
             })
             .radius(function(d) {
               return LinearY_1(d);
             });
-          var modelData_1 = nodeArray[i].data.B;
+          var modelData_1 = data[1];
           gg.selectAll()
             .data(modelData_1)
             .enter()
@@ -528,7 +793,7 @@ export default {
             .range([outerRadius * 1.05, outerRadius * 1.4])
             .domain(
               d3.extent(
-                nodeArray[i].data.C.reduce(function(a, b) {
+                data[2].reduce(function(a, b) {
                   return a.concat(b);
                 })
               )
@@ -537,13 +802,13 @@ export default {
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_2(k)-(2 * Math.PI) / 3/2/pieData_1_data.length;
+              return LinearX_2(k);
             })
             .radius(function(d) {
               return LinearY_2(d);
             });
 
-          var modelData_2 = nodeArray[i].data.C;
+          var modelData_2 = data[2];
           gg.selectAll()
             .data(modelData_2)
             .enter()
@@ -560,7 +825,7 @@ export default {
           var entropyData = [0.7, 0.3, 0.5];
           var linear_entropy = d3
             .scaleLinear()
-            .domain([0, d3.max(entropyData)])
+            .domain([0, 1])
             .range([0, triangleRadius * 0.5]);
           var pies_entropy = d3
             .pie()
@@ -587,6 +852,19 @@ export default {
             });
         }
       }
+      // function RandomArray(Len, Min, Max) {
+      //   var Range = Max - Min;
+
+      //   var out = [];
+      //   for (var i = 0; i < 15; i++) {
+      //     out[i] = [];
+      //     for (var j = 0; j < Len; j++) {
+      //       var Rand = Math.random();
+      //       out[i][j] = Min + Math.round(Rand * Range); //四舍五入
+      //     }
+      //   }
+      //   return out;
+      // }
     }
   }
 };
