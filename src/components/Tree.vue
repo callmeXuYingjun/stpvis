@@ -77,7 +77,7 @@ export default {
   watch: {
     "sharedState.treeData": function(newdata) {
       this.draw(newdata);
-    },
+    }
   },
   methods: {
     partitionSubmit() {
@@ -187,7 +187,7 @@ export default {
           const outerRadius =
             nodeArray[i].depth == shendu
               ? pow(nodeArray[i].data.sum)
-              : pow(nodeArray[i].data.sum)/2;
+              : pow(nodeArray[i].data.sum) / 2;
           const innerRadius = outerRadius * 0.9;
           const paddingAngle = (Math.PI / 180) * 5;
           var gg = g
@@ -349,8 +349,21 @@ export default {
             })
             .attr("stroke-width", "1px")
             .attr("fill", "none");
-          //三角形边上的分布
 
+          //文字提示
+
+          let tooltip = d3
+            .select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("color", "black")
+            .style("visibility", "hidden") // 是否可见（一开始设置为隐藏）
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .text("");
+
+          //三角形边上的分布
           var ggg_0 = gg
             .append("g")
             .attr("transform", [
@@ -377,7 +390,16 @@ export default {
             .style("stroke-width", 0.5)
             .style("fill", function() {
               return colors[0];
-            });
+            })
+            .on('mouseover', function (d,k) {
+              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.time[k])
+            })
+            .on('mousemove', function () {
+              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            })
+            .on('mouseout', function () {
+              return tooltip.style('visibility', 'hidden')
+            })
 
           var ggg_1 = gg
             .append("g")
@@ -409,7 +431,16 @@ export default {
             .style("stroke-width", 0.5)
             .style("fill", function() {
               return colors[1];
-            });
+            })
+            .on('mouseover', function (d,k) {
+              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.industry[k])
+            })
+            .on('mousemove', function () {
+              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            })
+            .on('mouseout', function () {
+              return tooltip.style('visibility', 'hidden')
+            })
 
           var ggg_2 = gg
             .append("g")
@@ -441,9 +472,18 @@ export default {
             .style("stroke-width", 0.5)
             .style("fill", function() {
               return colors[2];
-            });
+            })
+            .on('mouseover', function (d,k) {
+              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.area[k])
+            })
+            .on('mousemove', function () {
+              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            })
+            .on('mouseout', function () {
+              return tooltip.style('visibility', 'hidden')
+            })
 
-        //外圈多模式的分布
+          //外圈多模式的分布
           var LinearX_0 = d3
             .scaleLinear()
             .domain([0, pieData_0_data.length])
@@ -462,7 +502,9 @@ export default {
           var lineR_0 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_0(k)-(2 * Math.PI) /3/2/pieData_0_data.length;
+              return (
+                LinearX_0(k) - (2 * Math.PI) / 3 / 2 / pieData_0_data.length
+              );
             })
             .radius(function(d) {
               return LinearY_0(d);
@@ -474,7 +516,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity", 1)
+            .style("opacity", 0.5)
             .style("stroke-width", 0.2)
             .attr("d", lineR_0);
 
@@ -500,7 +542,9 @@ export default {
           var lineR_1 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_1(k)-(2 * Math.PI) / 3/2/pieData_1_data.length;
+              return (
+                LinearX_1(k) - (2 * Math.PI) / 3 / 2 / pieData_1_data.length
+              );
             })
             .radius(function(d) {
               return LinearY_1(d);
@@ -512,7 +556,7 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity", 0.2)
+            .style("opacity", 0.5)
             .style("stroke-width", 0.2)
             .attr("d", lineR_1);
 
@@ -537,7 +581,9 @@ export default {
           var lineR_2 = d3
             .lineRadial()
             .angle(function(d, k) {
-              return LinearX_2(k)-(2 * Math.PI) / 3/2/pieData_1_data.length;
+              return (
+                LinearX_2(k) - (2 * Math.PI) / 3 / 2 / pieData_1_data.length
+              );
             })
             .radius(function(d) {
               return LinearY_2(d);
@@ -550,14 +596,14 @@ export default {
             .append("path")
             .attr("fill", "none")
             .attr("stroke", "#D35F89")
-            .style("opacity", 0.2)
+            .style("opacity", 0.5)
             .style("stroke-width", 0.2)
             .attr("d", lineR_2);
 
           //三角形内部
 
           //信息熵的比例尺
-          var entropyData = [0.7, 0.3, 0.5];
+          var entropyData = nodeArray[i].data.entropyThree;
           var linear_entropy = d3
             .scaleLinear()
             .domain([0, d3.max(entropyData)])
