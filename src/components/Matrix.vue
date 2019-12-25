@@ -16,18 +16,15 @@ export default {
       sharedState: store.state
     };
   },
-  mounted() {
-    // this.draw();
-    // store.dispatch("matrixData_action");
-  },
   watch: {
-    "sharedState.patternData": function(newdata) {
+    "sharedState.tensorSelectedData": function(newdata) {
       this.draw(newdata);
     }
   },
   methods: {
-    draw(data) {
-      var martrixData = data[1];
+    draw(tensorSelectedData) {
+      var martrixData = tensorSelectedData.C.concat(tensorSelectedData.ce_C);
+      // var martrixData = data[1];
       document.getElementById("matrix_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -126,7 +123,7 @@ export default {
         //     return linear(d);
         //   });
       }
-      var modelName = d3.range(119);
+      var modelName = d3.range(martrixData.length);
       g.selectAll()
         .data(modelName)
         .enter()
@@ -137,10 +134,15 @@ export default {
         .style("font-size", "5px")
         .style("font-family", "monospace")
         .text(function(d) {
-          return d;
+          if(d>=martrixData.length/2){
+            return "history"+(d-martrixData.length/2);
+          }else{
+            return "current"+d;
+          }
+          
         });
 
-      var industryName = d3.range(44);
+      var industryName = d3.range(martrixData[0].length);
       g.selectAll()
         .data(industryName)
         .enter()
@@ -151,7 +153,7 @@ export default {
         .style("font-size", "5px")
         .style("font-family", "monospace")
         .text(function(d) {
-          return d;
+          return tensorSelectedData.industry[d];
         });
     }
   }

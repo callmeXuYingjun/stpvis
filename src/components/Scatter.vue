@@ -3,7 +3,7 @@
     <div id="scatter_top">
       <font>Scatter View</font>
       <Select v-model="model10" multiple size="small" placeholder="region" style="width:150px">
-        <Option v-for="item in cityList"  :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       <Select v-model="model10" multiple size="small" placeholder="industry" style="width:150px">
         <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -52,28 +52,19 @@ export default {
       model10: []
     };
   },
-  mounted() {
-    store.dispatch("scatterData_action");
-  },
-  computed: {
-    scatter_patternData() {
-      const [scatterData, patternData] = [
-        this.sharedState.scatterData,
-        this.sharedState.patternData
-      ];
-      return [scatterData, patternData];
-    }
-  },
+
   watch: {
-    scatter_patternData: {
-      handler: function(val) {
-        if (val[0].length && val[1].length) this.draw(val[0], val[1]);
-      },
-      deep: true
+    "sharedState.tensorSelectedData": function(newdata) {
+      this.draw(newdata);
     }
   },
   methods: {
-    draw(scatter, pattern) {
+    draw(tensorSelectedData) {
+      // console.log(tensorSelectedData);
+      var scatter = tensorSelectedData.pattern2D;
+      var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
+      var industryData = tensorSelectedData.C.concat(tensorSelectedData.ce_C);
+      var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 50 };
       document.getElementById("scatter_down").innerHTML = "";
@@ -97,30 +88,31 @@ export default {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      // format the scatter
-      scatter.forEach(function(d) {
-        d.x = +d.x;
-        d.y = +d.y;
-        d.he = +d.he;
-      });
+      // // format the scatter
+      // scatter.forEach(function(d) {
+      //   d.x = +d.x;
+      //   d.y = +d.y;
+      //   d.he = +d.he;
+      // });
 
       var maxInNumbers_x = d3.max(scatter, function(d) {
-        return +d.x;
+        return d[0];
       });
       var minInNumbers_x = d3.min(scatter, function(d) {
-        return +d.x;
+        return d[0];
       });
       var maxInNumbers_y = d3.max(scatter, function(d) {
-        return +d.y;
+        return d[1];
       });
       var minInNumbers_y = d3.min(scatter, function(d) {
-        return +d.y;
+        return d[1];
       });
-      var maxInNumbers_r = d3.max(scatter, function(d) {
-        return +d.he;
+
+      var maxInNumbers_r = d3.max(he_ce_he, function(d) {
+        return d;
       });
-      var minInNumbers_r = d3.min(scatter, function(d) {
-        return +d.he;
+      var minInNumbers_r = d3.min(he_ce_he, function(d) {
+        return d;
       });
 
       var linear_r = d3
@@ -141,13 +133,22 @@ export default {
       //   .scaleLinear()
       //   .domain([minInNumbers, maxInNumbers])
       //   .range([0, AxisWidth]);
-      var industryData = pattern[1].concat(pattern[1]);
-      for (var i = 0; i < scatter.length; i++) {
+      let tooltip = d3
+        .select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("color", "black")
+        .style("visibility", "hidden") // 是否可见（一开始设置为隐藏）
+        .style("font-size", "12px")
+        .style("font-weight", "bold")
+        .text("");
+      for (var i = 0; i < tensorSelectedData.pattern2D.length; i++) {
         svg
           .append("circle")
-          .attr("r", linear_r(scatter[i].he))
-          .attr("cx", Scale(scatter[i].x))
-          .attr("cy", Scale(scatter[i].y))
+          .attr("r", linear_r(he_ce_he[i]))
+          .attr("cx", Scale(scatter[i][0]))
+          .attr("cy", Scale(scatter[i][1]))
           .style("fill", function() {
             if (i >= scatter.length / 2) {
               return "grey";
@@ -156,8 +157,6 @@ export default {
             }
           });
 
-        var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
-
         var pieData = industryData[i]; //data we want to turn into a pie chart
         var pies = d3
           .pie()
@@ -165,8 +164,8 @@ export default {
           .endAngle(2 * Math.PI)(pieData); // turns into data for pie chart with start and end angles
         var arc = d3
           .arc()
-          .innerRadius(linear_r(scatter[i].he) / 2) //means full circle. if not 0, would be donut
-          .outerRadius(linear_r(scatter[i].he)) //size of circle
+          .innerRadius(linear_r(he_ce_he[i]) / 2) //means full circle. if not 0, would be donut
+          .outerRadius(linear_r(he_ce_he[i])) //size of circle
           .startAngle(d => d.startAngle) //how does it get d???
           .endAngle(d => d.endAngle);
         svg
@@ -186,8 +185,25 @@ export default {
           })
           .attr(
             "transform",
-            "translate(" + Scale(scatter[i].x) + "," + Scale(scatter[i].y) + ")"
-          );
+            "translate(" +
+              Scale(scatter[i][0]) +
+              "," +
+              Scale(scatter[i][1]) +
+              ")"
+          )
+          .on("mouseover", function(d, k) {
+            return tooltip
+              .style("visibility", "visible")
+              .text(tensorSelectedData.industry[k]);
+          })
+          .on("mousemove", function() {
+            return tooltip
+              .style("top", event.pageY - 10 + "px")
+              .style("left", event.pageX + 10 + "px");
+          })
+          .on("mouseout", function() {
+            return tooltip.style("visibility", "hidden");
+          });
       }
     }
   }

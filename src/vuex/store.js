@@ -16,7 +16,7 @@ var store = new Vuex.Store({
     patternData: [],
     anomalyData: [],
     treeData: {},
-    tensorSelectedData: "Root",
+    tensorSelectedData: {},
   },
   mutations: {
     testData_Update(state, data) {

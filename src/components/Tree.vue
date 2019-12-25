@@ -116,6 +116,7 @@ export default {
           }
         });
         var nodeArray = nodes.descendants();
+        store.commit("tensorSelectedData_Update", nodeArray[nodeArray.length-1].data);
         var colors = ["#893D98", "#22B184", "#4272B5"];
 
         var svg = d3
@@ -204,14 +205,7 @@ export default {
               return "white";
             })
             .on("click", function() {
-              store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
-              d3.select("#tree_panel")
-                .style("visibility", "visible")
-                .style("left", d3.event.pageX + "px")
-                .style("top", d3.event.pageY + "px");
-              // .on("click", () => {
-              //   d3.select("#tree_panel").style("visibility", "hidden");
-              // });
+              store.commit("tensorSelectedData_Update", nodeArray[i].data);
             });
 
           //第一扇形
@@ -391,15 +385,19 @@ export default {
             .style("fill", function() {
               return colors[0];
             })
-            .on('mouseover', function (d,k) {
-              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.time[k])
+            .on("mouseover", function(d, k) {
+              return tooltip
+                .style("visibility", "visible")
+                .text(nodeArray[i].data.time[k]);
             })
-            .on('mousemove', function () {
-              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            .on("mousemove", function() {
+              return tooltip
+                .style("top", event.pageY - 10 + "px")
+                .style("left", event.pageX + 10 + "px");
             })
-            .on('mouseout', function () {
-              return tooltip.style('visibility', 'hidden')
-            })
+            .on("mouseout", function() {
+              return tooltip.style("visibility", "hidden");
+            });
 
           var ggg_1 = gg
             .append("g")
@@ -432,15 +430,19 @@ export default {
             .style("fill", function() {
               return colors[1];
             })
-            .on('mouseover', function (d,k) {
-              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.industry[k])
+            .on("mouseover", function(d, k) {
+              return tooltip
+                .style("visibility", "visible")
+                .text(nodeArray[i].data.industry[k]);
             })
-            .on('mousemove', function () {
-              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            .on("mousemove", function() {
+              return tooltip
+                .style("top", event.pageY - 10 + "px")
+                .style("left", event.pageX + 10 + "px");
             })
-            .on('mouseout', function () {
-              return tooltip.style('visibility', 'hidden')
-            })
+            .on("mouseout", function() {
+              return tooltip.style("visibility", "hidden");
+            });
 
           var ggg_2 = gg
             .append("g")
@@ -473,15 +475,19 @@ export default {
             .style("fill", function() {
               return colors[2];
             })
-            .on('mouseover', function (d,k) {
-              return tooltip.style('visibility', 'visible').text(nodeArray[i].data.area[k])
+            .on("mouseover", function(d, k) {
+              return tooltip
+                .style("visibility", "visible")
+                .text(nodeArray[i].data.area[k]);
             })
-            .on('mousemove', function () {
-              return tooltip.style('top', (event.pageY-10)+'px').style('left',(event.pageX+10)+'px')
+            .on("mousemove", function() {
+              return tooltip
+                .style("top", event.pageY - 10 + "px")
+                .style("left", event.pageX + 10 + "px");
             })
-            .on('mouseout', function () {
-              return tooltip.style('visibility', 'hidden')
-            })
+            .on("mouseout", function() {
+              return tooltip.style("visibility", "hidden");
+            });
 
           //外圈多模式的分布
           var LinearX_0 = d3
@@ -630,6 +636,13 @@ export default {
             })
             .attr("stroke", function() {
               return "#fff";
+            })
+            .on("click", function() {
+              store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
+              d3.select("#tree_panel")
+                .style("visibility", "visible")
+                .style("left", d3.event.pageX + "px")
+                .style("top", d3.event.pageY + "px");
             });
         }
       }
