@@ -19,13 +19,27 @@ export default {
   mounted() {
     store.dispatch("boundaryData_action");
   },
+  computed: {
+    tensorSelectedData_boundaryData_patternsSelectedData() {
+      const [tensorSelectedData, boundaryData,patternsSelectedData] = [
+        this.sharedState.tensorSelectedData,
+        this.sharedState.boundaryData,
+        this.sharedState.patternsSelectedData
+      ];
+      return [tensorSelectedData, boundaryData,patternsSelectedData];
+    }
+  },
   watch: {
-    "sharedState.boundaryData": function(newdata) {
-      this.draw(newdata);
+    tensorSelectedData_boundaryData_patternsSelectedData: {
+      handler: function(val) {
+        if (JSON.stringify(val[0]) !== "{}" && JSON.stringify(val[1]) !== "{}"&&val[2].length>=1)
+          this.draw(val[0], val[1],val[2]);
+      },
+      deep: true
     }
   },
   methods: {
-    draw(data) {
+    draw(tensorSelectedData,boundaryData,patternsSelectedData) {
       var colors = ["#893D98", "#22B184", "#4272B5"];
       document.getElementById("pattern_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -80,18 +94,18 @@ export default {
         .style("fill", function() {
           return "#aad3df";
         });
-      var districtData = [
-        ["CY", [125.318334, 43.64432], 12],
-        ["NG", [125.447115, 43.739438], 13],
-        ["KC", [125.332132, 44.080271], 21],
-        ["ED", [125.642587, 43.899292], 12],
-        ["LY", [125.182654, 43.899292], 32],
-        ["SY", [125.667883, 43.522281], 12],
-        ["JT", [125.854156, 44.154825], 12],
-        ["DH", [125.720775, 44.545913], 32],
-        ["NA", [125.182654, 44.450447], 44],
-        ["YS", [126.562452, 44.841186], 22]
-      ];
+      // var districtData = [
+      //   ["CY", [125.318334, 43.64432], 12],
+      //   ["NG", [125.447115, 43.739438], 13],
+      //   ["KC", [125.332132, 44.080271], 21],
+      //   ["ED", [125.642587, 43.899292], 12],
+      //   ["LY", [125.182654, 43.899292], 32],
+      //   ["SY", [125.667883, 43.522281], 12],
+      //   ["JT", [125.854156, 44.154825], 12],
+      //   ["DH", [125.720775, 44.545913], 32],
+      //   ["NA", [125.182654, 44.450447], 44],
+      //   ["YS", [126.562452, 44.841186], 22]
+      // ];
 
       //       var palegreen = d3.rgb(66,251,75);    //浅绿
       // var darkgreen = d3.rgb(2,100,7);        //深绿
@@ -99,22 +113,18 @@ export default {
       var mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
       var linear_map = d3
         .scaleLinear()
-        .domain(
-          d3.extent(districtData, function(d) {
-            return d[2];
-          })
-        )
+        .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
         .range([0, 1]);
 
       g.selectAll()
-        .data(data.features)
+        .data(boundaryData.features)
         .enter()
         .append("path")
         .attr("d", path)
         .attr("stroke", "#808080")
         .attr("stroke-width", 1)
         .style("fill", function(d, i) {
-          return mapColor(linear_map(districtData[i][2]));
+          return mapColor(linear_map(tensorSelectedData.C[patternsSelectedData[0]][i]));
         })
         .on("click", function(d) {
           console.log(d.properties.name);
@@ -133,38 +143,34 @@ export default {
       // ];
 
       g.selectAll()
-        .data(districtData)
+        .data(tensorSelectedData.areaLocation)
         .enter()
         .append("text")
-        .attr("x", d => projection(d[1])[0])
-        .attr("y", d => projection(d[1])[1])
+        .attr("x", d => projection(d)[0])
+        .attr("y", d => projection(d)[1])
         .attr("dx", 12)
         .attr("dy", 12)
         .style("font-size", 7)
         .style("font-weight", "bold")
         .style("font-family", "monospace")
-        .text(function(d) {
-          return d[0];
+        .text(function(d,i) {
+          return tensorSelectedData.area[i];
         });
       var linear = d3
         .scaleLinear()
-        .domain(
-          d3.extent(districtData, function(d) {
-            return d[2];
-          })
-        )
+        .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
         .range([2, 10]);
       g.selectAll()
-        .data(districtData)
+        .data(tensorSelectedData.C[patternsSelectedData[0]])
         .enter()
         .append("circle")
-        .attr("cx", function(d) {
-          return projection(d[1])[0];
+        .attr("cx", function(d,i) {
+          return projection(tensorSelectedData.areaLocation[i])[0];
         })
-        .attr("cy", function(d) {
-          return projection(d[1])[1];
+        .attr("cy", function(d,i) {
+          return projection(tensorSelectedData.areaLocation[i])[1];
         })
-        .attr("r", d => linear(d[2]))
+        .attr("r", d => linear(d))
         .style("stroke", function() {
           return colors[2];
         })
@@ -175,8 +181,8 @@ export default {
       var pieData_industry = d3.range(44).map(function() {
         return 1;
       });
-      var pieData_industry_data = RandomArrayOne(44, 0, 100); //data we want to turn into a pie chart
-      var pieData_industry_data_1 = RandomArrayOne(44, 0, 100); //data we want to turn into a pie chart
+      var pieData_industry_data = tensorSelectedData.B[patternsSelectedData[0]]; //data we want to turn into a pie chart
+      var pieData_industry_data_1 = tensorSelectedData.B[patternsSelectedData[1]]; //data we want to turn into a pie chart
 
       var linear_industry = d3
         .scaleLinear()
@@ -253,17 +259,16 @@ export default {
           return colors[1];
         });
       //面积图
-      var pieData_time_data = RandomArrayOne(84, 0, 10);
-      var pieData_time_data_1 = RandomArrayOne(84, 0, 10);
+      var pieData_time_data = tensorSelectedData.A[patternsSelectedData[0]];
+      var pieData_time_data_1 =tensorSelectedData.A[patternsSelectedData[1]];
       var LinearX_time = d3
         .scaleLinear()
         .domain([0, pieData_time_data.length])
         .range([0, 2 * Math.PI]);
       var LinearY_time = d3
         .scaleLinear()
-        .range([outerRadius * 1.23, outerRadius * 1.3])
-        .domain([1, 10]);
-
+        .domain([0,1])
+        .range([outerRadius * 1.23, outerRadius * 1.3]);
       var lineR_time = d3
         .lineRadial()
         .defined(function(d) {
@@ -328,7 +333,7 @@ export default {
         .pie()
         .startAngle(0)
         .endAngle(Math.PI * 2)(
-        d3.range(84).map(function() {
+        d3.range(pieData_time_data.length).map(function() {
           return 1;
         })
       ); // turns into data for pie chart with start and end angles
@@ -343,22 +348,6 @@ export default {
         .attr("stroke", function() {
           return colors[0];
         });
-      // gg.datum(pieData_time_data)
-      //   .append("path")
-      //   .attr("fill", "none")
-      //   .attr("stroke", colors[0])
-      //   .style("stroke-width", 2)
-      //   .attr("d", lineR_time);
-
-      function RandomArrayOne(Len, Min, Max) {
-        var Range = Max - Min;
-        var out = [];
-        for (var j = 0; j < Len; j++) {
-          var Rand = Math.random();
-          out[j] = Min + Math.round(Rand * Range); //四舍五入
-        }
-        return out;
-      }
     }
   }
 };

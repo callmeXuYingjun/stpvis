@@ -17,6 +17,7 @@ var store = new Vuex.Store({
     anomalyData: [],
     treeData: {},
     tensorSelectedData: {},
+    patternsSelectedData: [1,2],
   },
   mutations: {
     testData_Update(state, data) {
@@ -42,6 +43,9 @@ var store = new Vuex.Store({
     },
     anomalyData_Update(state, data) {
       state.anomalyData = data
+    },
+    patternsSelectedData_Update(state, data) {
+      state.patternsSelectedData = data
     },
   },
   actions: {
@@ -88,7 +92,7 @@ var store = new Vuex.Store({
           commit('treeData_Update', data)
         })
     },
-    partition_action({ commit },params) {
+    partition_action({ commit }, params) {
       function read_treeData() {
         return new Promise(function (resolve) {
           axios.get('/algorithm/partition', {

@@ -10,7 +10,7 @@
 <script>
 import store from "../vuex/store.js";
 import * as d3 from "d3";
-import d3Cloud  from "d3-cloud"
+import d3Cloud from "d3-cloud";
 
 export default {
   data: function() {
@@ -20,28 +20,47 @@ export default {
   },
   computed: {
     tensorSelectedData_patternsSelectedData() {
-      const [tensorSelectedData,patternsSelectedData] = [
+      const [tensorSelectedData, patternsSelectedData] = [
         this.sharedState.tensorSelectedData,
         this.sharedState.patternsSelectedData
       ];
-      return [tensorSelectedData,patternsSelectedData];
+      return [tensorSelectedData, patternsSelectedData];
     }
   },
   watch: {
     tensorSelectedData_patternsSelectedData: {
       handler: function(val) {
-        if (JSON.stringify(val[0]) !== "{}" && val[1].length>=1)
+        if (JSON.stringify(val[0]) !== "{}" && val[1].length >= 1)
           this.draw(val[0], val[1]);
       },
       deep: true
     }
   },
   methods: {
-    draw(tensorSelectedData,patternsSelectedData) {
-      var data = [];
-      tensorSelectedData.industry.forEach((d,i)=>{
-        data[i]=[d,tensorSelectedData.B[patternsSelectedData[0]][i]]
-      })
+    draw(tensorSelectedData, patternsSelectedData) {
+      console.log(tensorSelectedData, patternsSelectedData);
+      // var data = [
+      //   ["物业服务与管理", 63],
+      //   ["供热", 61],
+      //   ["占道经营", 17],
+      //   ["违章建筑", 36],
+      //   ["供水", 29],
+      //   ["道路建设与维护", 28],
+      //   ["工作效率", 24],
+      //   ["噪声污染", 24],
+      //   ["土地资源管理", 22],
+      //   ["交通规划", 22],
+      //   ["营运管理", 21],
+      //   ["养老保险", 21],
+      //   ["社会治安", 21],
+      //   ["环境卫生", 21],
+      //   ["优惠政策", 20],
+      //   ["房屋产权办理", 19],
+      //   ["工作纪律", 19],
+      //   ["劳动监察", 19],
+      //   ["拆迁管理", 17],
+      //   ["下水排水", 17]
+      // ];
       document.getElementById("wordcloud_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -63,24 +82,23 @@ export default {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-
       const wordScale = d3
         .scaleLinear()
-        .domain(d3.extent(data,d=>d[1]))
-        .range([5, 60]);
+        .domain(d3.extent(tensorSelectedData.B[patternsSelectedData[0]]))
+        .range([2, 10]);
       d3Cloud()
         .size([width, height])
         .timeInterval(20)
-        .words(data)
+        .words(tensorSelectedData.industry)
         .rotate(function() {
           return 0;
         })
-        .fontSize(d => {
-          return wordScale(d[1])})
-        //.fontStyle(function(d,i) { return fontSyle(Math.random()); })
+        .fontSize((d, i) => {
+          return wordScale(tensorSelectedData.B[patternsSelectedData[0]][i]);
+        })
         .fontWeight(["bold"])
         .text(function(d) {
-          return d[0];
+          return d;
         })
         .spiral("rectangular") // "archimedean" or "rectangular"
         .on("end", drawWordCloud)
@@ -96,6 +114,7 @@ export default {
         .attr("transform", "translate(0," + height + ")")
         .selectAll("text");
       function drawWordCloud(words) {
+        console.log(words);
         wordcloud
           .selectAll()
           .data(words)

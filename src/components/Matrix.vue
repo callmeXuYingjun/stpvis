@@ -60,7 +60,7 @@ export default {
       );
       var linear = d3
         .scaleLinear()
-        .domain([0,maxx])
+        .domain([0, maxx])
         .range([0, 1]);
       var linear_r = d3
         .scaleLinear()
@@ -134,12 +134,11 @@ export default {
         .style("font-size", "5px")
         .style("font-family", "monospace")
         .text(function(d) {
-          if(d>=martrixData.length/2){
-            return "history"+(d-martrixData.length/2);
-          }else{
-            return "current"+d;
+          if (d >= martrixData.length / 2) {
+            return "history" + (d - martrixData.length / 2);
+          } else {
+            return "current" + d;
           }
-          
         });
 
       var industryName = d3.range(martrixData[0].length);
