@@ -86,7 +86,7 @@ export default {
         dimensionSelect: this.dimensionSelect,
         clusteringMethodsSelect: this.clusteringMethodsSelect,
         clusterNum: this.clusterNum,
-        tensorSelectedData: this.sharedState.tensorSelectedData
+        tensorSelectedName: this.sharedState.tensorSelectedData.name
       };
       store.dispatch("partition_action", params);
     },
@@ -638,7 +638,7 @@ export default {
               return "#fff";
             })
             .on("click", function() {
-              store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
+              // store.commit("tensorSelectedData_Update", nodeArray[i].data.name);
               d3.select("#tree_panel")
                 .style("visibility", "visible")
                 .style("left", d3.event.pageX + "px")

@@ -4,7 +4,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "朝阳区",
+                "name": "朝阳区CY",
                 "id": "220104"
             },
             "geometry": {
@@ -208,7 +208,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "南关区",
+                "name": "南关区NG",
                 "id": "220102"
             },
             "geometry": {
@@ -444,7 +444,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "宽城区",
+                "name": "宽城区KC",
                 "id": "220103"
             },
             "geometry": {
@@ -724,7 +724,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "二道区",
+                "name": "二道区ED",
                 "id": "220105"
             },
             "geometry": {
@@ -984,7 +984,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "绿园区",
+                "name": "绿园区LY",
                 "id": "220106"
             },
             "geometry": {
@@ -1096,7 +1096,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "双阳区",
+                "name": "双阳区SY",
                 "id": "220112"
             },
             "geometry": {
@@ -1328,7 +1328,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "九台市",
+                "name": "九台市JT",
                 "id": "220181"
             },
             "geometry": {
@@ -1756,7 +1756,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "德惠市",
+                "name": "德惠市DH",
                 "id": "220183"
             },
             "geometry": {
@@ -2148,7 +2148,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "农安县",
+                "name": "农安县NA",
                 "id": "220122"
             },
             "geometry": {
@@ -2728,7 +2728,7 @@
         {
             "type": "Feature",
             "properties": {
-                "name": "榆树市",
+                "name": "榆树市YS",
                 "id": "220182"
             },
             "geometry": {

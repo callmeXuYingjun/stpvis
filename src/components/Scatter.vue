@@ -63,7 +63,7 @@ export default {
       // console.log(tensorSelectedData);
       var scatter = tensorSelectedData.pattern2D;
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
-      var industryData = tensorSelectedData.C.concat(tensorSelectedData.ce_C);
+      var industryData = tensorSelectedData.B.concat(tensorSelectedData.B);
       var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 50 };

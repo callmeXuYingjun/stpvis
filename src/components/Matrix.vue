@@ -23,8 +23,7 @@ export default {
   },
   methods: {
     draw(tensorSelectedData) {
-      var martrixData = tensorSelectedData.C.concat(tensorSelectedData.ce_C);
-      // var martrixData = data[1];
+      var martrixData = tensorSelectedData.B.concat(tensorSelectedData.B);
       document.getElementById("matrix_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
