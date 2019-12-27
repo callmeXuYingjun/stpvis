@@ -143,7 +143,7 @@ export default {
         .style("font-size", "12px")
         .style("font-weight", "bold")
         .text("");
-      for (var i = 0; i < tensorSelectedData.pattern2D.length; i++) {
+      for (let i = 0; i < tensorSelectedData.pattern2D.length; i++) {
         svg
           .append("circle")
           .attr("r", linear_r(he_ce_he[i]))
@@ -155,6 +155,9 @@ export default {
             } else {
               return "red";
             }
+          })
+          .on("click", () => {
+            store.commit("patternsSelectedData_Update", [i,i+1]);
           });
 
         var pieData = industryData[i]; //data we want to turn into a pie chart
