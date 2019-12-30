@@ -44,31 +44,31 @@ export default {
   },
   methods: {
     draw(tensorSelectedData, boundaryData, patternsSelectedData) {
-      var colors = ["#893D98", "#22B184", "#4272B5"];
+      let colors = ["#893D98", "#22B184", "#4272B5"];
       document.getElementById("pattern_down").innerHTML = "";
-      var margin = { top: 20, right: 20, bottom: 20, left: 20 };
-      var width =
+      let margin = { top: 20, right: 20, bottom: 20, left: 20 };
+      let width =
         document.getElementById("pattern_down").scrollWidth -
         margin.left -
         margin.right;
-      var height =
+      let height =
         document.getElementById("pattern_down").scrollHeight -
         margin.top -
         margin.bottom;
-      var centerLocation = [125.951316, 44.23102];
-      var projection = d3
+      let centerLocation = [125.951316, 44.23102];
+      let projection = d3
         .geoMercator()
         .center(centerLocation)
         .scale(3000)
         .translate([width / 2, height / 2]);
 
-      var path = d3
+      let path = d3
         .geoPath() // d3.geo.path avec d3 version 3
         .projection(projection);
       const outerRadius = width > height ? height / 2.5 : width / 2.5;
       // const innerRadius = outerRadius * 0.9;
       // const paddingAngle = (Math.PI / 180) * 5;
-      var svg = d3
+      let svg = d3
           .select("#pattern_down")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -80,7 +80,7 @@ export default {
             "translate(" + margin.left + "," + margin.top + ")"
           );
 
-      var gg = g
+      let gg = g
         .append("g")
         .attr(
           "transform",
@@ -98,262 +98,448 @@ export default {
         .style("fill", function() {
           return "#aad3df";
         });
-      var mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
-      var linear_map = d3
-        .scaleLinear()
-        .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
-        .range([0, 1]);
 
-      g.selectAll()
-        .data(boundaryData.features)
-        .enter()
-        .append("path")
-        .attr("d", path)
-        .attr("stroke", "#808080")
-        .attr("stroke-width", 1)
-        .style("fill", function(d) {
-          let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
-          if (indexTemp != -1) {
-            return mapColor(
-              linear_map(
-                tensorSelectedData.C[patternsSelectedData[0]][indexTemp]
-              )
-            );
-          } else {
-            return "black";
-          }
-        })
-        .style("opacity", function(d) {
-          let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
-          if (indexTemp != -1) {
-            return 1
-          } else {
-            return 0
-          }
-        })
-        .on("click", function(d) {
-          console.log(d.properties.name);
-        });
-      // var districtData = [
-      //   ["朝阳区CY", [125.318334, 43.64432], 12],
-      //   ["南关区NG", [125.447115, 43.739438], 13],
-      //   ["宽城区KC", [125.332132, 44.080271], 21],
-      //   ["二道区ED", [125.642587, 43.899292], 12],
-      //   ["绿园区LY", [125.182654, 43.899292], 32],
-      //   ["双阳区SY", [125.667883, 43.522281], 12],
-      //   ["九台市JT", [125.854156, 44.154825], 12],
-      //   ["德惠市DH", [125.720775, 44.545913], 32],
-      //   ["农安县NA", [125.182654, 44.450447], 44],
-      //   ["榆树市YS", [126.562452, 44.841186], 22]
-      // ];
+      if (patternsSelectedData.length == 1) {
+        let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
+        let linear_map = d3
+          .scaleLinear()
+          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .range([0, 1]);
 
-      g.selectAll()
-        .data(tensorSelectedData.areaLocation)
-        .enter()
-        .append("text")
-        .attr("x", d => projection(d)[0])
-        .attr("y", d => projection(d)[1])
-        .attr("dx", 12)
-        .attr("dy", 12)
-        .style("font-size", 7)
-        .style("font-weight", "bold")
-        .style("font-family", "monospace")
-        .text(function(d, i) {
-          return tensorSelectedData.area[i];
-        });
-      var linear = d3
-        .scaleLinear()
-        .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
-        .range([2, 10]);
-      g.selectAll()
-        .data(tensorSelectedData.C[patternsSelectedData[0]])
-        .enter()
-        .append("circle")
-        .attr("cx", function(d, i) {
-          return projection(tensorSelectedData.areaLocation[i])[0];
-        })
-        .attr("cy", function(d, i) {
-          return projection(tensorSelectedData.areaLocation[i])[1];
-        })
-        .attr("r", d => linear(d))
-        .style("stroke", function() {
-          return colors[2];
-        })
-        .style("stroke-width", 2)
-        .style("fill", "rgba(255,255,255,0.5)");
+        g.selectAll()
+          .data(boundaryData.features)
+          .enter()
+          .append("path")
+          .attr("d", path)
+          .attr("stroke", "#808080")
+          .attr("stroke-width", 1)
+          .style("fill", function(d) {
+            let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
+            if (indexTemp != -1) {
+              return mapColor(
+                linear_map(
+                  tensorSelectedData.C[patternsSelectedData[0]][indexTemp]
+                )
+              );
+            } else {
+              return "black";
+            }
+          })
+          .style("opacity", function(d) {
+            let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
+            if (indexTemp != -1) {
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+          .on("click", function(d) {
+            console.log(d.properties.name);
+          });
 
-      //行业
-      var pieData_industry = d3.range(44).map(function() {
-        return 1;
-      });
-      var pieData_industry_data = tensorSelectedData.B[patternsSelectedData[0]]; //data we want to turn into a pie chart
-      var pieData_industry_data_1 =
-        tensorSelectedData.B[patternsSelectedData[1]]; //data we want to turn into a pie chart
+        g.selectAll()
+          .data(tensorSelectedData.areaLocation)
+          .enter()
+          .append("text")
+          .attr("x", d => projection(d)[0])
+          .attr("y", d => projection(d)[1])
+          .attr("dx", 12)
+          .attr("dy", 12)
+          .style("font-size", 7)
+          .style("font-weight", "bold")
+          .style("font-family", "monospace")
+          .text(function(d, i) {
+            return tensorSelectedData.area[i];
+          });
+        let linear = d3
+          .scaleLinear()
+          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .range([2, 10]);
+        g.selectAll()
+          .data(tensorSelectedData.C[patternsSelectedData[0]])
+          .enter()
+          .append("circle")
+          .attr("cx", function(d, i) {
+            return projection(tensorSelectedData.areaLocation[i])[0];
+          })
+          .attr("cy", function(d, i) {
+            return projection(tensorSelectedData.areaLocation[i])[1];
+          })
+          .attr("r", d => linear(d))
+          .style("stroke", function() {
+            return colors[2];
+          })
+          .style("stroke-width", 2)
+          .style("fill", "rgba(255,255,255,0.5)");
 
-      var linear_industry = d3
-        .scaleLinear()
-        .domain([
-          0,
-          d3.max(pieData_industry_data.concat(pieData_industry_data_1))
-        ])
-        .range([outerRadius * 0.88, outerRadius * 1.1]);
-      var linear_industry_1 = d3
-        .scaleLinear()
-        .domain([
-          0,
-          d3.max(pieData_industry_data.concat(pieData_industry_data_1))
-        ])
-        .range([outerRadius * 0.82, outerRadius * 0.6]);
-      var pies_industry = d3
-        .pie()
-        .startAngle(0)
-        .endAngle(Math.PI * 2)(pieData_industry); // turns into data for pie chart with start and end angles
-      let arc_industry_mid = d3
-        .arc()
-        .innerRadius(outerRadius * 0.83) //means full circle. if not 0, would be donut
-        .outerRadius(outerRadius * 0.87) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
+        //行业
+        let pieData_industry = d3
+          .range(tensorSelectedData.industry.length)
+          .map(function() {
+            return 1;
+          });
 
-      let arc_industry = d3
-        .arc()
-        .innerRadius(outerRadius * 0.88) //means full circle. if not 0, would be donut
-        .outerRadius(function(d, i) {
-          return linear_industry(pieData_industry_data[i]);
-        }) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
-      let arc_industry_1 = d3
-        .arc()
-        .innerRadius(outerRadius * 0.82) //means full circle. if not 0, would be donut
-        .outerRadius(function(d, i) {
-          return linear_industry_1(pieData_industry_data_1[i]);
-        }) //size of circle
-        .startAngle(d => d.startAngle) //how does it get d???
-        .endAngle(d => d.endAngle);
-      gg.selectAll()
-        .data(pies_industry)
-        .enter()
-        .append("path")
-        .attr("d", arc_industry)
-        .attr("fill", () => {
-          return colors[1];
-        })
-        .attr("stroke", function() {
-          return "#fff";
-        });
-      gg.selectAll()
-        .data(pies_industry)
-        .enter()
-        .append("path")
-        .attr("d", arc_industry_1)
-        .attr("fill", () => {
-          return colors[1];
-        })
-        .attr("stroke", function() {
-          return "#fff";
-        });
-      gg.selectAll()
-        .data(pies_industry)
-        .enter()
-        .append("path")
-        .attr("d", arc_industry_mid)
-        .attr("fill", () => {
-          return "none";
-        })
-        .attr("stroke", function() {
-          return colors[1];
-        });
-      //面积图
-      var pieData_time_data = tensorSelectedData.A[patternsSelectedData[0]];
-      var pieData_time_data_1 = tensorSelectedData.A[patternsSelectedData[1]];
-      var LinearX_time = d3
-        .scaleLinear()
-        .domain([0, pieData_time_data.length])
-        .range([0, 2 * Math.PI]);
-      var LinearY_time = d3
-        .scaleLinear()
-        .domain([0, d3.max(pieData_time_data.concat(pieData_time_data_1))])
-        .range([outerRadius * 1.23, outerRadius * 1.3]);
-      var lineR_time = d3
-        .lineRadial()
-        .defined(function(d) {
-          return d + 1;
-        })
-        .angle(function(d, k) {
-          return LinearX_time(k);
-        })
-        .radius(function(d) {
-          return LinearY_time(d);
-        });
-      var area = d3
-        .areaRadial()
-        .curve(d3.curveCardinalClosed)
-        .defined(lineR_time.defined())
-        .angle(lineR_time.angle())
-        .outerRadius(lineR_time.radius())
-        .innerRadius(outerRadius * 1.23);
-      gg.datum(pieData_time_data)
-        .append("path")
-        .attr("fill", colors[0])
-        .attr("d", area);
+        let pieData_industry_data =
+          tensorSelectedData.B[patternsSelectedData[0]]; //data we want to turn into a pie chart
 
-      var LinearY_time_1 = d3
-        .scaleLinear()
-        .range([outerRadius * 1.17, outerRadius * 1.1])
-        .domain([0, d3.max(pieData_time_data.concat(pieData_time_data_1))]);
+        let linear_industry = d3
+          .scaleLinear()
+          .domain([
+            0,
+            d3.max(pieData_industry_data)
+          ])
+          .range([outerRadius * 0.88, outerRadius * 1.1]);
+        let pies_industry = d3
+          .pie()
+          .startAngle(0)
+          .endAngle(Math.PI * 2)(pieData_industry); // turns into data for pie chart with start and end angles
+        let arc_industry_mid = d3
+          .arc()
+          .innerRadius(outerRadius * 0.83) //means full circle. if not 0, would be donut
+          .outerRadius(outerRadius * 0.87) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
 
-      var lineR_time_1 = d3
-        .lineRadial()
-        .defined(function(d) {
-          return d + 1;
-        })
-        .angle(function(d, k) {
-          return LinearX_time(k);
-        })
-        .radius(function(d) {
-          return LinearY_time_1(d);
-        });
-      var area_1 = d3
-        .areaRadial()
-        .curve(d3.curveCardinalClosed)
-        .defined(lineR_time_1.defined())
-        .angle(lineR_time_1.angle())
-        .outerRadius(lineR_time_1.radius())
-        .innerRadius(outerRadius * 1.17);
+        let arc_industry = d3
+          .arc()
+          .innerRadius(outerRadius * 0.88) //means full circle. if not 0, would be donut
+          .outerRadius(function(d, i) {
+            return linear_industry(pieData_industry_data[i]);
+          }) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
 
-      gg.datum(pieData_time_data_1)
-        .append("path")
-        .attr("fill", colors[0])
-        .attr("d", area_1);
+        gg.selectAll()
+          .data(pies_industry)
+          .enter()
+          .append("path")
+          .attr("d", arc_industry)
+          .attr("fill", () => {
+            return colors[1];
+          })
+          .attr("stroke", function() {
+            return "#fff";
+          });
+        gg.selectAll()
+          .data(pies_industry)
+          .enter()
+          .append("path")
+          .attr("d", arc_industry_mid)
+          .attr("fill", () => {
+            return "none";
+          })
+          .attr("stroke", function() {
+            return colors[1];
+          });
+        //面积图
+        let pieData_time_data = tensorSelectedData.A[patternsSelectedData[0]];
+        let LinearX_time = d3
+          .scaleLinear()
+          .domain([0, pieData_time_data.length])
+          .range([0, 2 * Math.PI]);
+        let LinearY_time = d3
+          .scaleLinear()
+          .domain([0, d3.max(pieData_time_data)])
+          .range([outerRadius * 1.23, outerRadius * 1.3]);
+        let lineR_time = d3
+          .lineRadial()
+          .defined(function(d) {
+            return d + 1;
+          })
+          .angle(function(d, k) {
+            return LinearX_time(k);
+          })
+          .radius(function(d) {
+            return LinearY_time(d);
+          });
+        let area = d3
+          .areaRadial()
+          .curve(d3.curveCardinalClosed)
+          .defined(lineR_time.defined())
+          .angle(lineR_time.angle())
+          .outerRadius(lineR_time.radius())
+          .innerRadius(outerRadius * 1.23);
+        gg.datum(pieData_time_data)
+          .append("path")
+          .attr("fill", colors[0])
+          .attr("d", area);
+        let arc_area_mid = d3
+          .arc()
+          .innerRadius(outerRadius * 1.18) //means full circle. if not 0, would be donut
+          .outerRadius(outerRadius * 1.22) //size of circle
+          .startAngle(d => {
+            return d.startAngle;
+          }) //how does it get d???
+          .endAngle(d => d.endAngle);
+        let pies_area = d3
+          .pie()
+          .startAngle(0)
+          .endAngle(Math.PI * 2)(
+          d3.range(pieData_time_data.length).map(function() {
+            return 1;
+          })
+        ); // turns into data for pie chart with start and end angles
+        gg.selectAll()
+          .data(pies_area)
+          .enter()
+          .append("path")
+          .attr("d", arc_area_mid)
+          .attr("fill", () => {
+            return "none";
+          })
+          .attr("stroke", function() {
+            return colors[0];
+          });
+      } else {
+        let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
+        let linear_map = d3
+          .scaleLinear()
+          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .range([0, 1]);
 
-      let arc_area_mid = d3
-        .arc()
-        .innerRadius(outerRadius * 1.18) //means full circle. if not 0, would be donut
-        .outerRadius(outerRadius * 1.22) //size of circle
-        .startAngle(d => {
-          return d.startAngle;
-        }) //how does it get d???
-        .endAngle(d => d.endAngle);
-      var pies_area = d3
-        .pie()
-        .startAngle(0)
-        .endAngle(Math.PI * 2)(
-        d3.range(pieData_time_data.length).map(function() {
-          return 1;
-        })
-      ); // turns into data for pie chart with start and end angles
-      gg.selectAll()
-        .data(pies_area)
-        .enter()
-        .append("path")
-        .attr("d", arc_area_mid)
-        .attr("fill", () => {
-          return "none";
-        })
-        .attr("stroke", function() {
-          return colors[0];
-        });
+        g.selectAll()
+          .data(boundaryData.features)
+          .enter()
+          .append("path")
+          .attr("d", path)
+          .attr("stroke", "#808080")
+          .attr("stroke-width", 1)
+          .style("fill", function(d) {
+            let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
+            if (indexTemp != -1) {
+              return mapColor(
+                linear_map(
+                  tensorSelectedData.C[patternsSelectedData[0]][indexTemp]
+                )
+              );
+            } else {
+              return "black";
+            }
+          })
+          .style("opacity", function(d) {
+            let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
+            if (indexTemp != -1) {
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+          .on("click", function(d) {
+            console.log(d.properties.name);
+          });
+
+        g.selectAll()
+          .data(tensorSelectedData.areaLocation)
+          .enter()
+          .append("text")
+          .attr("x", d => projection(d)[0])
+          .attr("y", d => projection(d)[1])
+          .attr("dx", 12)
+          .attr("dy", 12)
+          .style("font-size", 7)
+          .style("font-weight", "bold")
+          .style("font-family", "monospace")
+          .text(function(d, i) {
+            return tensorSelectedData.area[i];
+          });
+        let linear = d3
+          .scaleLinear()
+          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .range([2, 10]);
+        g.selectAll()
+          .data(tensorSelectedData.C[patternsSelectedData[0]])
+          .enter()
+          .append("circle")
+          .attr("cx", function(d, i) {
+            return projection(tensorSelectedData.areaLocation[i])[0];
+          })
+          .attr("cy", function(d, i) {
+            return projection(tensorSelectedData.areaLocation[i])[1];
+          })
+          .attr("r", d => linear(d))
+          .style("stroke", function() {
+            return colors[2];
+          })
+          .style("stroke-width", 2)
+          .style("fill", "rgba(255,255,255,0.5)");
+
+        //行业
+        let pieData_industry = d3
+          .range(tensorSelectedData.industry.length)
+          .map(function() {
+            return 1;
+          });
+
+        let pieData_industry_data =
+          tensorSelectedData.B[patternsSelectedData[0]]; //data we want to turn into a pie chart
+        let pieData_industry_data_1 =
+          tensorSelectedData.B[patternsSelectedData[1]]; //data we want to turn into a pie chart
+
+        let linear_industry = d3
+          .scaleLinear()
+          .domain([
+            0,
+            d3.max(pieData_industry_data.concat(pieData_industry_data_1))
+          ])
+          .range([outerRadius * 0.88, outerRadius * 1.1]);
+        let linear_industry_1 = d3
+          .scaleLinear()
+          .domain([
+            0,
+            d3.max(pieData_industry_data.concat(pieData_industry_data_1))
+          ])
+          .range([outerRadius * 0.82, outerRadius * 0.6]);
+        let pies_industry = d3
+          .pie()
+          .startAngle(0)
+          .endAngle(Math.PI * 2)(pieData_industry); // turns into data for pie chart with start and end angles
+        let arc_industry_mid = d3
+          .arc()
+          .innerRadius(outerRadius * 0.83) //means full circle. if not 0, would be donut
+          .outerRadius(outerRadius * 0.87) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
+
+        let arc_industry = d3
+          .arc()
+          .innerRadius(outerRadius * 0.88) //means full circle. if not 0, would be donut
+          .outerRadius(function(d, i) {
+            return linear_industry(pieData_industry_data[i]);
+          }) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
+        let arc_industry_1 = d3
+          .arc()
+          .innerRadius(outerRadius * 0.82) //means full circle. if not 0, would be donut
+          .outerRadius(function(d, i) {
+            return linear_industry_1(pieData_industry_data_1[i]);
+          }) //size of circle
+          .startAngle(d => d.startAngle) //how does it get d???
+          .endAngle(d => d.endAngle);
+        gg.selectAll()
+          .data(pies_industry)
+          .enter()
+          .append("path")
+          .attr("d", arc_industry)
+          .attr("fill", () => {
+            return colors[1];
+          })
+          .attr("stroke", function() {
+            return "#fff";
+          });
+        gg.selectAll()
+          .data(pies_industry)
+          .enter()
+          .append("path")
+          .attr("d", arc_industry_1)
+          .attr("fill", () => {
+            return colors[1];
+          })
+          .attr("stroke", function() {
+            return "#fff";
+          });
+        gg.selectAll()
+          .data(pies_industry)
+          .enter()
+          .append("path")
+          .attr("d", arc_industry_mid)
+          .attr("fill", () => {
+            return "none";
+          })
+          .attr("stroke", function() {
+            return colors[1];
+          });
+        //面积图
+        let pieData_time_data = tensorSelectedData.A[patternsSelectedData[0]];
+        let pieData_time_data_1 = tensorSelectedData.A[patternsSelectedData[1]];
+        let LinearX_time = d3
+          .scaleLinear()
+          .domain([0, pieData_time_data.length])
+          .range([0, 2 * Math.PI]);
+        let LinearY_time = d3
+          .scaleLinear()
+          .domain([0, d3.max(pieData_time_data.concat(pieData_time_data_1))])
+          .range([outerRadius * 1.23, outerRadius * 1.3]);
+        let lineR_time = d3
+          .lineRadial()
+          .defined(function(d) {
+            return d + 1;
+          })
+          .angle(function(d, k) {
+            return LinearX_time(k);
+          })
+          .radius(function(d) {
+            return LinearY_time(d);
+          });
+        let area = d3
+          .areaRadial()
+          .curve(d3.curveCardinalClosed)
+          .defined(lineR_time.defined())
+          .angle(lineR_time.angle())
+          .outerRadius(lineR_time.radius())
+          .innerRadius(outerRadius * 1.23);
+        gg.datum(pieData_time_data)
+          .append("path")
+          .attr("fill", colors[0])
+          .attr("d", area);
+
+        let LinearY_time_1 = d3
+          .scaleLinear()
+          .range([outerRadius * 1.17, outerRadius * 1.1])
+          .domain([0, d3.max(pieData_time_data.concat(pieData_time_data_1))]);
+
+        let lineR_time_1 = d3
+          .lineRadial()
+          .defined(function(d) {
+            return d + 1;
+          })
+          .angle(function(d, k) {
+            return LinearX_time(k);
+          })
+          .radius(function(d) {
+            return LinearY_time_1(d);
+          });
+        let area_1 = d3
+          .areaRadial()
+          .curve(d3.curveCardinalClosed)
+          .defined(lineR_time_1.defined())
+          .angle(lineR_time_1.angle())
+          .outerRadius(lineR_time_1.radius())
+          .innerRadius(outerRadius * 1.17);
+
+        gg.datum(pieData_time_data_1)
+          .append("path")
+          .attr("fill", colors[0])
+          .attr("d", area_1);
+
+        let arc_area_mid = d3
+          .arc()
+          .innerRadius(outerRadius * 1.18) //means full circle. if not 0, would be donut
+          .outerRadius(outerRadius * 1.22) //size of circle
+          .startAngle(d => {
+            return d.startAngle;
+          }) //how does it get d???
+          .endAngle(d => d.endAngle);
+        let pies_area = d3
+          .pie()
+          .startAngle(0)
+          .endAngle(Math.PI * 2)(
+          d3.range(pieData_time_data.length).map(function() {
+            return 1;
+          })
+        ); // turns into data for pie chart with start and end angles
+        gg.selectAll()
+          .data(pies_area)
+          .enter()
+          .append("path")
+          .attr("d", arc_area_mid)
+          .attr("fill", () => {
+            return "none";
+          })
+          .attr("stroke", function() {
+            return colors[0];
+          });
+      }
     }
   }
 };
