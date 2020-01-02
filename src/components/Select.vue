@@ -13,8 +13,6 @@
 
 <script>
 import store from "../vuex/store.js";
-// import * as d3 from "d3";
-
 export default {
   data: function() {
     return {
