@@ -2,15 +2,6 @@
   <div id="scatter">
     <div id="scatter_top">
       <font>Scatter View</font>
-      <Select v-model="model10" multiple size="small" placeholder="region" style="width:150px">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      <Select v-model="model10" multiple size="small" placeholder="industry" style="width:150px">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      <Select v-model="model10" multiple size="small" placeholder="time" style="width:150px">
-        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
     </div>
     <div id="scatter_down"></div>
   </div>
@@ -23,36 +14,8 @@ export default {
   data: function() {
     return {
       sharedState: store.state,
-      cityList: [
-        {
-          value: "New York",
-          label: "New York"
-        },
-        {
-          value: "London",
-          label: "London"
-        },
-        {
-          value: "Sydney",
-          label: "Sydney"
-        },
-        {
-          value: "Ottawa",
-          label: "Ottawa"
-        },
-        {
-          value: "Paris",
-          label: "Paris"
-        },
-        {
-          value: "Canberra",
-          label: "Canberra"
-        }
-      ],
-      model10: []
     };
   },
-
   watch: {
     "sharedState.tensorSelectedData": function(newdata) {
       this.draw(newdata);
@@ -60,7 +23,7 @@ export default {
   },
   methods: {
     draw(tensorSelectedData) {
-      // console.log(tensorSelectedData);
+      // console.log(tensorSelectedData)
       var scatter = tensorSelectedData.pattern2D;
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
       var industryData = tensorSelectedData.B.concat(tensorSelectedData.B);
@@ -87,13 +50,6 @@ export default {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      // // format the scatter
-      // scatter.forEach(function(d) {
-      //   d.x = +d.x;
-      //   d.y = +d.y;
-      //   d.he = +d.he;
-      // });
 
       var maxInNumbers_x = d3.max(scatter, function(d) {
         return d[0];
@@ -250,10 +206,5 @@ font {
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;
-}
-#scatter_top .ivu-select {
-  float: right;
-  margin-right: 2%;
-  margin-top: 3px;
 }
 </style>
