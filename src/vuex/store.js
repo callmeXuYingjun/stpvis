@@ -18,6 +18,7 @@ var store = new Vuex.Store({
     treeData: {},
     tensorSelectedData: {},
     patternsSelectedData: [1],
+    areaSelectedData: 0,
   },
   mutations: {
     testData_Update(state, data) {
@@ -46,6 +47,9 @@ var store = new Vuex.Store({
     },
     patternsSelectedData_Update(state, data) {
       state.patternsSelectedData = data
+    },
+    areaSelectedData_Update(state, data) {
+      state.areaSelectedData = data
     },
   },
   actions: {

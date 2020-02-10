@@ -113,7 +113,7 @@ export default {
             }
           })
           .on("click", () => {
-            store.commit("patternsSelectedData_Update", [i]);
+            store.commit("patternsSelectedData_Update", [i])
           });
 
         var pieData = industryData[i]; //data we want to turn into a pie chart

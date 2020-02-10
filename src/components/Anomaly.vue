@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     draw(data, tensorSelectedData) {
+      // console.log(tensorSelectedData.anomalyArea)
       var anomalyData = tensorSelectedData.anomalyArea;
       document.getElementById("anomaly_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -112,7 +113,8 @@ export default {
             return 0;
           }
         })
-        .on("click", function(d) {
+        .on("click", function(d,i) {
+          store.commit("areaSelectedData_Update",i);
           console.log(d.properties.name);
         });
       // var districtData = [

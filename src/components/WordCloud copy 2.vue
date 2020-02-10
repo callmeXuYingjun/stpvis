@@ -19,37 +19,29 @@ export default {
     };
   },
   computed: {
-    tensorSelectedData_areaSelectedData() {
-      const [tensorSelectedData,areaSelectedData] = [
+    tensorSelectedData_patternsSelectedData() {
+      const [tensorSelectedData,patternsSelectedData] = [
         this.sharedState.tensorSelectedData,
-        this.sharedState.areaSelectedData
+        this.sharedState.patternsSelectedData
       ];
-      return [tensorSelectedData,areaSelectedData];
+      return [tensorSelectedData,patternsSelectedData];
     }
   },
   watch: {
-    tensorSelectedData_areaSelectedData: {
+    tensorSelectedData_patternsSelectedData: {
       handler: function(val) {
-        if (JSON.stringify(val[0]) !== "{}")
+        if (JSON.stringify(val[0]) !== "{}" && val[1].length>=1)
           this.draw(val[0], val[1]);
       },
       deep: true
     }
   },
   methods: {
-    draw(tensorSelectedData,areaSelectedData) {
-      var modelDiffentAll=[]
-      for(let i=0;i<tensorSelectedData.C.length;i++){
-        modelDiffentAll[i]=Math.abs(tensorSelectedData.C[i][areaSelectedData]-tensorSelectedData.ce_C[i][areaSelectedData])
-      }
-      var industryDistribute=[]
-      for(let i=0;i<tensorSelectedData.B[0].length;i++){
-        var sumTemp=0
-        for(let j=0;j<tensorSelectedData.B.length;j++){
-          sumTemp+=tensorSelectedData.B[j][i]*modelDiffentAll[j]
-        }
-        industryDistribute[i]=[tensorSelectedData.industry[i],sumTemp]
-      }
+    draw(tensorSelectedData,patternsSelectedData) {
+      var data = [];
+      tensorSelectedData.industry.forEach((d,i)=>{
+        data[i]=[d,tensorSelectedData.B[patternsSelectedData[0]][i]]
+      })
       document.getElementById("wordcloud_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -74,12 +66,12 @@ export default {
 
       const wordScale = d3
         .scaleLinear()
-        .domain(d3.extent(industryDistribute,d=>d[1]))
+        .domain(d3.extent(data,d=>d[1]))
         .range([5, 60]);
       d3Cloud()
         .size([width, height])
         .timeInterval(20)
-        .words(industryDistribute)
+        .words(data)
         .rotate(function() {
           return 0;
         })
