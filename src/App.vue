@@ -9,7 +9,8 @@
           <router-view name="Scatter"></router-view>
         </div>
         <div id="Vertikal_1-Horizontal_3">
-          <router-view name="Matrix"></router-view>
+          <router-view name="Query"></router-view>
+          <!-- <router-view name="Matrix"></router-view> -->
         </div>
       </div>
       <div id="Vertikal_2">
@@ -17,14 +18,14 @@
           <router-view name="Pattern"></router-view>
         </div>
         <div id="Vertikal_2-Horizontal_2">
-          <router-view name="WordCloud"></router-view>
-        </div>
-        <div id="Vertikal_2-Horizontal_3">
           <router-view name="Anomaly"></router-view>
         </div>
-        <div id="Vertikal_2-Horizontal_4">
-          <router-view name="Query"></router-view>
+        <div id="Vertikal_2-Horizontal_3">
+          <router-view name="WordCloud"></router-view>
         </div>
+        <!-- <div id="Vertikal_2-Horizontal_4">
+          <router-view name="Query"></router-view>
+        </div> -->
       </div>
       <!-- <router-view name="Tree" ></router-view> -->
     </div>

@@ -10,10 +10,11 @@
 <script>
 import store from "../vuex/store.js";
 import * as d3 from "d3";
+// import {lasso as d3Lasso } from "d3-lasso";
 export default {
   data: function() {
     return {
-      sharedState: store.state,
+      sharedState: store.state
     };
   },
   watch: {
@@ -23,6 +24,40 @@ export default {
   },
   methods: {
     draw(tensorSelectedData) {
+      // var lasso_start = function() {
+      //   lasso
+      //     .items()
+      //     .attr("r", 7)
+      //     .classed("not_possible", true)
+      //     .classed("selected", false);
+      // };
+
+      // var lasso_draw = function() {
+      //   lasso
+      //     .possibleItems()
+      //     .classed("not_possible", false)
+      //     .classed("possible", true);
+
+      //   lasso
+      //     .notPossibleItems()
+      //     .classed("not_possible", true)
+      //     .classed("possible", false);
+      // };
+
+      // var lasso_end = function() {
+      //   lasso
+      //     .items()
+      //     .classed("not_possible", false)
+      //     .classed("possible", false);
+
+      //   lasso
+      //     .selectedItems()
+      //     .classed("selected", true)
+      //     .attr("r", 7);
+
+      //   lasso.notSelectedItems().attr("r", 3.5);
+      // };
+
       // console.log(tensorSelectedData)
       var scatter = tensorSelectedData.pattern2D;
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
@@ -99,22 +134,40 @@ export default {
         .style("font-size", "12px")
         .style("font-weight", "bold")
         .text("");
-      for (let i = 0; i < tensorSelectedData.pattern2D.length; i++) {
-        svg
+      // var circles=
+      svg.selectAll()
+          .data(scatter)
+          .enter()
           .append("circle")
-          .attr("r", linear_r(he_ce_he[i]))
-          .attr("cx", Scale(scatter[i][0]))
-          .attr("cy", Scale(scatter[i][1]))
-          .style("fill", function() {
+          .attr("r", (d,i)=>linear_r(he_ce_he[i]))
+          .attr("cx",(d,i)=>Scale(scatter[i][0]))
+          .attr("cy", (d,i)=>Scale(scatter[i][1]))
+          .style("fill", function(d,i) {
             if (i >= scatter.length / 2) {
               return "#D53A35";
             } else {
               return "#2F4554";
             }
           })
-          .on("click", () => {
-            store.commit("patternsSelectedData_Update", [i])
+          .on("click", (d,i) => {
+            store.commit("patternsSelectedData_Update", [i]);
           });
+      for (let i = 0; i < scatter.length; i++) {
+        // circles[i]=svg
+        //   .append("circle")
+        //   .attr("r", linear_r(he_ce_he[i]))
+        //   .attr("cx", Scale(scatter[i][0]))
+        //   .attr("cy", Scale(scatter[i][1]))
+        //   .style("fill", function() {
+        //     if (i >= scatter.length / 2) {
+        //       return "#D53A35";
+        //     } else {
+        //       return "#2F4554";
+        //     }
+        //   })
+        //   .on("click", () => {
+        //     store.commit("patternsSelectedData_Update", [i]);
+        //   });
 
         var pieData = industryData[i]; //data we want to turn into a pie chart
         var pies = d3
@@ -164,6 +217,16 @@ export default {
             return tooltip.style("visibility", "hidden");
           });
       }
+      //   var lasso = d3Lasso()
+      //     .closePathDistance(75) 
+      //     .closePathSelect(true) 
+      //     .targetArea(svg)
+      //     .items(circles) 
+      //     .on("start",lasso_start) 
+      //     .on("draw",lasso_draw) 
+      //     .on("end",lasso_end); 
+
+      // svg.call(lasso);
     }
   }
 };
@@ -207,4 +270,51 @@ font {
   border-color: #c7c7c7;
   border-radius: 5px;
 }
+/* .axis path {
+  stroke: black;
+}
+
+.tick line {
+  visibility: hidden;
+}
+
+.border {
+  margin-top: 9px;
+  margin-left: 29px;
+  border: 0.5px solid black;
+  width: 325px;
+  height: 335px;
+  position: absolute;
+}
+
+.lasso path {
+  stroke: rgb(80, 80, 80);
+  stroke-width: 2px;
+}
+
+.lasso .drawn {
+  fill-opacity: 0.05;
+}
+
+.lasso .loop_close {
+  fill: none;
+  stroke-dasharray: 4, 4;
+}
+
+.lasso .origin {
+  fill: #3399ff;
+  fill-opacity: 0.5;
+}
+
+.not_possible {
+  fill: rgb(200, 200, 200);
+}
+
+.possible {
+  fill: #ec888c;
+}
+
+.selected {
+  fill: steelblue;
+} */
 </style>
