@@ -98,12 +98,23 @@ export default {
         .style("fill", function() {
           return "#aad3df";
         });
-
       if (patternsSelectedData.length == 1) {
+        let ASelect,BSelect,CSelect,modeID
+        if(patternsSelectedData[0]<tensorSelectedData.A.length){
+          ASelect=tensorSelectedData.A
+          BSelect=tensorSelectedData.B
+          CSelect=tensorSelectedData.C
+          modeID=patternsSelectedData[0]
+        }else{
+          ASelect=tensorSelectedData.ce_A
+          BSelect=tensorSelectedData.B
+          CSelect=tensorSelectedData.ce_C
+          modeID=patternsSelectedData[0]-tensorSelectedData.A.length
+        }
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
           .scaleLinear()
-          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .domain(d3.extent(CSelect[modeID]))
           .range([0, 1]);
 
         g.selectAll()
@@ -118,7 +129,7 @@ export default {
             if (indexTemp != -1) {
               return mapColor(
                 linear_map(
-                  tensorSelectedData.C[patternsSelectedData[0]][indexTemp]
+                  CSelect[modeID][indexTemp]
                 )
               );
             } else {
@@ -153,10 +164,10 @@ export default {
           });
         let linear = d3
           .scaleLinear()
-          .domain(d3.extent(tensorSelectedData.C[patternsSelectedData[0]]))
+          .domain(d3.extent(CSelect[modeID]))
           .range([2, 10]);
         g.selectAll()
-          .data(tensorSelectedData.C[patternsSelectedData[0]])
+          .data(CSelect[modeID])
           .enter()
           .append("circle")
           .attr("cx", function(d, i) {
@@ -180,7 +191,7 @@ export default {
           });
 
         let pieData_industry_data =
-          tensorSelectedData.B[patternsSelectedData[0]]; //data we want to turn into a pie chart
+          BSelect[modeID]; //data we want to turn into a pie chart
 
         let linear_industry = d3
           .scaleLinear()
@@ -232,7 +243,7 @@ export default {
             return colors[1];
           });
         //面积图
-        let pieData_time_data = tensorSelectedData.A[patternsSelectedData[0]];
+        let pieData_time_data = ASelect[modeID];
         let LinearX_time = d3
           .scaleLinear()
           .domain([0, pieData_time_data.length])
@@ -290,7 +301,8 @@ export default {
           .attr("stroke", function() {
             return colors[0];
           });
-      } else {
+      } 
+      else {
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
           .scaleLinear()

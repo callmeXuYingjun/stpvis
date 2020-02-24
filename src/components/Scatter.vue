@@ -107,9 +107,9 @@ export default {
           .attr("cy", Scale(scatter[i][1]))
           .style("fill", function() {
             if (i >= scatter.length / 2) {
-              return "grey";
+              return "#D53A35";
             } else {
-              return "red";
+              return "#2F4554";
             }
           })
           .on("click", () => {

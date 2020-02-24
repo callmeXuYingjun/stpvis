@@ -120,12 +120,15 @@ export default {
           // .style("stroke-width", 0.5)
           .style("fill", function(d) {
             if(d[0]>cScore.length/2){
-              return "red";
+              return "#D53A35";
             }else{
-              return "blue";
+              return "#2F4554";
             }
             
-          })
+          })          
+          .on("click", (d) => {
+            store.commit("patternsSelectedData_Update",[d[0]])
+          });
     }
   }
 };
