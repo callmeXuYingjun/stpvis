@@ -38,6 +38,7 @@ export default {
   },
   methods: {
     draw(tensorSelectedData,areaSelectedData) {
+      console.log(tensorSelectedData,areaSelectedData)
       var modelDiffentAll=[]
       for(let i=0;i<tensorSelectedData.C.length;i++){
         modelDiffentAll[i]=Math.abs(tensorSelectedData.C[i][areaSelectedData]-tensorSelectedData.ce_C[i][areaSelectedData])

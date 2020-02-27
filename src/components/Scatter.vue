@@ -135,23 +135,75 @@ export default {
         .style("font-weight", "bold")
         .text("");
       // var circles=
-      svg.selectAll()
-          .data(scatter)
-          .enter()
-          .append("circle")
-          .attr("r", (d,i)=>linear_r(he_ce_he[i]))
-          .attr("cx",(d,i)=>Scale(scatter[i][0]))
-          .attr("cy", (d,i)=>Scale(scatter[i][1]))
-          .style("fill", function(d,i) {
-            if (i >= scatter.length / 2) {
-              return "#D53A35";
-            } else {
-              return "#2F4554";
-            }
-          })
-          .on("click", (d,i) => {
-            store.commit("patternsSelectedData_Update", [i]);
-          });
+      svg
+        .selectAll()
+        .data(scatter)
+        .enter()
+        .append("circle")
+        .attr("r", (d, i) => linear_r(he_ce_he[i]))
+        .attr("cx", (d, i) => Scale(scatter[i][0]))
+        .attr("cy", (d, i) => Scale(scatter[i][1]))
+        .style("fill", function(d, i) {
+          if (i >= scatter.length / 2) {
+            return "#D53A35";
+          } else {
+            return "#2F4554";
+          }
+        })
+        .on("click", (d, i) => {
+          store.commit("patternsSelectedData_Update", [i]);
+        });
+      var industryOne = [
+        ["物业服务与管理", "供热", "占道经营", "违章建筑"],
+        [
+          "供水",
+          "道路建设与维护",
+          "工作效率",
+          "噪声污染",
+          "土地资源管理",
+          "交通规划"
+        ],
+        [
+          "营运管理",
+          "养老保险",
+          "社会治安",
+          "环境卫生",
+          "优惠政策",
+          "房屋产权办理",
+          "工作纪律"
+        ],
+        [
+          "燃气",
+          "劳动监察",
+          "拆迁管理",
+          "下水排水",
+          "媒体内容",
+          "低保管理",
+          "工商活动",
+          "农村路桥建设维护",
+          "空气污染",
+          "特殊扶助"
+        ],
+        [
+          "经营性收费",
+          "交通秩序",
+          "服务态度与质量",
+          "交通设施建设维护",
+          "消防安全",
+          "人口管理",
+          "医疗保险",
+          "补课办班",
+          "园林绿化",
+          "路灯管理",
+          "房屋交易",
+          "政务公开",
+          "基层组织建设",
+          "供电",
+          "房地产开发",
+          "废弃物",
+          "教学管理"
+        ]
+      ];
       for (let i = 0; i < scatter.length; i++) {
         // circles[i]=svg
         //   .append("circle")
@@ -168,8 +220,23 @@ export default {
         //   .on("click", () => {
         //     store.commit("patternsSelectedData_Update", [i]);
         //   });
-
-        var pieData = industryData[i]; //data we want to turn into a pie chart
+        var industryOneDis = [0, 0, 0, 0, 0];
+        var industryOneName = [
+          "一级行业名称1",
+          "一级行业名称2",
+          "一级行业名称3",
+          "一级行业名称4",
+          "一级行业名称5"
+        ];
+        for (var n = 0; n < industryData[i].length; n++) {
+          for (var m = 0; m < 5; m++) {
+            if (industryOne[m].indexOf(tensorSelectedData.industry[n]) != -1) {
+              industryOneDis[m] += industryData[i][n];
+              break;
+            }
+          }
+        }
+        var pieData = industryOneDis; //data we want to turn into a pie chart
         var pies = d3
           .pie()
           .startAngle(0)
@@ -206,7 +273,7 @@ export default {
           .on("mouseover", function(d, k) {
             return tooltip
               .style("visibility", "visible")
-              .text(tensorSelectedData.industry[k]);
+              .text(industryOneName[k]);
           })
           .on("mousemove", function() {
             return tooltip
@@ -218,13 +285,13 @@ export default {
           });
       }
       //   var lasso = d3Lasso()
-      //     .closePathDistance(75) 
-      //     .closePathSelect(true) 
+      //     .closePathDistance(75)
+      //     .closePathSelect(true)
       //     .targetArea(svg)
-      //     .items(circles) 
-      //     .on("start",lasso_start) 
-      //     .on("draw",lasso_draw) 
-      //     .on("end",lasso_end); 
+      //     .items(circles)
+      //     .on("start",lasso_start)
+      //     .on("draw",lasso_draw)
+      //     .on("end",lasso_end);
 
       // svg.call(lasso);
     }

@@ -148,20 +148,20 @@ export default {
             console.log(d.properties.name);
           });
 
-        g.selectAll()
-          .data(tensorSelectedData.areaLocation)
-          .enter()
-          .append("text")
-          .attr("x", d => projection(d)[0])
-          .attr("y", d => projection(d)[1])
-          .attr("dx", 12)
-          .attr("dy", 12)
-          .style("font-size", 7)
-          .style("font-weight", "bold")
-          .style("font-family", "monospace")
-          .text(function(d, i) {
-            return tensorSelectedData.area[i];
-          });
+        // g.selectAll()
+        //   .data(tensorSelectedData.areaLocation)
+        //   .enter()
+        //   .append("text")
+        //   .attr("x", d => projection(d)[0])
+        //   .attr("y", d => projection(d)[1])
+        //   .attr("dx", 12)
+        //   .attr("dy", 12)
+        //   .style("font-size", 7)
+        //   .style("font-weight", "bold")
+        //   .style("font-family", "monospace")
+        //   .text(function(d, i) {
+        //     return tensorSelectedData.area[i];
+        //   });
         let linear = d3
           .scaleLinear()
           .domain(d3.extent(CSelect[modeID]))

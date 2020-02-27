@@ -72,7 +72,7 @@ export default {
       var cScoreTop10=cScore.slice(0,10)
       // console.log(cScoreTop10)
       // set the dimensions and margins of the graph
-      var margin = { top: 20, right: 20, bottom: 30, left: 50 };
+      var margin = { top: 20, right: 20, bottom: 30, left: 20 };
       document.getElementById("query_down").innerHTML = "";
       var width =
         document.getElementById("query_down").scrollWidth -
@@ -82,8 +82,8 @@ export default {
         document.getElementById("query_down").scrollHeight -
         margin.top -
         margin.bottom;
-      var textLeft = 20,
-          textTop = 20;
+      var textLeft = 30,
+          textTop = 10;
       var  barHeight= (height - textTop)/cScoreTop10.length;
       var linear = d3
         .scaleLinear()
@@ -99,10 +99,10 @@ export default {
       var g = svg
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-      var gg = g
-        .append("g")
-        .attr("transform", "translate(" + textLeft + "," + textTop + ")");
-      gg.selectAll()
+      // var gg = g
+      //   .append("g")
+      //   .attr("transform", "translate(" + textLeft + "," + 0 + ")");
+      g.selectAll()
           .data(cScoreTop10)
           .enter()
           .append("rect")
@@ -119,16 +119,32 @@ export default {
           })
           // .style("stroke-width", 0.5)
           .style("fill", function(d) {
-            if(d[0]>cScore.length/2){
+            if(d[0]>=cScore.length/2){
               return "#D53A35";
             }else{
               return "#2F4554";
             }
-            
           })          
           .on("click", (d) => {
             store.commit("patternsSelectedData_Update",[d[0]])
           });
+
+      g.selectAll()
+        .data(cScoreTop10)
+        .enter()
+        .append("text")
+        .attr("x", 0)
+        .attr("y", (d, i) =>0.4*barHeight+ barHeight*i + textTop)
+        .attr("dy", "0.8em")
+        .style("font-size", "12px")
+        .style("font-family", "monospace")
+        .text(function(d) {
+            if(d[0]<cScore.length/2){
+              return "o-"+d[0]
+            }else{
+              return "n-"+(d[0]-cScore.length/2)
+            }
+        });
     }
   }
 };

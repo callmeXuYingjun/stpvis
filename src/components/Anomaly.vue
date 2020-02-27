@@ -113,8 +113,9 @@ export default {
             return 0;
           }
         })
-        .on("click", function(d,i) {
-          store.commit("areaSelectedData_Update",i);
+        .on("click", function(d) {
+          let indexTemp = tensorSelectedData.area.indexOf(d.properties.name)
+          store.commit("areaSelectedData_Update",indexTemp);
           console.log(d.properties.name);
         });
       // var districtData = [
@@ -129,20 +130,20 @@ export default {
       //   ["NA", [125.182654, 44.450447], 44],
       //   ["YS", [126.562452, 44.841186], 22]
       // ];
-      g.selectAll()
-        .data(tensorSelectedData.areaLocation)
-        .enter()
-        .append("text")
-        .attr("x", d => projection(d)[0])
-        .attr("y", d => projection(d)[1])
-        .attr("dx", 12)
-        .attr("dy", 12)
-        .style("font-size", 7)
-        .style("font-weight", "bold")
-        .style("font-family", "monospace")
-        .text(function(d, i) {
-          return tensorSelectedData.area[i];
-        });
+      // g.selectAll()
+      //   .data(tensorSelectedData.areaLocation)
+      //   .enter()
+      //   .append("text")
+      //   .attr("x", d => projection(d)[0])
+      //   .attr("y", d => projection(d)[1])
+      //   .attr("dx", 12)
+      //   .attr("dy", 12)
+      //   .style("font-size", 7)
+      //   .style("font-weight", "bold")
+      //   .style("font-family", "monospace")
+      //   .text(function(d, i) {
+      //     return tensorSelectedData.area[i];
+      //   });
       // var linear = d3
       //   .scaleLinear()
       //   .domain(
