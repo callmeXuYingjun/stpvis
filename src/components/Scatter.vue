@@ -135,24 +135,24 @@ export default {
         .style("font-weight", "bold")
         .text("");
       // var circles=
-      svg
-        .selectAll()
-        .data(scatter)
-        .enter()
-        .append("circle")
-        .attr("r", (d, i) => linear_r(he_ce_he[i]))
-        .attr("cx", (d, i) => Scale(scatter[i][0]))
-        .attr("cy", (d, i) => Scale(scatter[i][1]))
-        .style("fill", function(d, i) {
-          if (i >= scatter.length / 2) {
-            return "#D53A35";
-          } else {
-            return "#2F4554";
-          }
-        })
-        .on("click", (d, i) => {
-          store.commit("patternsSelectedData_Update", [i]);
-        });
+      // svg
+      //   .selectAll()
+      //   .data(scatter)
+      //   .enter()
+      //   .append("circle")
+      //   .attr("r", (d, i) => linear_r(he_ce_he[i]))
+      //   .attr("cx", (d, i) => Scale(scatter[i][0]))
+      //   .attr("cy", (d, i) => Scale(scatter[i][1]))
+      //   .style("fill", function(d, i) {
+      //     if (i >= scatter.length / 2) {
+      //       return "#D53A35";
+      //     } else {
+      //       return "#2F4554";
+      //     }
+      //   })
+      //   .on("click", (d, i) => {
+      //     store.commit("patternsSelectedData_Update", [i]);
+      //   });
       var industryOne = [
         ["物业服务与管理", "供热", "占道经营", "违章建筑"],
         [
@@ -205,21 +205,21 @@ export default {
         ]
       ];
       for (let i = 0; i < scatter.length; i++) {
-        // circles[i]=svg
-        //   .append("circle")
-        //   .attr("r", linear_r(he_ce_he[i]))
-        //   .attr("cx", Scale(scatter[i][0]))
-        //   .attr("cy", Scale(scatter[i][1]))
-        //   .style("fill", function() {
-        //     if (i >= scatter.length / 2) {
-        //       return "#D53A35";
-        //     } else {
-        //       return "#2F4554";
-        //     }
-        //   })
-        //   .on("click", () => {
-        //     store.commit("patternsSelectedData_Update", [i]);
-        //   });
+        svg
+          .append("circle")
+          .attr("r", linear_r(he_ce_he[i]))
+          .attr("cx", Scale(scatter[i][0]))
+          .attr("cy", Scale(scatter[i][1]))
+          .style("fill", function() {
+            if (i >= scatter.length / 2) {
+              return "#D53A35";
+            } else {
+              return "#2F4554";
+            }
+          })
+          .on("click", () => {
+            store.commit("patternsSelectedData_Update", [i]);
+          });
         var industryOneDis = [0, 0, 0, 0, 0];
         var industryOneName = [
           "一级行业名称1",

@@ -2,6 +2,10 @@
   <div id="tree">
     <div id="tree_top">
       <font>Tree View</font>
+      <i-switch true-color="#13ce66" false-color="#ff4949" v-model="switch1" @on-change="change">
+        <span slot="open">粗</span>
+        <span slot="close">细</span>
+      </i-switch>
     </div>
     <div id="tree_down"></div>
     <div id="tree_panel">
@@ -41,6 +45,7 @@ export default {
   data: function() {
     return {
       sharedState: store.state,
+      switch1: false,
       dimensionList: [
         {
           value: "0",
@@ -80,6 +85,13 @@ export default {
     }
   },
   methods: {
+    change(status) {
+        var params = {
+        tensorSelectedName: this.sharedState.tensorSelectedData.name,
+        liduStatus: status
+      };
+      store.dispatch("lidu_action", params);
+    },
     partitionSubmit() {
       d3.select("#tree_panel").style("visibility", "hidden");
       var params = {
@@ -116,7 +128,10 @@ export default {
           }
         });
         var nodeArray = nodes.descendants();
-        store.commit("tensorSelectedData_Update", nodeArray[nodeArray.length-1].data);
+        store.commit(
+          "tensorSelectedData_Update",
+          nodeArray[nodeArray.length - 1].data
+        );
         var colors = ["#893D98", "#22B184", "#4272B5"];
 
         var svg = d3
@@ -698,5 +713,10 @@ font {
   border-style: solid;
   border-color: grey;
   background-color: white;
+}
+#tree_top .ivu-switch {
+  float: right;
+  margin-right: 2%;
+  margin-top: 3px;
 }
 </style>

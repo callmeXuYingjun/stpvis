@@ -115,6 +115,26 @@ var store = new Vuex.Store({
           commit('treeData_Update', data)
         })
     },
+    lidu_action({ commit }, params) {
+      function read_treeData() {
+        return new Promise(function (resolve) {
+          axios.get('/algorithm/lidu', {
+            params: params
+          })
+            .then(function (response) {
+              resolve(response.data)
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        });
+      }
+      read_treeData()
+        .then(data => {
+          console.log(data)
+          // commit('treeData_Update', data)
+        })
+    },
 
     anomalyData_action({ commit }) {
       function read_anomalyData() {

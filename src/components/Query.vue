@@ -2,16 +2,17 @@
   <div id="query">
     <div id="query_top">
       <font>Query View</font>
-      <Select v-model="areaSelectSet" multiple size="small" placeholder="region" style="width:150px">
+      <Button type="success" @click="query" size="small" style="width:50px">OK</Button>
+      <Select v-model="areaSelectSet" multiple size="small" placeholder="region" style="width:100px">
         <Option v-for="(item,index) in sharedState.tensorSelectedData.area" :value="index" :key="item">{{ item }}</Option>
       </Select>
-      <Select v-model="industrySelectSet" multiple size="small" placeholder="industry" style="width:150px">
+      <Select v-model="industrySelectSet" multiple size="small" placeholder="industry" style="width:100px">
         <Option v-for="(item,index) in sharedState.tensorSelectedData.industry" :value="index" :key="item">{{ item }}</Option>
       </Select>
-      <Select v-model="timeSelectSet" multiple size="small" placeholder="time" style="width:150px">
+      <Select v-model="timeSelectSet" multiple size="small" placeholder="time" style="width:100px">
         <Option v-for="(item,index) in sharedState.tensorSelectedData.time" :value="index" :key="item">{{ item }}</Option>
       </Select>
-      <Button type="success" @click="query" size="small" style="width:150px">OK</Button>
+      
     </div>
     <div id="query_down"></div>
   </div>
@@ -188,7 +189,12 @@ font {
   border-color: #c7c7c7;
   border-radius: 5px;
 }
-#query_top .ivu-select  .ivu-btn{
+#query_top .ivu-select{
+  float: right;
+  margin-right: 2%;
+  margin-top: 3px;
+}
+#query_top .ivu-btn{
   float: right;
   margin-right: 2%;
   margin-top: 3px;

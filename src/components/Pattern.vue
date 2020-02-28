@@ -99,17 +99,17 @@ export default {
           return "#aad3df";
         });
       if (patternsSelectedData.length == 1) {
-        let ASelect,BSelect,CSelect,modeID
-        if(patternsSelectedData[0]<tensorSelectedData.A.length){
-          ASelect=tensorSelectedData.A
-          BSelect=tensorSelectedData.B
-          CSelect=tensorSelectedData.C
-          modeID=patternsSelectedData[0]
-        }else{
-          ASelect=tensorSelectedData.ce_A
-          BSelect=tensorSelectedData.B
-          CSelect=tensorSelectedData.ce_C
-          modeID=patternsSelectedData[0]-tensorSelectedData.A.length
+        let ASelect, BSelect, CSelect, modeID;
+        if (patternsSelectedData[0] < tensorSelectedData.A.length) {
+          ASelect = tensorSelectedData.A;
+          BSelect = tensorSelectedData.B;
+          CSelect = tensorSelectedData.C;
+          modeID = patternsSelectedData[0];
+        } else {
+          ASelect = tensorSelectedData.ce_A;
+          BSelect = tensorSelectedData.B;
+          CSelect = tensorSelectedData.ce_C;
+          modeID = patternsSelectedData[0] - tensorSelectedData.A.length;
         }
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
@@ -127,11 +127,7 @@ export default {
           .style("fill", function(d) {
             let indexTemp = tensorSelectedData.area.indexOf(d.properties.name);
             if (indexTemp != -1) {
-              return mapColor(
-                linear_map(
-                  CSelect[modeID][indexTemp]
-                )
-              );
+              return mapColor(linear_map(CSelect[modeID][indexTemp]));
             } else {
               return "black";
             }
@@ -190,15 +186,11 @@ export default {
             return 1;
           });
 
-        let pieData_industry_data =
-          BSelect[modeID]; //data we want to turn into a pie chart
+        let pieData_industry_data = BSelect[modeID]; //data we want to turn into a pie chart
 
         let linear_industry = d3
           .scaleLinear()
-          .domain([
-            0,
-            d3.max(pieData_industry_data)
-          ])
+          .domain([0, d3.max(pieData_industry_data)])
           .range([outerRadius * 0.88, outerRadius * 1.1]);
         let pies_industry = d3
           .pie()
@@ -301,8 +293,7 @@ export default {
           .attr("stroke", function() {
             return colors[0];
           });
-      } 
-      else {
+      } else {
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
           .scaleLinear()
@@ -595,4 +586,5 @@ font {
   border-color: #c7c7c7;
   border-radius: 5px;
 }
+
 </style>
