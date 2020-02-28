@@ -163,6 +163,8 @@ export default {
               return colors[1];
             } else if (temp[temp.length - 1][0] == "C") {
               return colors[2];
+            }else{
+              return "grey"
             }
           })
           .style("fill", function() {

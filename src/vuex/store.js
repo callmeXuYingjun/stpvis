@@ -131,8 +131,8 @@ var store = new Vuex.Store({
       }
       read_treeData()
         .then(data => {
-          console.log(data)
-          // commit('treeData_Update', data)
+          // console.log(data)
+          commit('treeData_Update', data)
         })
     },
 
