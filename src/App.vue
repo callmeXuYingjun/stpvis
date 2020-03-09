@@ -1,5 +1,6 @@
 <template>
   <div id="App">
+    <!-- <router-view name="Scatter"></router-view> -->
     <div id="Main">
       <div id="Vertikal_1">
         <div id="Vertikal_1-Horizontal_1">
@@ -10,7 +11,6 @@
         </div>
         <div id="Vertikal_1-Horizontal_3">
           <router-view name="Query"></router-view>
-          <!-- <router-view name="Matrix"></router-view> -->
         </div>
       </div>
       <div id="Vertikal_2">
@@ -23,11 +23,7 @@
         <div id="Vertikal_2-Horizontal_3">
           <router-view name="WordCloud"></router-view>
         </div>
-        <!-- <div id="Vertikal_2-Horizontal_4">
-          <router-view name="Query"></router-view>
-        </div> -->
       </div>
-      <!-- <router-view name="Tree" ></router-view> -->
     </div>
   </div>
 </template>
