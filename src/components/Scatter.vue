@@ -24,45 +24,10 @@ export default {
   },
   methods: {
     draw(tensorSelectedData) {
-      // var lasso_start = function() {
-      //   lasso
-      //     .items()
-      //     .attr("r", 7)
-      //     .classed("not_possible", true)
-      //     .classed("selected", false);
-      // };
-
-      // var lasso_draw = function() {
-      //   lasso
-      //     .possibleItems()
-      //     .classed("not_possible", false)
-      //     .classed("possible", true);
-
-      //   lasso
-      //     .notPossibleItems()
-      //     .classed("not_possible", true)
-      //     .classed("possible", false);
-      // };
-
-      // var lasso_end = function() {
-      //   lasso
-      //     .items()
-      //     .classed("not_possible", false)
-      //     .classed("possible", false);
-
-      //   lasso
-      //     .selectedItems()
-      //     .classed("selected", true)
-      //     .attr("r", 7);
-
-      //   lasso.notSelectedItems().attr("r", 3.5);
-      // };
-
-      // console.log(tensorSelectedData)
       var scatter = tensorSelectedData.pattern2D;
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
       var industryData = tensorSelectedData.B.concat(tensorSelectedData.B);
-      var colors = d3.scaleOrdinal(d3.schemeCategory10); //maps integers to colors
+      var colors = ["#439D3B","#815BB3","#B89ECF","#7C4B4C","#F36731"]; //maps integers to colors
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 50 };
       document.getElementById("scatter_down").innerHTML = "";
@@ -81,8 +46,8 @@ export default {
       var svg = d3
         .select("#scatter_down")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width+ margin.left+margin.right)
+        .attr("height", height+ margin.top+margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -222,11 +187,11 @@ export default {
           });
         var industryOneDis = [0, 0, 0, 0, 0];
         var industryOneName = [
-          "一级行业名称1",
-          "一级行业名称2",
-          "一级行业名称3",
-          "一级行业名称4",
-          "一级行业名称5"
+          "一级名称1",
+          "一级名称2",
+          "一级名称3",
+          "一级名称4",
+          "一级名称5"
         ];
         for (var n = 0; n < industryData[i].length; n++) {
           for (var m = 0; m < 5; m++) {
@@ -253,8 +218,8 @@ export default {
           .enter()
           .append("path")
           .attr("d", arc)
-          .attr("fill", d => {
-            return colors(d.value);
+          .attr("fill", (d,k) => {
+            return colors[k];
           })
           .attr("stroke", function() {
             return "#fff";
@@ -284,16 +249,38 @@ export default {
             return tooltip.style("visibility", "hidden");
           });
       }
-      //   var lasso = d3Lasso()
-      //     .closePathDistance(75)
-      //     .closePathSelect(true)
-      //     .targetArea(svg)
-      //     .items(circles)
-      //     .on("start",lasso_start)
-      //     .on("draw",lasso_draw)
-      //     .on("end",lasso_end);
-
-      // svg.call(lasso);
+      svg.selectAll()
+        .data(colors)
+        .enter()
+        .append("rect")
+        .attr("x", function(d,i) {
+          return width*0.1+80*i;
+        })
+        .attr("y", function() {
+          return height+5;
+        })
+        .attr("width",20)
+        .attr("height",20)
+        .style("stroke", function() {
+          return "#D4D5D3";
+        })
+        .style("fill", function(d) {
+          return d
+        })
+      svg.selectAll()
+        .data(industryOneName)
+        .enter()
+        .append("text")
+        .attr("x",function(d,i) {
+          return 20+width*0.1+80*i;
+        })
+        .attr("y", height+5)
+        .attr("dy", "0.8em")
+        .style("font-size", "12px")
+        .style("font-family", "monospace")
+        .text(function(d) {
+          return d
+        });
     }
   }
 };
