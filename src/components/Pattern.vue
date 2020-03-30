@@ -489,7 +489,7 @@ export default {
         let LinearY_time_1 = d3
           .scaleLinear()
           .range([outerRadius * 1.17, outerRadius * 1.1])
-          .domain([0, d3.max(pieData_time_data.concat(pieData_time_data_1))]);
+          .domain([d3.min(pieData_time_data.concat(pieData_time_data_1)), d3.max(pieData_time_data.concat(pieData_time_data_1))]);
 
         let lineR_time_1 = d3
           .lineRadial()
@@ -580,8 +580,8 @@ font {
 #pattern_down {
   width: 100%;
   height: 94%;
-  background-color: #f5f5f5;
-  /* background-color: white; */
+  /* background-color: #f5f5f5; */
+  background-color: white;
   border-width: 1px;
   border-style: solid;
   border-color: #c7c7c7;

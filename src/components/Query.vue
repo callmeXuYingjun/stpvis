@@ -259,7 +259,8 @@ font {
 #query_down {
   width: 100%;
   height: 94%;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-color: white;
   border-width: 1px;
   border-style: solid;
   border-color: #c7c7c7;

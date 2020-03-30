@@ -177,7 +177,8 @@ export default {
           .attr("cy", Scale(scatter[i][1]))
           .style("fill", function() {
             if (i >= scatter.length / 2) {
-              return "#D53A35";
+              // return "#D53A35";
+              return "#2F4554";
             } else {
               return "#2F4554";
             }
@@ -318,7 +319,8 @@ font {
 #scatter_down {
   width: 100%;
   height: 94%;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-color: white;
   border-width: 1px;
   border-style: solid;
   border-color: #c7c7c7;

@@ -106,7 +106,7 @@ export default {
       treee();
       function treee() {
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 80, bottom: 20, left: 60 };
+        var margin = { top: 20, right: 80, bottom: 20, left: 80 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -155,6 +155,7 @@ export default {
           .enter()
           .append("path")
           .attr("class", "link")
+          .attr("id", "link")
           .style("stroke", function(d) {
             let temp = d.data.name.split("-");
             if (temp[temp.length - 1][0] == "A") {
@@ -222,6 +223,7 @@ export default {
               return "white";
             })
             .on("click", function() {
+              d3.selectAll("#link").style("visibility", "hidden");
               store.commit("tensorSelectedData_Update", nodeArray[i].data);
             });
 
@@ -700,8 +702,9 @@ font {
 #tree_down {
   width: 100%;
   height: 94%;
-  background-color: #f5f5f5;
-  border-width: 1px;
+  /* background-color: #f5f5f5; */
+  background-color: white;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;
