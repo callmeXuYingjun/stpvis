@@ -21,7 +21,7 @@
         multiple
         size="small"
         placeholder="industry"
-        style="width:100px"
+        style="width:120px"
       >
         <Option
           v-for="(item,index) in sharedState.tensorSelectedData.industry"
@@ -106,8 +106,6 @@ export default {
     },
     draw(cScore) {
       var cScoreTop10 = cScore.slice(0, 10);
-      // console.log(cScoreTop10)
-      // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 20 };
       document.getElementById("query_down").innerHTML = "";
       var width =
@@ -261,7 +259,7 @@ font {
   height: 94%;
   /* background-color: #f5f5f5; */
   background-color: white;
-  border-width: 1px;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;

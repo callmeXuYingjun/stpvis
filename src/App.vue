@@ -1,9 +1,18 @@
 <template>
   <div id="App">
-    <!-- <router-view name="Scatter"></router-view> -->
     <router-view name="Tree"></router-view>
-    <!-- <router-view name="Scatter"></router-view>
-     <router-view name="Pattern"></router-view> -->
+    <!-- <router-view name="Pattern"></router-view> -->
+    <!-- <router-view name="Anomaly"></router-view>  -->
+    <!-- <router-view name="Scatter"></router-view> -->
+    <!-- <router-view name="Query"></router-view> -->
+    <!-- 
+    <router-view name="Anomaly"></router-view> -->
+    <!-- <router-view name="WordCloud"></router-view> -->
+    <!-- <router-view name="Query"></router-view>
+    <router-view name="Pattern"></router-view>
+    <router-view name="Anomaly"></router-view>
+    <router-view name="WordCloud"></router-view> -->
+
     <!-- <div id="Main">
       <div id="Vertikal_1">
         <div id="Vertikal_1-Horizontal_1">

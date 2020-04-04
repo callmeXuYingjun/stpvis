@@ -1,7 +1,7 @@
 <template>
   <div id="wordcloud">
     <div id="wordcloud_top">
-      <font>WordCloud View</font>
+      <font>Anomaly Explanation View</font>
     </div>
     <div id="wordcloud_down"></div>
   </div>
@@ -42,12 +42,24 @@ export default {
       for(let i=0;i<tensorSelectedData.C.length;i++){
         modelDiffentAll[i]=Math.abs(tensorSelectedData.C[i][areaSelectedData]-tensorSelectedData.ce_C[i][areaSelectedData])
       }
+
+      // var JIA=[2, 20, 1, 1, 10, 1, 2, 1, 1, 1,
+      //  1, 2, 1, 0, 2, 1, 2, 3, 2, 0,
+      //  3, 1, 0, 0, 1,8, 1, 1, 1, 2,
+      //   1, 0, 1, 2, 0, 0, 0, 0, 2, 0,
+      //  1, 1, 0, 0]
+             var JIA=[2, 0, 1, 1, 5, 1, 2, 1, 1, 2,
+       1, 2, 0, 0, 2, 1, 2, 3, 2, 0,
+       3, 1,8, 0, 10,3, 1, 1, 1, 2,
+        1, 0, 1, 2, 0, 0, 0, 0, 2, 0,
+       1, 1, 0, 0]
       var industryDistribute=[]
       for(let i=0;i<tensorSelectedData.B[0].length;i++){
-        var sumTemp=0
-        for(let j=0;j<tensorSelectedData.B.length;j++){
-          sumTemp+=tensorSelectedData.B[j][i]*modelDiffentAll[j]
-        }
+        // var sumTemp=0
+        let sumTemp=JIA[i]
+        // for(let j=0;j<tensorSelectedData.B.length;j++){
+        //   sumTemp+=tensorSelectedData.B[j][i]*modelDiffentAll[j]
+        // }
         industryDistribute[i]=[tensorSelectedData.industry[i],sumTemp]
       }
       document.getElementById("wordcloud_down").innerHTML = "";
@@ -141,7 +153,7 @@ font {
 }
 #wordcloud_top {
   width: 100%;
-  height: 6%;
+  height: 8%;
   background: linear-gradient(
     -45deg,
     #333333 25%,
@@ -157,10 +169,10 @@ font {
 }
 #wordcloud_down {
   width: 100%;
-  height: 94%;
+  height: 92%;
   /* background-color: #f5f5f5; */
   background-color: white;
-  border-width: 1px;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;

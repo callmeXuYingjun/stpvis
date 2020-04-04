@@ -1,7 +1,7 @@
 <template>
   <div id="scatter">
     <div id="scatter_top">
-      <font>Scatter View</font>
+      <font>Pattern Projection View</font>
     </div>
     <div id="scatter_down"></div>
   </div>
@@ -25,9 +25,13 @@ export default {
   methods: {
     draw(tensorSelectedData) {
       var scatter = tensorSelectedData.pattern2D;
+      // console.log(tensorSelectedData.he)
+      // console.log(tensorSelectedData.ce_he)
+      // console.log(tensorSelectedData.C)
+      // console.log(tensorSelectedData.ce_C)
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
       var industryData = tensorSelectedData.B.concat(tensorSelectedData.B);
-      var colors = ["#439D3B","#815BB3","#B89ECF","#7C4B4C","#F36731"]; //maps integers to colors
+      var colors = ["#439D3B", "#815BB3", "#B89ECF", "#7C4B4C", "#F36731"]; //maps integers to colors
       // set the dimensions and margins of the graph
       var margin = { top: 20, right: 20, bottom: 30, left: 50 };
       document.getElementById("scatter_down").innerHTML = "";
@@ -46,8 +50,8 @@ export default {
       var svg = d3
         .select("#scatter_down")
         .append("svg")
-        .attr("width", width+ margin.left+margin.right)
-        .attr("height", height+ margin.top+margin.bottom)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -119,55 +123,32 @@ export default {
       //     store.commit("patternsSelectedData_Update", [i]);
       //   });
       var industryOne = [
-        ["物业服务与管理", "供热", "占道经营", "违章建筑"],
+        [1, 4, 17, 20, 40],
         [
-          "供水",
-          "道路建设与维护",
-          "工作效率",
-          "噪声污染",
-          "土地资源管理",
-          "交通规划"
+          2,
+          3,
+          5,
+          9,
+          10,
+          12,
+          15,
+          21,
+          23,
+          27,
+          28,
+          30,
+          31,
+          32,
+          34,
+          35,
+          36,
+          37,
+          41,
+          43
         ],
-        [
-          "营运管理",
-          "养老保险",
-          "社会治安",
-          "环境卫生",
-          "优惠政策",
-          "房屋产权办理",
-          "工作纪律"
-        ],
-        [
-          "燃气",
-          "劳动监察",
-          "拆迁管理",
-          "下水排水",
-          "媒体内容",
-          "低保管理",
-          "工商活动",
-          "农村路桥建设维护",
-          "空气污染",
-          "特殊扶助"
-        ],
-        [
-          "经营性收费",
-          "交通秩序",
-          "服务态度与质量",
-          "交通设施建设维护",
-          "消防安全",
-          "人口管理",
-          "医疗保险",
-          "补课办班",
-          "园林绿化",
-          "路灯管理",
-          "房屋交易",
-          "政务公开",
-          "基层组织建设",
-          "供电",
-          "房地产开发",
-          "废弃物",
-          "教学管理"
-        ]
+        [0, 6, 11, 14, 16, 18, 29, 33, 38],
+        [8, 19, 22, 24, 26, 39],
+        [7, 13, 25, 42]
       ];
       for (let i = 0; i < scatter.length; i++) {
         svg
@@ -177,8 +158,8 @@ export default {
           .attr("cy", Scale(scatter[i][1]))
           .style("fill", function() {
             if (i >= scatter.length / 2) {
-              // return "#D53A35";
-              return "#2F4554";
+              return "#D53A35";
+              // return "#2F4554";
             } else {
               return "#2F4554";
             }
@@ -188,18 +169,24 @@ export default {
           });
         var industryOneDis = [0, 0, 0, 0, 0];
         var industryOneName = [
-          "一级名称1",
-          "一级名称2",
-          "一级名称3",
-          "一级名称4",
-          "一级名称5"
+          "公共事业",
+          "城市管理",
+          "公共服务",
+          "乡村建设",
+          "环境污染"
         ];
-        for (var n = 0; n < industryData[i].length; n++) {
-          for (var m = 0; m < 5; m++) {
-            if (industryOne[m].indexOf(tensorSelectedData.industry[n]) != -1) {
-              industryOneDis[m] += industryData[i][n];
-              break;
-            }
+        // for (var n = 0; n < industryData[i].length; n++) {
+        //   for (var m = 0; m < 5; m++) {
+        //     if (industryOne[m].indexOf(tensorSelectedData.industry[n]) != -1) {
+        //       industryOneDis[m] += industryData[i][n];
+        //       break;
+        //     }
+        //   }
+        // }
+        
+        for (var m = 0; m < 5; m++) {
+          for (var n = 0; n < industryOne[m].length; n++) {
+              industryOneDis[m] += industryData[i][industryOne[m][n]];
           }
         }
         var pieData = industryOneDis; //data we want to turn into a pie chart
@@ -219,7 +206,7 @@ export default {
           .enter()
           .append("path")
           .attr("d", arc)
-          .attr("fill", (d,k) => {
+          .attr("fill", (d, k) => {
             return colors[k];
           })
           .attr("stroke", function() {
@@ -250,37 +237,39 @@ export default {
             return tooltip.style("visibility", "hidden");
           });
       }
-      svg.selectAll()
+      svg
+        .selectAll()
         .data(colors)
         .enter()
         .append("rect")
-        .attr("x", function(d,i) {
-          return width*0.1+80*i;
+        .attr("x", function(d, i) {
+          return width * 0.1 + 80 * i;
         })
         .attr("y", function() {
-          return height+5;
+          return height + 5;
         })
-        .attr("width",20)
-        .attr("height",20)
+        .attr("width", 20)
+        .attr("height", 20)
         .style("stroke", function() {
           return "#D4D5D3";
         })
         .style("fill", function(d) {
-          return d
-        })
-      svg.selectAll()
+          return d;
+        });
+      svg
+        .selectAll()
         .data(industryOneName)
         .enter()
         .append("text")
-        .attr("x",function(d,i) {
-          return 20+width*0.1+80*i;
+        .attr("x", function(d, i) {
+          return 20 + width * 0.1 + 80 * i;
         })
-        .attr("y", height+5)
+        .attr("y", height + 5)
         .attr("dy", "0.8em")
         .style("font-size", "12px")
         .style("font-family", "monospace")
         .text(function(d) {
-          return d
+          return d;
         });
     }
   }
@@ -321,7 +310,7 @@ font {
   height: 94%;
   /* background-color: #f5f5f5; */
   background-color: white;
-  border-width: 1px;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;

@@ -1,7 +1,7 @@
 <template>
   <div id="anomaly">
     <div id="anomaly_top">
-      <font>Anomaly View</font>
+      <font>Regional Anomaly View</font>
     </div>
     <div id="anomaly_down"></div>
   </div>
@@ -40,7 +40,7 @@ export default {
   methods: {
     draw(data, tensorSelectedData) {
       // console.log(tensorSelectedData.anomalyArea)
-      var anomalyData = tensorSelectedData.anomalyArea;
+      // var anomalyData = tensorSelectedData.anomalyArea;
       document.getElementById("anomaly_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -61,9 +61,6 @@ export default {
       var path = d3
         .geoPath() // d3.geo.path avec d3 version 3
         .projection(projection);
-      // const outerRadius = width > height ? height / 2 : width / 2;
-      // const innerRadius = outerRadius * 0.9;
-      // const paddingAngle = (Math.PI / 180) * 5;
       var svg = d3
           .select("#anomaly_down")
           .append("svg")
@@ -75,25 +72,6 @@ export default {
             "transform",
             "translate(" + margin.left + "," + margin.top + ")"
           );
-
-      // var gg = g
-      //   .append("g")
-      //   .attr(
-      //     "transform",
-      //     () =>
-      //       "translate(" +
-      //       projection(centerLocation)[0] +
-      //       "," +
-      //       projection(centerLocation)[1] +
-      //       ")"
-      //   );
-      // gg.append("circle")
-      //   .attr("r", function() {
-      //     return innerRadius;
-      //   })
-      //   .style("fill", function() {
-      //     return "#aad3df";
-      //   });
 
       g.selectAll()
         .data(data.features)
@@ -110,7 +88,7 @@ export default {
           if (indexTemp != -1) {
             return 1;
           } else {
-            return 0;
+            return 0.3;
           }
         })
         .on("click", function(d) {
@@ -118,139 +96,7 @@ export default {
           store.commit("areaSelectedData_Update",indexTemp);
           console.log(d.properties.name);
         });
-      // var districtData = [
-      //   ["CY", [125.318334, 43.64432], 12],
-      //   ["NG", [125.447115, 43.739438], 13],
-      //   ["KC", [125.332132, 44.080271], 21],
-      //   ["ED", [125.642587, 43.899292], 12],
-      //   ["LY", [125.182654, 43.899292], 32],
-      //   ["SY", [125.667883, 43.522281], 12],
-      //   ["JT", [125.854156, 44.154825], 12],
-      //   ["DH", [125.720775, 44.545913], 32],
-      //   ["NA", [125.182654, 44.450447], 44],
-      //   ["YS", [126.562452, 44.841186], 22]
-      // ];
-      // g.selectAll()
-      //   .data(tensorSelectedData.areaLocation)
-      //   .enter()
-      //   .append("text")
-      //   .attr("x", d => projection(d)[0])
-      //   .attr("y", d => projection(d)[1])
-      //   .attr("dx", 12)
-      //   .attr("dy", 12)
-      //   .style("font-size", 7)
-      //   .style("font-weight", "bold")
-      //   .style("font-family", "monospace")
-      //   .text(function(d, i) {
-      //     return tensorSelectedData.area[i];
-      //   });
-      // var linear = d3
-      //   .scaleLinear()
-      //   .domain(
-      //     d3.extent(districtData, function(d) {
-      //       return d[2];
-      //     })
-      //   )
-      //   .range([5, 30]);
-      // g.selectAll()
-      //   .data(districtData)
-      //   .enter()
-      //   .append("rect")
-      //   .attr("x", function(d) {
-      //     return projection(d[1])[0];
-      //   })
-      //   .attr("y", function(d) {
-      //     return projection(d[1])[1];
-      //   })
-      //   .attr("width", d => linear(d[2]))
-      //   .attr("height", d => linear(d[2]))
-      //   .style("stroke", function() {
-      //     return "#D4D5D3";
-      //   })
-      //   .style("stroke-width", 0.5)
-      //   .style("fill", "red")
-      //   .attr(
-      //     "transform",
-      //     d => "translate(" + -linear(d[2]) / 2 + "," + -linear(d[2]) / 2 + ")"
-      //   );
-      // g.selectAll()
-      //   .data(districtData)
-      //   .enter()
-      //   .append("rect")
-      //   .attr("x", function(d) {
-      //     return projection(d[1])[0];
-      //   })
-      //   .attr("y", function(d) {
-      //     return projection(d[1])[1];
-      //   })
-      //   .attr("width", d => linear(d[2]) / 2)
-      //   .attr("height", d => linear(d[2]) / 2)
-      //   .style("stroke", function() {
-      //     return "#D4D5D3";
-      //   })
-      //   .style("stroke-width", 0.5)
-      //   .style("fill", "white")
-      //   .attr(
-      //     "transform",
-      //     d => "translate(" + -linear(d[2]) / 4 + "," + -linear(d[2]) / 4 + ")"
-      //   );
-
-      var petal = [[0, 0], [5, -40], [0, -60], [-5, -40]];
-      var linePath = d3.line().curve(d3.curveCardinalClosed);
-      var color = d3.scaleOrdinal(d3.schemeCategory10);
-      var scaleMax = 0.5;
-      var scaleMin = 0.1;
-      var linear_scale = d3
-        .scaleLinear()
-        .domain(
-          d3.extent(
-            anomalyData.reduce(function(a, b) {
-              return a.concat(b);
-            })
-          )
-        )
-        .range([scaleMin, scaleMax]);
-      tensorSelectedData.areaLocation.forEach((d, i) => {
-        flower(projection(d), i);
-      });
-      function flower(location, districtIndex) {
-        // g.append("circle")
-        //   .attr("r", function() {
-        //     return 60 * scaleMax;
-        //   })
-        //   .style("fill", function() {
-        //     return "none";
-        //   })
-        //   .attr("stroke", "grey")
-        //   .attr("stroke-width", 2)
-        //   .attr("transform", function() {
-        //     return "translate(" + location[0] + "," + location[1] + ")";
-        //   });
-
-        for (var i = 0; i < anomalyData[0].length; i++) {
-          g.append("path")
-            .attr("d", linePath(petal))
-            .attr("stroke", "black")
-            .attr("stroke-width", 0.2)
-            .attr("fill", color(i))
-            .attr("transform", function() {
-              return (
-                "translate(" +
-                location[0] +
-                "," +
-                location[1] +
-                ") rotate(" +
-                (360 / anomalyData[0].length) * i +
-                ") scale(" +
-                linear_scale(anomalyData[districtIndex][i]) +
-                ") "
-              );
-            });
-          // .attr("transform", function() {
-          //   return "scale(0.5)";
-          // });
-        }
-      }
+   
     }
   }
 };
@@ -271,7 +117,7 @@ font {
 }
 #anomaly_top {
   width: 100%;
-  height: 6%;
+  height: 8%;
   background: linear-gradient(
     -45deg,
     #333333 25%,
@@ -287,10 +133,10 @@ font {
 }
 #anomaly_down {
   width: 100%;
-  height: 94%;
+  height: 92%;
   /* background-color: #f5f5f5; */
   background-color: white;
-  border-width: 1px;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;

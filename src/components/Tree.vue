@@ -1,7 +1,7 @@
 <template>
   <div id="tree">
     <div id="tree_top">
-      <font>Tree View</font>
+      <font>Progressive Partition Tree</font>
       <i-switch true-color="#13ce66" false-color="#ff4949" v-model="switch1" @on-change="change">
         <span slot="open">粗</span>
         <span slot="close">细</span>
@@ -104,9 +104,10 @@ export default {
     },
     draw(treeData) {
       treee();
+      d3.selectAll("#"+this.sharedState.tensorSelectedData.name).style("fill", "#CCC")
       function treee() {
         document.getElementById("tree_down").innerHTML = "";
-        var margin = { top: 20, right: 80, bottom: 20, left: 80 };
+        var margin = { top: 20, right: 130, bottom: 20, left: 80 };
         var width =
           document.getElementById("tree_down").scrollWidth -
           margin.left -
@@ -193,6 +194,9 @@ export default {
               "," +
               d.parent.x
             );
+          })
+          .on("click", function() {
+              d3.selectAll("#link").style("visibility", "hidden")
           });
 
         var pow = d3
@@ -219,11 +223,14 @@ export default {
             .attr("r", function() {
               return innerRadius;
             })
+            .attr("id",nodeArray[i].data.name)
+            .attr("class", "circleAll")
             .style("fill", function() {
               return "white";
             })
             .on("click", function() {
-              d3.selectAll("#link").style("visibility", "hidden");
+              d3.selectAll(".circleAll").style("fill", "white")
+              d3.selectAll("#"+nodeArray[i].data.name).style("fill", "#CCC")
               store.commit("tensorSelectedData_Update", nodeArray[i].data);
             });
 
@@ -235,7 +242,7 @@ export default {
           var min_0 = d3.min(pieData_0_data);
           var linear_0 = d3
             .scaleLinear()
-            .domain([min_0, max_0])
+            .domain([min_0/10, max_0])
             .range([outerRadius * 0.3, outerRadius * 1.5]);
           var pies_0 = d3
             .pie()
@@ -293,6 +300,7 @@ export default {
             .attr("fill", () => {
               return colors[1];
             })
+            .attr("stroke-width",0)
             .attr("stroke", function() {
               return "#fff";
             });
@@ -305,7 +313,7 @@ export default {
           var min_2 = d3.min(pieData_2_data);
           var linear_2 = d3
             .scaleLinear()
-            .domain([min_2, max_2])
+            .domain([min_2/10, max_2])
             .range([outerRadius * 0.3, outerRadius * 1.5]);
           var pies_2 = d3
             .pie()
@@ -328,6 +336,7 @@ export default {
             .attr("fill", () => {
               return colors[2];
             })
+            .attr("stroke-width",0)
             .attr("stroke", function() {
               return "#fff";
             });
@@ -360,7 +369,7 @@ export default {
             .attr("stroke", (d, k) => {
               return colors[k];
             })
-            .attr("stroke-width", "1px")
+            .attr("stroke-width", 0)
             .attr("fill", "none");
 
           //文字提示
@@ -607,7 +616,7 @@ export default {
             .lineRadial()
             .angle(function(d, k) {
               return (
-                LinearX_2(k) - (2 * Math.PI) / 3 / 2 / pieData_1_data.length
+                LinearX_2(k) - (2 * Math.PI) / 3 / 2 / pieData_2_data.length
               );
             })
             .radius(function(d) {
@@ -664,6 +673,7 @@ export default {
                 .style("top", d3.event.pageY + "px");
             });
         }
+        
       }
     }
   }

@@ -46,7 +46,7 @@ export default {
     draw(tensorSelectedData, boundaryData, patternsSelectedData) {
       let colors = ["#893D98", "#22B184", "#4272B5"];
       document.getElementById("pattern_down").innerHTML = "";
-      let margin = { top: 40, right: 20, bottom: 20, left: 20 };
+      let margin = { top: 20, right: 20, bottom: 20, left: 20 };
       let width =
         document.getElementById("pattern_down").scrollWidth -
         margin.left -
@@ -59,7 +59,7 @@ export default {
       let projection = d3
         .geoMercator()
         .center(centerLocation)
-        .scale(6000)
+        .scale(3000)
         .translate([width / 2, height / 2]);
 
       let path = d3
@@ -111,8 +111,6 @@ export default {
           CSelect = tensorSelectedData.ce_C;
           modeID = patternsSelectedData[0] - tensorSelectedData.A.length;
         }
-        var JIAArea=[7,4,4,5,6]
-        CSelect[modeID]=JIAArea
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
           .scaleLinear()
@@ -139,7 +137,7 @@ export default {
             if (indexTemp != -1) {
               return 1;
             } else {
-              return 0.2;
+              return 0;
             }
           })
           .on("click", function(d) {
@@ -189,22 +187,7 @@ export default {
           });
 
         let pieData_industry_data = BSelect[modeID]; //data we want to turn into a pie chart
-      //   var JIAIndustry=[2, 14, 1, 1, 4, 1, 2, 1, 1, 1,
-      //  1, 2, 1, 1, 2, 1, 2, 3, 2, 0,
-      //  3, 1, 1, 1, 1,3, 1, 1, 1, 2,
-      //   1, 1, 1, 2, 1, 1, 1, 1, 2, 1,
-      //  1, 1, 1, 1]
-      // var JIAIndustry=[4, 15, 1, 4, 2, 1, 2, 1, 1, 1,
-      //  1, 2, 1, 1, 2, 1, 2, 3, 2, 0,
-      //  3, 1, 1, 1, 1,10, 1, 1, 1, 2,
-      //   1, 1, 1, 2, 2, 5, 1, 6, 2, 1,
-      //  1, 1, 1, 1]
-      var JIAIndustry=[30, 50, 1, 10, 2, 1, 2, 1, 1, 1,
-       1, 2, 1, 1, 2, 1, 2, 3, 2, 10,
-       3, 1, 1, 10, 1,13, 1, 1, 1, 2,
-        1, 21, 1, 2, 2, 5, 1, 6, 2, 1,
-       20, 1, 1, 1]
-       pieData_industry_data=JIAIndustry
+
         let linear_industry = d3
           .scaleLinear()
           .domain([0, d3.max(pieData_industry_data)])
@@ -253,23 +236,14 @@ export default {
           });
         //面积图
         let pieData_time_data = ASelect[modeID];
-        // var JIATime=[3,0,3,0,1,0,2,0,1,0]
-        var JIATime=[10,0,0,0,0,9,0,0,0,0]
-        // var JIATime=[7,5,6,5,6,1,1,2,1,1]
-      // pieData_time_data.forEach(element => {
-      //   // console.log(element)
-      //   JIA.push(element)
-      //   JIA.push(0)
-      // });
-
         let LinearX_time = d3
           .scaleLinear()
-          .domain([0, JIATime.length])
+          .domain([0, pieData_time_data.length])
           .range([0, 2 * Math.PI]);
         let LinearY_time = d3
           .scaleLinear()
-          .domain([0, d3.max(JIATime)])
-          .range([outerRadius * 1.22, outerRadius * 1.35]);
+          .domain([0, d3.max(pieData_time_data)])
+          .range([outerRadius * 1.23, outerRadius * 1.3]);
         let lineR_time = d3
           .lineRadial()
           .defined(function(d) {
@@ -287,8 +261,8 @@ export default {
           .defined(lineR_time.defined())
           .angle(lineR_time.angle())
           .outerRadius(lineR_time.radius())
-          .innerRadius(outerRadius * 1.22);
-        gg.datum(JIATime)
+          .innerRadius(outerRadius * 1.23);
+        gg.datum(pieData_time_data)
           .append("path")
           .attr("fill", colors[0])
           .attr("d", area);
