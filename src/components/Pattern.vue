@@ -111,7 +111,7 @@ export default {
           CSelect = tensorSelectedData.ce_C;
           modeID = patternsSelectedData[0] - tensorSelectedData.A.length;
         }
-        var JIAArea=[7,4,4,5,6]
+        var JIAArea=[12,4,4,5,6]
         CSelect[modeID]=JIAArea
         let mapColor = d3.interpolate("white", colors[2]); //颜色插值函数
         let linear_map = d3
@@ -199,7 +199,7 @@ export default {
       //  3, 1, 1, 1, 1,10, 1, 1, 1, 2,
       //   1, 1, 1, 2, 2, 5, 1, 6, 2, 1,
       //  1, 1, 1, 1]
-      var JIAIndustry=[30, 50, 1, 10, 2, 1, 2, 1, 1, 1,
+      var JIAIndustry=[10, 50, 1, 10, 2, 1, 2, 1, 1, 1,
        1, 2, 1, 1, 2, 1, 2, 3, 2, 10,
        3, 1, 1, 10, 1,13, 1, 1, 1, 2,
         1, 21, 1, 2, 2, 5, 1, 6, 2, 1,
@@ -253,8 +253,8 @@ export default {
           });
         //面积图
         let pieData_time_data = ASelect[modeID];
-        // var JIATime=[3,0,3,0,1,0,2,0,1,0]
-        var JIATime=[10,0,0,0,0,9,0,0,0,0]
+        var JIATime=[3,0,9,0,10,0,2,0,1,0]
+        // var JIATime=[1,0,0,0,0,9,0,0,0,0]
         // var JIATime=[7,5,6,5,6,1,1,2,1,1]
       // pieData_time_data.forEach(element => {
       //   // console.log(element)

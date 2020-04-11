@@ -1,7 +1,7 @@
 <template>
   <div id="App">
     <router-view name="Tree"></router-view>
-    <!-- <router-view name="Pattern"></router-view> -->
+    <router-view name="Pattern"></router-view>
     <!-- <router-view name="Anomaly"></router-view>  -->
     <!-- <router-view name="Scatter"></router-view> -->
     <!-- <router-view name="Query"></router-view> -->
