@@ -1,7 +1,7 @@
 <template>
   <div id="wordcloud">
     <div id="wordcloud_top">
-      <font>WordCloud View</font>
+      <font>Anomaly Explanation View</font>
     </div>
     <div id="wordcloud_down"></div>
   </div>
@@ -19,29 +19,49 @@ export default {
     };
   },
   computed: {
-    tensorSelectedData_patternsSelectedData() {
-      const [tensorSelectedData,patternsSelectedData] = [
+    tensorSelectedData_areaSelectedData() {
+      const [tensorSelectedData,areaSelectedData] = [
         this.sharedState.tensorSelectedData,
-        this.sharedState.patternsSelectedData
+        this.sharedState.areaSelectedData
       ];
-      return [tensorSelectedData,patternsSelectedData];
+      return [tensorSelectedData,areaSelectedData];
     }
   },
   watch: {
-    tensorSelectedData_patternsSelectedData: {
+    tensorSelectedData_areaSelectedData: {
       handler: function(val) {
-        if (JSON.stringify(val[0]) !== "{}" && val[1].length>=1)
+        if (JSON.stringify(val[0]) !== "{}")
           this.draw(val[0], val[1]);
       },
       deep: true
     }
   },
   methods: {
-    draw(tensorSelectedData,patternsSelectedData) {
-      var data = [];
-      tensorSelectedData.industry.forEach((d,i)=>{
-        data[i]=[d,tensorSelectedData.B[patternsSelectedData[0]][i]]
-      })
+    draw(tensorSelectedData,areaSelectedData) {
+      var modelDiffentAll=[]
+      for(let i=0;i<tensorSelectedData.C.length;i++){
+        modelDiffentAll[i]=Math.abs(tensorSelectedData.C[i][areaSelectedData]-tensorSelectedData.ce_C[i][areaSelectedData])
+      }
+
+      // var JIA=[2, 20, 1, 1, 10, 1, 2, 1, 1, 1,
+      //  1, 2, 1, 0, 2, 1, 2, 3, 2, 0,
+      //  3, 1, 0, 0, 1,8, 1, 1, 1, 2,
+      //   1, 0, 1, 2, 0, 0, 0, 0, 2, 0,
+      //  1, 1, 0, 0]
+             var JIA=[2, 0, 1, 1, 5, 1, 2, 1, 1, 2,
+       1, 2, 0, 0, 2, 1, 2, 3, 2, 0,
+       3, 1,8, 0, 10,3, 1, 1, 1, 2,
+        1, 0, 1, 2, 0, 0, 0, 0, 2, 0,
+       1, 1, 0, 0]
+      var industryDistribute=[]
+      for(let i=0;i<tensorSelectedData.B[0].length;i++){
+        // var sumTemp=0
+        let sumTemp=JIA[i]
+        // for(let j=0;j<tensorSelectedData.B.length;j++){
+        //   sumTemp+=tensorSelectedData.B[j][i]*modelDiffentAll[j]
+        // }
+        industryDistribute[i]=[tensorSelectedData.industry[i],sumTemp]
+      }
       document.getElementById("wordcloud_down").innerHTML = "";
       var margin = { top: 20, right: 20, bottom: 20, left: 20 };
       var width =
@@ -66,12 +86,12 @@ export default {
 
       const wordScale = d3
         .scaleLinear()
-        .domain(d3.extent(data,d=>d[1]))
+        .domain(d3.extent(industryDistribute,d=>d[1]))
         .range([5, 60]);
       d3Cloud()
         .size([width, height])
         .timeInterval(20)
-        .words(data)
+        .words(industryDistribute)
         .rotate(function() {
           return 0;
         })
@@ -133,7 +153,7 @@ font {
 }
 #wordcloud_top {
   width: 100%;
-  height: 6%;
+  height: 8%;
   background: linear-gradient(
     -45deg,
     #333333 25%,
@@ -149,9 +169,10 @@ font {
 }
 #wordcloud_down {
   width: 100%;
-  height: 94%;
-  background-color: #f5f5f5;
-  border-width: 1px;
+  height: 92%;
+  /* background-color: #f5f5f5; */
+  background-color: white;
+  border-width: 0px;
   border-style: solid;
   border-color: #c7c7c7;
   border-radius: 5px;

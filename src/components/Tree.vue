@@ -76,7 +76,6 @@ export default {
     };
   },
   mounted() {
-    store.dispatch("patternData_action");
     store.dispatch("treeData_action");
   },
   watch: {

@@ -25,10 +25,6 @@ export default {
   methods: {
     draw(tensorSelectedData) {
       var scatter = tensorSelectedData.pattern2D;
-      // console.log(tensorSelectedData.he)
-      // console.log(tensorSelectedData.ce_he)
-      // console.log(tensorSelectedData.C)
-      // console.log(tensorSelectedData.ce_C)
       var he_ce_he = tensorSelectedData.he.concat(tensorSelectedData.ce_he);
       var industryData = tensorSelectedData.B.concat(tensorSelectedData.B);
       var colors = ["#439D3B", "#815BB3", "#B89ECF", "#7C4B4C", "#F36731"]; //maps integers to colors
